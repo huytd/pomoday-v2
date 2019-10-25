@@ -1,0 +1,9 @@
+TypeScript React Template
+
+Use this as a template when you start a new repository.
+
+What included and configured are:
+  - TypeScript
+  - React
+  - SCSS and TailwindCSS with a preset of colors
+  - Parcel as a bundler
