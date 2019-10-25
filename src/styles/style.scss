@@ -119,6 +119,10 @@ body {
   line-height: 1.6em;
 }
 
+input:focus {
+  outline: none;
+}
+
 @tailwind components;
 @tailwind utilities;
 

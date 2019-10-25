@@ -8,6 +8,7 @@ enum RowType {
 };
 
 enum TaskStatus {
+  NONE,
   DONE,
   WIP,
   WAIT
@@ -16,18 +17,46 @@ enum TaskStatus {
 type Command = {
   command: string,
   tag?: string,
-  text: string
+  text?: string,
+  id?: number
 } | null;
 
-const parse = (str: string) => str.match(/(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/);
+const parseTaskCommand = (str: string) => str.match(/(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/);
+const parseCheckCommand = (str: string) => str.match(/(c(?:heck)?)\s(\d+)/);
+const parseBeginCommand = (str: string) => str.match(/(b(?:egin)?)\s(\d+)/);
+const parseHelpCommand = (str: string) => str.match(/(close-help|help)/);
+
 const parseCommand = (input: string): Command => {
-  const match = parse(input);
-  if (match) {
+  const matchTask = parseTaskCommand(input);
+  if (matchTask) {
     return {
-      command: match[1],
-      tag: match[2],
-      text: match[3].trim()
+      command: matchTask[1],
+      tag: matchTask[2],
+      text: matchTask[3].trim()
     } as Command;
+  }
+
+  const matchCheck = parseCheckCommand(input);
+  if (matchCheck) {
+    return {
+      command: matchCheck[1],
+      id: parseInt(matchCheck[2])
+    }
+  }
+
+  const matchBegin = parseBeginCommand(input);
+  if (matchBegin) {
+    return {
+      command: matchBegin[1],
+      id: parseInt(matchBegin[2])
+    }
+  }
+
+  const matchHelp = parseHelpCommand(input);
+  if (matchHelp) {
+    return {
+      command: matchHelp[1]
+    }
   }
   return null;
 };
@@ -52,6 +81,7 @@ const TaskItemDisplay = props => {
   const title = props.title;
   const status = props.status;
   const counter = props.counter;
+  console.log(props);
   return <>
     <div className="w-12 text-right mr-2">{counter}. </div>
     <div className="flex-1 text-left">{getStatus(status)} <span className="inline-block" dangerouslySetInnerHTML={{__html: title}}></span></div>
@@ -81,7 +111,8 @@ const getInitialState = () => {
     }
   }
   return {
-    tasks: [] as TaskItem[]
+    tasks: [] as TaskItem[],
+    showHelp: true
   };
 };
 
@@ -100,7 +131,34 @@ export const App = () => {
         const cmd = parseCommand(inputRef.current.value);
         if (cmd) {
           switch (cmd.command) {
-            case "t" || "task":
+            case "b":
+            case "begin":
+              const bupdated = state.tasks.map(t => {
+                if (t.id === cmd.id) {
+                  t.status = TaskStatus.WIP;
+                }
+                return t;
+              });
+              setState({
+                ...state,
+                tasks: bupdated
+              });
+              break;
+            case "c":
+            case "check":
+              const cupdated = state.tasks.map(t => {
+                if (t.id === cmd.id) {
+                  t.status = t.status === TaskStatus.DONE ? TaskStatus.WAIT : TaskStatus.DONE;
+                }
+                return t;
+              });
+              setState({
+                ...state,
+                tasks: cupdated
+              });
+              break;
+            case "t":
+            case "task":
               const tag = cmd.tag || "@uncategorized";
               const task = cmd.text;
               const nextId = state.tasks.reduce((maxId: number, t: TaskItem) => {
@@ -118,6 +176,18 @@ export const App = () => {
                   status: TaskStatus.WAIT
                 } as TaskItem)
               })
+              break;
+            case "help":
+              setState({
+                ...state,
+                showHelp: true
+              });
+              break;
+            case "close-help":
+              setState({
+                ...state,
+                showHelp: false
+              });
               break;
           }
         }
@@ -155,14 +225,34 @@ export const App = () => {
 
   return <div className="w-full h-full flex flex-col">
     <div className="p-2 bg-gray-100 text-sm"></div>
-    <div className="flex-1 p-5">
-      {Object.keys(taskGroups).map((g, i) => [
-        <Row key={`tag-${i}`} type={RowType.TAG} title={g} />,
-        taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} status={t.status} title={t.title} counter={t.id} />),
-        <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} title="" />
-      ])}
-      <Row type={RowType.TEXT} title={`${(summary.done/state.tasks.length * 100).toFixed(0)}% of all tasks complete.`} />
-      <Row type={RowType.TEXT} title={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
+    <div className="flex-1 flex flex-row">
+      <div className="flex-1 p-5">
+        {Object.keys(taskGroups).map((g, i) => [
+          <Row key={`tag-${i}`} type={RowType.TAG} title={g} />,
+          taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} status={t.status} title={t.title} counter={t.id} />),
+          <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} title="" />
+        ])}
+        <Row type={RowType.TEXT} title={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
+        <Row type={RowType.TEXT} title={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
+      </div>
+      {state.showHelp ? <div className="w-2/6 p-5 text-sm text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
+        Type the command in the input box below, starting with:<br/>
+        &nbsp; <b>t</b> or <b>task</b>: Add a new task<br/>
+        &nbsp; <b>c</b> or <b>check</b>: Check to mark a task as done<br/>
+        &nbsp; <b>b</b> or <b>begin</b>: Start working on a task<br/>
+        <br/>
+        Example:<br/>
+        &nbsp; t @work This is a new task<br/>
+        &nbsp; task @longer-tag This is another task<br/>
+        &nbsp; b 10<br/>
+        &nbsp; begin 12<br/>
+        &nbsp; c 7<br/>
+        &nbsp; check 9<br/>
+        <br/>
+        Other commands:<br/>
+        &nbsp; <b>close-help</b>: Close this help text<br/>
+        &nbsp; <b>help</b>: Show this help text<br/>
+      </div> : null}
     </div>
     <input ref={inputRef} className="bg-gray-300 p-2 text-sm" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
   </div>;
