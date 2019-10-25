@@ -137,3 +137,14 @@ input:focus {
     }
   }
 }
+
+code {
+  &::before {
+    content: "「 ";
+    opacity: 0.5;
+  }
+  &::after {
+    content: " 」";
+    opacity: 0.5;
+  }
+}

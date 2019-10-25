@@ -48,6 +48,7 @@ type Command = {
 } | null;
 
 const parseTaskCommand = (str: string) => str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/);
+const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/);
 const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(\d+)/);
 const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/);
@@ -65,7 +66,20 @@ const parseCommand = (input: string): Command => {
     } as Command;
   }
 
-  const matchOther = parseCheckCommand(input) || parseBeginCommand(input) || parseDeleteCommand(input) || parseFlagCommand(input) || parseStopCommand(input);
+  const matchEdit = parseEditCommand(input);
+  if (matchEdit) {
+    return {
+      command: matchEdit[1],
+      id: parseInt(matchEdit[2]),
+      text: matchEdit[3].trim()
+    } as Command;
+  }
+
+  const matchOther = parseCheckCommand(input)  ||
+                     parseBeginCommand(input)  ||
+                     parseDeleteCommand(input) ||
+                     parseFlagCommand(input)   ||
+                     parseStopCommand(input);
   if (matchOther) {
     return {
       command: matchOther[1],
@@ -267,22 +281,41 @@ export const App = () => {
             case "task":
               const tag = cmd.tag || "@uncategorized";
               const task = cmd.text;
-              const nextId = state.tasks.reduce((maxId: number, t: TaskItem) => {
-                if (t.id > maxId) {
-                  maxId = t.id;
-                }
-                return maxId;
-              }, 0);
-              setState({
-                ...state,
-                tasks: state.tasks.concat({
-                  id: nextId + 1,
-                  tag: tag,
-                  title: task,
-                  status: TaskStatus.WAIT
-                } as TaskItem)
-              })
+              if (task && task.length) {
+                const nextId = state.tasks.reduce((maxId: number, t: TaskItem) => {
+                  if (t.id > maxId) {
+                    maxId = t.id;
+                  }
+                  return maxId;
+                }, 0);
+                setState({
+                  ...state,
+                  tasks: state.tasks.concat({
+                    id: nextId + 1,
+                    tag: tag,
+                    title: task,
+                    status: TaskStatus.WAIT
+                  } as TaskItem)
+                })
+              }
               break;
+            case "e":
+            case "edit": {
+              const id = cmd.id;
+              const task = cmd.text;
+              if (task && task.length) {
+                setState({
+                  ...state,
+                  tasks: state.tasks.map(t => {
+                    if (t.id === id) {
+                      t.title = task;
+                    }
+                    return t;
+                  })
+                });
+              }
+            }
+            break;
             case "help":
               setState({
                 ...state,
@@ -344,26 +377,23 @@ export const App = () => {
         </div>
         {state.showHelp ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
-        &nbsp; <b>t</b> or <b>task</b>: Add a new task<br/>
-        &nbsp; <b>b</b> or <b>begin</b>: Start working on a task<br/>
-        &nbsp; <b>c</b> or <b>check</b>: Check to mark a task as done<br/>
-        &nbsp; <b>d</b> or <b>delete</b>: Delete a task<br/>
-        &nbsp; <b>fl</b> or <b>flag</b>: Flag a task<br/>
-        &nbsp; <b>st</b> or <b>stop</b>: Stop working on a task<br/>
+        &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task<br/>
+        &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a task<br/>
+        &nbsp; <b>c</b> or <b>check</b>&nbsp;&nbsp; Check to mark a task as done<br/>
+        &nbsp; <b>d</b> or <b>delete</b>&nbsp; Delete a task<br/>
+        &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Flag a task<br/>
+        &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task<br/>
         <br/>
         Example:<br/>
-        &nbsp; t @work This is a new task<br/>
-        &nbsp; task @longer-tag This is another task<br/>
-        &nbsp; b 10<br/>
-        &nbsp; begin 12<br/>
-        &nbsp; c 7<br/>
-        &nbsp; check 9<br/>
-        &nbsp; d 3<br/>
-        &nbsp; delete 3<br/>
-        &nbsp; fl 2<br/>
-        &nbsp; flag 2<br/>
-        &nbsp; st 1<br/>
-        &nbsp; stop 1<br/>
+        &nbsp; <code>t @work This is a new task</code><br/>
+        &nbsp; <code>task @longer-tag This is another task</code><br/>
+        &nbsp; <code>b 10</code> or <code>begin 12</code><br/>
+        &nbsp; <code>c 7</code>&nbsp; or <code>check 9</code><br/>
+        &nbsp; <code>d 3</code>&nbsp; or <code>delete 3</code><br/>
+        &nbsp; <code>fl 2</code> or <code>flag 2</code><br/>
+        &nbsp; <code>st 1</code> or <code>stop 1</code><br/>
+        &nbsp; <code>e 1 this is a new task description</code><br/>
+        &nbsp; <code>edit 1 a new task description goes here</code><br/>
         <br/>
         Other commands:<br/>
         &nbsp; <b>close-help</b>: Close this help text<br/>
