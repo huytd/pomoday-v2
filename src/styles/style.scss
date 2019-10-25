@@ -122,14 +122,11 @@ body {
 @tailwind components;
 @tailwind utilities;
 
-// .reset-counter {
-  // counter-reset: task-numbering;
-// }
-
-// .counter-increment {
-  // counter-increment: task-numbering;
-
-  // &::before {
-    // content: counter(task-numbering) ". ";
-  // }
-// }
+.row {
+  a {
+    @apply text-tomato-500;
+    &:hover {
+      @apply text-tomato-300;
+    }
+  }
+}

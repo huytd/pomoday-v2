@@ -1,4 +1,5 @@
 import * as React from 'react';
+import marked from 'marked';
 
 enum RowType {
   TAG,
@@ -33,9 +34,9 @@ const parseCommand = (input: string): Command => {
 
 const getStatus = (status?: TaskStatus) => {
   switch (status) {
-    case TaskStatus.DONE: return <span className="text-green-600 mr-2">✔</span>;
-    case TaskStatus.WIP: return <span className="text-orange-500 mr-2">…</span>;
-    case TaskStatus.WAIT: return <span className="text-gray-500 mr-2">□</span>;
+    case TaskStatus.DONE: return <span className="text-green-600">✔</span>;
+    case TaskStatus.WIP: return <span className="text-orange-500">…</span>;
+    case TaskStatus.WAIT: return <span className="text-gray-500">□</span>;
     default: return null;
   }
 };
@@ -53,7 +54,7 @@ const TaskItemDisplay = props => {
   const counter = props.counter;
   return <>
     <div className="w-12 text-right mr-2">{counter}. </div>
-    <div className="flex-1 text-left">{getStatus(status)} {title}</div>
+    <div className="flex-1 text-left">{getStatus(status)} <span className="inline-block" dangerouslySetInnerHTML={{__html: title}}></span></div>
   </>;
 };
 
@@ -62,8 +63,8 @@ const Row = (props) => {
   const title = props.title || "";
   const status = props.status || undefined;
   const counter = props.counter || undefined;
-  return <div className={`${type === RowType.TAG ? 'reset-counter font-bold underline' : (type === RowType.TEXT && !title.length ? 'p-3' : 'flex flex-row')}`}>
-    {type === RowType.TASK ? <TaskItemDisplay title={title} status={status} counter={counter} /> : title}
+  return <div className={`row ${type === RowType.TAG ? 'font-bold underline' : (type === RowType.TEXT && !title.length ? 'p-3' : 'flex flex-row')}`}>
+    {type === RowType.TASK ? <TaskItemDisplay title={marked(title)} status={status} counter={counter} /> : ( type === RowType.TEXT ? <span className="inline-block" dangerouslySetInnerHTML={{__html: marked(title)}}></span> : title)}
   </div>;
 };
 
@@ -133,14 +134,35 @@ export const App = () => {
     return groups;
   }, {});
 
+  const summary = state.tasks.reduce((stats, t) => {
+    switch (t.status) {
+      case TaskStatus.WAIT:
+        stats.pending += 1;
+        break;
+      case TaskStatus.DONE:
+        stats.done += 1;
+        break;
+      case TaskStatus.WIP:
+        stats.wip += 1;
+        break;
+    }
+    return stats;
+  }, {
+    done: 0,
+    wip: 0,
+    pending: 0
+  })
+
   return <div className="w-full h-full flex flex-col">
     <div className="p-2 bg-gray-100 text-sm"></div>
-    <div className="flex-1 p-5 w-1/2 mx-auto">
+    <div className="flex-1 p-5">
       {Object.keys(taskGroups).map((g, i) => [
         <Row key={`tag-${i}`} type={RowType.TAG} title={g} />,
         taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} status={t.status} title={t.title} counter={t.id} />),
         <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} title="" />
       ])}
+      <Row type={RowType.TEXT} title={`${(summary.done/state.tasks.length * 100).toFixed(0)}% of all tasks complete.`} />
+      <Row type={RowType.TEXT} title={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
     </div>
     <input ref={inputRef} className="bg-gray-300 p-2 text-sm" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
   </div>;
