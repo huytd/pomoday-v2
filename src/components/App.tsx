@@ -342,7 +342,7 @@ export const App = () => {
           <Row type={RowType.TEXT} title={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
           <Row type={RowType.TEXT} title={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
         </div>
-        {state.showHelp ? <div className="w-full h-full fixed top-0 left-0 bg-white sm:relative rm:top-auto rm:left-auto sm:h-auto sm:w-2/6 p-5 text-sm text-gray-700 text-left border-l" style={{transition: 'all 0.5s'}}>
+        {state.showHelp ? <div className="w-full h-full fixed top-0 left-0 bg-white sm:relative rm:top-auto rm:left-auto sm:h-auto sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
         &nbsp; <b>t</b> or <b>task</b>: Add a new task<br/>
         &nbsp; <b>b</b> or <b>begin</b>: Start working on a task<br/>
