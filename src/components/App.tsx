@@ -24,6 +24,7 @@ type Command = {
 const parseTaskCommand = (str: string) => str.match(/(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/);
 const parseCheckCommand = (str: string) => str.match(/(c(?:heck)?)\s(\d+)/);
 const parseBeginCommand = (str: string) => str.match(/(b(?:egin)?)\s(\d+)/);
+const parseDeleteCommand = (str: string) => str.match(/(d(?:elete)?)\s(\d+)/);
 const parseHelpCommand = (str: string) => str.match(/(close-help|help)/);
 
 const parseCommand = (input: string): Command => {
@@ -49,6 +50,14 @@ const parseCommand = (input: string): Command => {
     return {
       command: matchBegin[1],
       id: parseInt(matchBegin[2])
+    }
+  }
+
+  const matchDelete = parseDeleteCommand(input);
+  if (matchDelete) {
+    return {
+      command: matchDelete[1],
+      id: parseInt(matchDelete[2])
     }
   }
 
@@ -81,7 +90,6 @@ const TaskItemDisplay = props => {
   const title = props.title;
   const status = props.status;
   const counter = props.counter;
-  console.log(props);
   return <>
     <div className="w-12 text-right mr-2">{counter}. </div>
     <div className="flex-1 text-left">{getStatus(status)} <span className="inline-block" dangerouslySetInnerHTML={{__html: title}}></span></div>
@@ -155,6 +163,19 @@ export const App = () => {
               setState({
                 ...state,
                 tasks: cupdated
+              });
+              break;
+            case "d":
+            case "delete":
+              const dupdated = state.tasks.reduce((tasks, t) => {
+                if (t.id !== cmd.id) {
+                  tasks.push(t);
+                }
+                return tasks;
+              }, []);
+              setState({
+                ...state,
+                tasks: dupdated
               });
               break;
             case "t":
@@ -238,8 +259,9 @@ export const App = () => {
       {state.showHelp ? <div className="w-2/6 p-5 text-sm text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
         &nbsp; <b>t</b> or <b>task</b>: Add a new task<br/>
-        &nbsp; <b>c</b> or <b>check</b>: Check to mark a task as done<br/>
         &nbsp; <b>b</b> or <b>begin</b>: Start working on a task<br/>
+        &nbsp; <b>c</b> or <b>check</b>: Check to mark a task as done<br/>
+        &nbsp; <b>d</b> or <b>delete</b>: Delete a task<br/>
         <br/>
         Example:<br/>
         &nbsp; t @work This is a new task<br/>
@@ -248,6 +270,8 @@ export const App = () => {
         &nbsp; begin 12<br/>
         &nbsp; c 7<br/>
         &nbsp; check 9<br/>
+        &nbsp; d 3<br/>
+        &nbsp; delete 3<br/>
         <br/>
         Other commands:<br/>
         &nbsp; <b>close-help</b>: Close this help text<br/>
