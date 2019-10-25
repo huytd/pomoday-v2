@@ -11,7 +11,8 @@ enum TaskStatus {
   NONE,
   DONE,
   WIP,
-  WAIT
+  WAIT,
+  FLAG
 }
 
 type Command = {
@@ -25,6 +26,7 @@ const parseTaskCommand = (str: string) => str.match(/(t(?:ask)?)\s(@(?:\S*['-]?)
 const parseCheckCommand = (str: string) => str.match(/(c(?:heck)?)\s(\d+)/);
 const parseBeginCommand = (str: string) => str.match(/(b(?:egin)?)\s(\d+)/);
 const parseDeleteCommand = (str: string) => str.match(/(d(?:elete)?)\s(\d+)/);
+const parseFlagCommand = (str: string) => str.match(/(fl(?:ag)?)\s(\d+)/);
 const parseHelpCommand = (str: string) => str.match(/(close-help|help)/);
 
 const parseCommand = (input: string): Command => {
@@ -37,27 +39,11 @@ const parseCommand = (input: string): Command => {
     } as Command;
   }
 
-  const matchCheck = parseCheckCommand(input);
-  if (matchCheck) {
+  const matchOther = parseCheckCommand(input) || parseBeginCommand(input) || parseDeleteCommand(input) || parseFlagCommand(input);
+  if (matchOther) {
     return {
-      command: matchCheck[1],
-      id: parseInt(matchCheck[2])
-    }
-  }
-
-  const matchBegin = parseBeginCommand(input);
-  if (matchBegin) {
-    return {
-      command: matchBegin[1],
-      id: parseInt(matchBegin[2])
-    }
-  }
-
-  const matchDelete = parseDeleteCommand(input);
-  if (matchDelete) {
-    return {
-      command: matchDelete[1],
-      id: parseInt(matchDelete[2])
+      command: matchOther[1],
+      id: parseInt(matchOther[2])
     }
   }
 
@@ -72,9 +58,10 @@ const parseCommand = (input: string): Command => {
 
 const getStatus = (status?: TaskStatus) => {
   switch (status) {
-    case TaskStatus.DONE: return <span className="text-green-600">✔</span>;
-    case TaskStatus.WIP: return <span className="text-orange-500">…</span>;
-    case TaskStatus.WAIT: return <span className="text-gray-500">□</span>;
+    case TaskStatus.DONE: return <span className="text-xl text-green-600">✔</span>;
+    case TaskStatus.WIP: return <span className="text-xl text-orange-500">…</span>;
+    case TaskStatus.WAIT: return <span className="text-xl text-gray-500">□</span>;
+    case TaskStatus.FLAG: return <span className="text-xl text-tomato-500">■</span>;
     default: return null;
   }
 };
@@ -92,7 +79,7 @@ const TaskItemDisplay = props => {
   const counter = props.counter;
   return <>
     <div className="w-12 text-right mr-2">{counter}. </div>
-    <div className="flex-1 text-left">{getStatus(status)} <span className="inline-block" dangerouslySetInnerHTML={{__html: title}}></span></div>
+    <div className="flex-1 text-left">{getStatus(status)} <span className={`inline-block ${status === TaskStatus.DONE ? 'text-gray-500 line-through' : ''}`} dangerouslySetInnerHTML={{__html: title}}></span></div>
   </>;
 };
 
@@ -176,6 +163,19 @@ export const App = () => {
               setState({
                 ...state,
                 tasks: dupdated
+              });
+              break;
+            case "fl":
+            case "flag":
+              const flupdated = state.tasks.map(t => {
+                if (t.id === cmd.id) {
+                  t.status = TaskStatus.FLAG;
+                }
+                return t;
+              });
+              setState({
+                ...state,
+                tasks: flupdated
               });
               break;
             case "t":
