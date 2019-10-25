@@ -370,7 +370,7 @@ export const App = () => {
         &nbsp; <b>help</b>: Show this help text<br/>
       </div> : null}
     </div>
-    <input ref={inputRef} className="bg-gray-300 p-2 text-sm" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
+    <input ref={inputRef} className="bg-gray-300 w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
   </div>
   </StateContext.Provider>;
 };
