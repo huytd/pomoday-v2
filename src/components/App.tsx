@@ -47,14 +47,14 @@ type Command = {
   id?: number
 } | null;
 
-const parseTaskCommand = (str: string) => str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/);
-const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/);
-const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(\d+)/);
-const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/);
-const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/);
-const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(\d+)/);
-const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(\d+)/);
-const parseHelpCommand = (str: string) => str.match(/^(close-help|help)/);
+const parseTaskCommand = (str: string) => str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
+const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
+const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(\d+)/i);
+const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/i);
+const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/i);
+const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(\d+)/i);
+const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(\d+)/i);
+const parseHelpCommand = (str: string) => str.match(/^(close-help|help)/i);
 
 const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);
@@ -212,7 +212,7 @@ export const App = () => {
       if (key === 13) {
         const cmd = parseCommand(inputRef.current.value);
         if (cmd) {
-          switch (cmd.command) {
+          switch (cmd.command.toLowerCase()) {
             case "b":
             case "begin":
               const bupdated = state.tasks.map(t => {
