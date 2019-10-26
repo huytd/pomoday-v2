@@ -98,11 +98,11 @@ const parseCommand = (input: string): Command => {
 
 const getStatus = (status?: TaskStatus) => {
   switch (status) {
-    case TaskStatus.DONE: return <span className="text-xl text-green-600">✔</span>;
-    case TaskStatus.WIP: return <span className="text-xl text-orange-500">*</span>;
-    case TaskStatus.WAIT: return <span className="text-xl text-gray-500">□</span>;
-    case TaskStatus.FLAG: return <span className="text-xl text-tomato-500">■</span>;
-    default: return null;
+    case TaskStatus.DONE: return `<span class="text-lg text-green-600">✔</span>`;
+    case TaskStatus.WIP: return `<span class="text-lg text-orange-500">*</span>`;
+    case TaskStatus.WAIT: return `<span class="text-lg text-gray-500">□</span>`;
+    case TaskStatus.FLAG: return `<span class="text-lg text-tomato-500">■</span>`;
+    default: return "";
   }
 };
 
@@ -145,9 +145,11 @@ const TimeSpent = (props) => {
 
   switch (status) {
     case TaskStatus.WIP:
-      return <span className="text-sm text-orange-500">{counterAsString(timeSpent)}</span>;
+      return <span className="block sm:inline-block text-sm text-orange-500">{counterAsString(timeSpent)}</span>;
+    case TaskStatus.DONE:
+      return <span className="block sm:inline-block text-sm text-gray-400">{counterAsString(timeSpent)}</span>;
     default:
-      return timeSpent ? <span className="text-sm text-gray-500">{counterAsString(timeSpent)}</span> : null;
+      return timeSpent ? <span className="block sm:inline-block text-sm text-tomato-400">{counterAsString(timeSpent)}</span> : null;
   }
 };
 
@@ -156,12 +158,11 @@ const TaskItemDisplay = props => {
   const status = props.status;
   const id = props.id;
   const timeSpent = props.timeSpent;
+  const html = getStatus(status) + ' ' + title.replace('<p>', '').replace('</p>', '');
   return <>
     <div className="w-12 text-right mr-2">{id}. </div>
     <div className="flex-1 text-left">
-      {getStatus(status)}
-      {' '}
-      <span className={`inline-block ${status === TaskStatus.DONE ? 'text-gray-500 line-through' : ''}`} dangerouslySetInnerHTML={{__html: title}}></span>
+      <span className={`task-content inline-block ${status === TaskStatus.DONE ? 'text-gray-500 line-through' : ''}`} dangerouslySetInnerHTML={{__html: html}}></span>
       {' '}
       <TimeSpent id={id} status={status} timeSpent={timeSpent} />
     </div>
@@ -363,7 +364,7 @@ export const App = () => {
   })
 
   return <StateContext.Provider value={[state, setState]}>
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col font-mono">
       <div className="p-2 bg-gray-100 text-sm"></div>
       <div className="flex-1 flex flex-col sm:flex-row">
         <div className="flex-1 p-5">

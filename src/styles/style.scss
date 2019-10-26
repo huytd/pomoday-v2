@@ -115,7 +115,7 @@
 @tailwind base;
 
 body {
-  font-family: 'Oxygen Mono', monospace;
+  font-size: 14px;
   line-height: 1.6em;
   &::-webkit-scrollbar { width: 0 !important }
   overflow: -moz-scrollbars-none;
@@ -146,5 +146,11 @@ code {
   &::after {
     content: " 」";
     opacity: 0.5;
+  }
+}
+
+.task-content {
+  p {
+    display: inline-block;
   }
 }
