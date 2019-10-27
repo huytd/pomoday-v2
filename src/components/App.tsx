@@ -106,37 +106,53 @@ const getStatus = (status?: TaskStatus) => {
   }
 };
 
+type Worklog = {
+  start: number;
+  end: number;
+};
+
 type TaskItem = {
   id: number;
   tag: string;
   title: string;
   status: TaskStatus;
+  logs: Worklog[];
 };
 
 const pad = n => n > 9 ? `${n}` : `0${n}`;
+
 const counterAsString = (counter: number): string => {
-    const hrs = ~~(counter / 3600);
-    const min = ~~((counter - (hrs * 3600)) / 60);
-    const sec = ~~(counter % 60);
-    return `${hrs > 0 ? pad(hrs) + ':' : ''}${pad(min)}:${pad(sec)}`;
+  const hrs = ~~(counter / 3600);
+  const min = ~~((counter - (hrs * 3600)) / 60);
+  const sec = ~~(counter % 60);
+  return `${hrs > 0 ? pad(hrs) + ':' : ''}${pad(min)}:${pad(sec)}`;
 };
 
 const TimeSpent = (props) => {
   const task = props.task;
-  const [state, setState] = React.useContext(StateContext);
-  const [ timeSpent, setTimeSpent ] = React.useState(0);
+
+  const totalTime = (task.logs || []).reduce((total, log: Worklog) => {
+    if (log.end) {
+      total += log.end - log.start;
+    } else {
+      total += Date.now() - log.start;
+    }
+    return total;
+  }, 0) / 1000;
+
+  const [ counter, setCounter ] = React.useState(totalTime);
 
   useInterval(() => {
-    setTimeSpent(timeSpent + 1);
+    setCounter(counter + 1);
   }, task.status === TaskStatus.WIP ? 1000 : 0);
 
   switch (task.status) {
     case TaskStatus.WIP:
-      return <span className="block sm:inline-block text-sm text-orange-500">{counterAsString(timeSpent)}</span>;
+      return <span className="block sm:inline-block text-sm text-orange-500">{counterAsString(counter)}</span>;
     case TaskStatus.DONE:
-      return <span className="block sm:inline-block text-sm text-gray-400">{counterAsString(timeSpent)}</span>;
+      return <span className="block sm:inline-block text-sm text-gray-400">{counterAsString(counter)}</span>;
     default:
-      return timeSpent ? <span className="block sm:inline-block text-sm text-tomato-400">{counterAsString(timeSpent)}</span> : null;
+      return counter ? <span className="block sm:inline-block text-sm text-tomato-400">{counterAsString(counter)}</span> : null;
   }
 };
 
@@ -180,6 +196,16 @@ const getInitialState = () => {
   };
 };
 
+const stopWorkLogging = (t: TaskItem) => {
+  if (t.logs && t.logs.length) {
+    const lastLog = t.logs[t.logs.length - 1];
+    if (lastLog.start && !lastLog.end) {
+      lastLog.end = Date.now();
+    }
+  }
+  return t;
+};
+
 export const App = () => {
   const inputRef = React.useRef(null);
   const [ state, setState ] = React.useState(getInitialState());
@@ -199,7 +225,10 @@ export const App = () => {
             case "begin":
               const bupdated = state.tasks.map(t => {
                 if (t.id === cmd.id) {
-                  t.status = TaskStatus.WIP;
+                  if (t.status !== TaskStatus.WIP) {
+                    t.status = TaskStatus.WIP;
+                    t.logs = (t.logs || []).concat({ start: Date.now(), end: 0 });
+                  }
                 }
                 return t;
               });
@@ -213,6 +242,9 @@ export const App = () => {
               const cupdated = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   t.status = t.status === TaskStatus.DONE ? TaskStatus.WAIT : TaskStatus.DONE;
+                  if (t.status === TaskStatus.DONE) {
+                    t = stopWorkLogging(t);
+                  }
                 }
                 return t;
               });
@@ -238,7 +270,8 @@ export const App = () => {
             case "flag":
               const flupdated = state.tasks.map(t => {
                 if (t.id === cmd.id) {
-                  t.status = TaskStatus.FLAG;
+                  t.status = t.status === TaskStatus.FLAG ? TaskStatus.WAIT : TaskStatus.FLAG;
+                  t = stopWorkLogging(t);
                 }
                 return t;
               });
@@ -251,7 +284,10 @@ export const App = () => {
             case "stop":
               const stupdated = state.tasks.map(t => {
                 if (t.id === cmd.id) {
-                  t.status = TaskStatus.WAIT;
+                  if (t.status === TaskStatus.WIP) {
+                    t.status = TaskStatus.WAIT;
+                    t = stopWorkLogging(t);
+                  }
                 }
                 return t;
               });
@@ -364,7 +400,7 @@ export const App = () => {
         &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a task<br/>
         &nbsp; <b>c</b> or <b>check</b>&nbsp;&nbsp; Check to mark a task as done<br/>
         &nbsp; <b>d</b> or <b>delete</b>&nbsp; Delete a task<br/>
-        &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Flag a task<br/>
+        &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Toggle a flag<br/>
         &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task<br/>
         <br/>
         Example:<br/>
@@ -381,6 +417,8 @@ export const App = () => {
         Other commands:<br/>
         &nbsp; <b>close-help</b>: Close this help text<br/>
         &nbsp; <b>help</b>: Show this help text<br/>
+        <br/>
+        Want to report an issue or a feature suggestion?<br/>Please feel free to email me at <i>hello@pomoday.com</i>
       </div> : null}
     </div>
     <input ref={inputRef} className="bg-gray-300 w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
