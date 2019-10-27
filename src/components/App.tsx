@@ -49,6 +49,7 @@ type Command = {
 
 const parseTaskCommand = (str: string) => str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
 const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
+const parseMoveCommand = (str: string) => str.match(/^(mv|move)\s(\d+)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
 const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(\d+)/i);
 const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/i);
@@ -72,6 +73,15 @@ const parseCommand = (input: string): Command => {
       command: matchEdit[1],
       id: parseInt(matchEdit[2]),
       text: matchEdit[3].trim()
+    } as Command;
+  }
+
+  const matchMove = parseMoveCommand(input);
+  if (matchMove) {
+    return {
+      command: matchMove[1],
+      id: parseInt(matchMove[2]),
+      tag: matchMove[3]
     } as Command;
   }
 
@@ -221,6 +231,19 @@ export const App = () => {
         const cmd = parseCommand(inputRef.current.value);
         if (cmd) {
           switch (cmd.command.toLowerCase()) {
+            case "mv":
+            case "move":
+              const mupdated = state.tasks.map(t => {
+                if (t.id === cmd.id) {
+                  t.tag = cmd.tag;
+                }
+                return t;
+              });
+              setState({
+                ...state,
+                tasks: mupdated
+              });
+              break;
             case "b":
             case "begin":
               const bupdated = state.tasks.map(t => {
@@ -400,6 +423,8 @@ export const App = () => {
         &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a task<br/>
         &nbsp; <b>c</b> or <b>check</b>&nbsp;&nbsp; Check to mark a task as done<br/>
         &nbsp; <b>d</b> or <b>delete</b>&nbsp; Delete a task<br/>
+        &nbsp; <b>e</b> or <b>edit</b>&nbsp; Edit a task title<br/>
+        &nbsp; <b>mv</b> or <b>move</b>&nbsp;&nbsp; Move a task to another tag<br/>
         &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Toggle a flag<br/>
         &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task<br/>
         <br/>
@@ -409,9 +434,10 @@ export const App = () => {
         &nbsp; <code>b 10</code> or <code>begin 12</code><br/>
         &nbsp; <code>c 7</code>&nbsp; or <code>check 9</code><br/>
         &nbsp; <code>d 3</code>&nbsp; or <code>delete 3</code><br/>
+        &nbsp; <code>e 1 this is a new task description</code><br/>
+        &nbsp; <code>mv 2 @new-tag</code> or <code>move 2 @uncategorized</code><br/>
         &nbsp; <code>fl 2</code> or <code>flag 2</code><br/>
         &nbsp; <code>st 1</code> or <code>stop 1</code><br/>
-        &nbsp; <code>e 1 this is a new task description</code><br/>
         &nbsp; <code>edit 1 a new task description goes here</code><br/>
         <br/>
         Other commands:<br/>
