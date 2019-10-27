@@ -111,7 +111,6 @@ type TaskItem = {
   tag: string;
   title: string;
   status: TaskStatus;
-  timeSpent?: number;
 };
 
 const pad = n => n > 9 ? `${n}` : `0${n}`;
@@ -123,27 +122,15 @@ const counterAsString = (counter: number): string => {
 };
 
 const TimeSpent = (props) => {
+  const task = props.task;
   const [state, setState] = React.useContext(StateContext);
-  const id = props.id;
-  const status = props.status;
-  const [ timeSpent, setTimeSpent ] = React.useState(props.timeSpent || 0);
+  const [ timeSpent, setTimeSpent ] = React.useState(0);
 
   useInterval(() => {
     setTimeSpent(timeSpent + 1);
-    if (timeSpent % 5 === 0) {
-      setState({
-        ...state,
-        tasks: state.tasks.map(t => {
-          if (t.id === id) {
-            t.timeSpent = timeSpent;
-          }
-          return t;
-        })
-      });
-    }
-  }, status === TaskStatus.WIP ? 1000 : 0);
+  }, task.status === TaskStatus.WIP ? 1000 : 0);
 
-  switch (status) {
+  switch (task.status) {
     case TaskStatus.WIP:
       return <span className="block sm:inline-block text-sm text-orange-500">{counterAsString(timeSpent)}</span>;
     case TaskStatus.DONE:
@@ -154,29 +141,24 @@ const TimeSpent = (props) => {
 };
 
 const TaskItemDisplay = props => {
-  const title = props.title;
-  const status = props.status;
-  const id = props.id;
-  const timeSpent = props.timeSpent;
-  const html = getStatus(status) + ' ' + title.replace('<p>', '').replace('</p>', '');
+  const task = props.task;
+  const html = getStatus(task.status) + ' ' + marked(task.title).replace('<p>', '').replace('</p>', '');
   return <>
-    <div className="w-12 text-right mr-2">{id}. </div>
+    <div className="w-12 text-right mr-2">{task.id}. </div>
     <div className="flex-1 text-left">
-      <span className={`task-content inline-block ${status === TaskStatus.DONE ? 'text-gray-500 line-through' : ''}`} dangerouslySetInnerHTML={{__html: html}}></span>
+      <span className={`task-content inline-block ${task.status === TaskStatus.DONE ? 'text-gray-500 line-through' : ''}`} dangerouslySetInnerHTML={{__html: html}}></span>
       {' '}
-      <TimeSpent id={id} status={status} timeSpent={timeSpent} />
+      <TimeSpent task={task} />
     </div>
   </>;
 };
 
 const Row = (props) => {
   const type = props.type;
-  const title = props.title || "";
-  const status = props.status || undefined;
-  const id = props.id || undefined;
-  const timeSpent = props.timeSpent || undefined;
-  return <div className={`row ${type === RowType.TAG ? 'font-bold underline' : (type === RowType.TEXT && !title.length ? 'p-3' : 'flex flex-row')}`}>
-    {type === RowType.TASK ? <TaskItemDisplay title={marked(title)} status={status} id={id} timeSpent={timeSpent} /> : ( type === RowType.TEXT ? <span className="inline-block" dangerouslySetInnerHTML={{__html: marked(title)}}></span> : title)}
+  const text = props.text || "";
+  const task = props.task || undefined;
+  return <div className={`row ${type === RowType.TAG ? 'font-bold underline' : (type === RowType.TEXT && !text.length ? 'p-3' : 'flex flex-row')}`}>
+    {type === RowType.TASK ? <TaskItemDisplay task={task} /> : ( type === RowType.TEXT ? <span className="inline-block" dangerouslySetInnerHTML={{__html: marked(text)}}></span> : text)}
   </div>;
 };
 
@@ -369,12 +351,12 @@ export const App = () => {
       <div className="flex-1 flex flex-col sm:flex-row">
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
-            <Row key={`tag-${i}`} type={RowType.TAG} title={g} />,
-              taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} status={t.status} title={t.title} id={t.id} timeSpent={t.timeSpent} />),
-                <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} title="" />
+            <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
+            taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} task={t} />),
+            <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} text="" />
           ])}
-          <Row type={RowType.TEXT} title={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
-          <Row type={RowType.TEXT} title={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
+          <Row type={RowType.TEXT} text={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
+          <Row type={RowType.TEXT} text={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
         </div>
         {state.showHelp ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
