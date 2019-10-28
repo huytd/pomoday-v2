@@ -130,12 +130,13 @@ type TaskItem = {
 };
 
 const pad = n => n > 9 ? `${n}` : `0${n}`;
-
-const counterAsString = (counter: number): string => {
-  const hrs = ~~(counter / 3600);
-  const min = ~~((counter - (hrs * 3600)) / 60);
-  const sec = ~~(counter % 60);
-  return `${hrs > 0 ? pad(hrs) + ':' : ''}${pad(min)}:${pad(sec)}`;
+const counterAsString = (counter) => {
+  const days = ~~(counter / 86400);
+  const remain = counter - days * 86400;
+  const hrs = ~~(remain / 3600);
+  const min = ~~((remain - (hrs * 3600)) / 60);
+  const sec = ~~(remain % 60);
+  return `${days > 0 ? days + ' days' : ''} ${hrs > 0 ? pad(hrs) + ':' : ''}${pad(min)}:${pad(sec)}`;
 };
 
 const TimeSpent = (props) => {
@@ -443,8 +444,6 @@ export const App = () => {
         Other commands:<br/>
         &nbsp; <b>close-help</b>: Close this help text<br/>
         &nbsp; <b>help</b>: Show this help text<br/>
-        <br/>
-        Want to report an issue or a feature suggestion?<br/>Please feel free to email me at <i>hello@pomoday.com</i>
       </div> : null}
     </div>
     <input ref={inputRef} className="bg-gray-300 w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
