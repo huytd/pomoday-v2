@@ -55,7 +55,7 @@ const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(\d+)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(\d+)/i);
-const parseHelpCommand = (str: string) => str.match(/^(close-help|help)/i);
+const parseOtherCommand = (str: string) => str.match(/^(close-help|help|today)/i);
 
 const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);
@@ -97,7 +97,7 @@ const parseCommand = (input: string): Command => {
     }
   }
 
-  const matchHelp = parseHelpCommand(input);
+  const matchHelp = parseOtherCommand(input);
   if (matchHelp) {
     return {
       command: matchHelp[1]
@@ -138,6 +138,14 @@ const counterAsString = (counter) => {
   const sec = ~~(remain % 60);
   return `${days > 0 ? days + ' days' : ''} ${hrs > 0 ? pad(hrs) + ':' : ''}${pad(min)}:${pad(sec)}`;
 };
+const counterAsLog = (counter) => {
+  const days = ~~(counter / 86400);
+  const remain = counter - days * 86400;
+  const hrs = ~~(remain / 3600);
+  const min = ~~((remain - (hrs * 3600)) / 60);
+  const sec = ~~(remain % 60);
+  return `${days > 0 ? days + ' days ' : ''}${hrs > 0 ? pad(hrs) + ' hrs ' : ''}${min > 0 ? pad(min) + ' min ' : '' }${pad(sec) + ' sec '}`;
+};
 
 const TimeSpent = (props) => {
   const task = props.task;
@@ -167,9 +175,11 @@ const TimeSpent = (props) => {
   }
 };
 
+const taskAsString = t => marked(t).replace('<p>', '').replace('</p>', '');
+
 const TaskItemDisplay = props => {
   const task = props.task;
-  const html = getStatus(task.status) + ' ' + marked(task.title).replace('<p>', '').replace('</p>', '');
+  const html = getStatus(task.status) + ' ' + taskAsString(task.title);
   return <>
     <div className="w-12 text-right mr-2">{task.id}. </div>
     <div className="flex-1 text-left">
@@ -189,6 +199,42 @@ const Row = (props) => {
   </div>;
 };
 
+const isSameDay = (a, b) => Math.abs(a - b) <= 86400000;
+
+const Today = props => {
+  const [ state ] = React.useContext(StateContext);
+  const now = Date.now();
+  const today = state.tasks.reduce((tasks, t) => {
+    if (t.logs) {
+      const works = t.logs.reduce((logs, l, id) => {
+        if (isSameDay(now, l.start)) {
+          logs.push({
+            task: t.title,
+            start: l.start,
+            end: l.end,
+            done: l.end && id === t.logs.length - 1 && t.status === TaskStatus.DONE || false
+          });
+        }
+        return logs;
+      }, []);
+      tasks = tasks.concat(works);
+    }
+    return tasks;
+  }, []);
+  today.sort((a, b) => a.start - b.start);
+
+  return <>
+    <div className="font-bold text-black mb-4">Today Activities</div>
+    {today.map((t, i) => <div className="text-black mb-2 flex flex-row" key={i}>
+    <div className="w-8 text-right mr-2">{i + 1}.</div>
+      <div className="flex-1">
+        <div dangerouslySetInnerHTML={{ __html: taskAsString(t.task) }}></div>
+        <div className="text-gray-500">{ (new Date(t.start)).toLocaleTimeString() } - { !t.end ? <span className="text-orange-500">ON GOING</span> : <span>{counterAsLog((t.end - t.start) / 1000)}</span> } {t.done ? [<span>- </span>, <span className="text-green-600">FINISHED</span>] : null}</div>
+      </div>
+    </div>)}
+  </>;
+};
+
 const getInitialState = () => {
   if (window.localStorage) {
     const saved = window.localStorage.getItem('pomoday');
@@ -203,7 +249,8 @@ const getInitialState = () => {
   }
   return {
     tasks: [] as TaskItem[],
-    showHelp: true
+    showHelp: true,
+    showToday: false
   };
 };
 
@@ -371,6 +418,12 @@ export const App = () => {
                 showHelp: false
               });
               break;
+            case "today":
+              setState({
+                ...state,
+                showToday: !state.showToday
+              });
+              break;
           }
         }
         inputRef.current.value = "";
@@ -418,6 +471,9 @@ export const App = () => {
           <Row type={RowType.TEXT} text={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
           <Row type={RowType.TEXT} text={`<span class="text-green-500">${summary.done}</span> done · <span class="text-orange-500">${summary.wip}</span> in-progress · <span class="text-purple-500">${summary.pending}</span> waiting`} />
         </div>
+        {state.showToday ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l">
+          <Today />
+        </div> : null}
         {state.showHelp ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
         &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task<br/>
