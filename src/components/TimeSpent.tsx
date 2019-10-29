@@ -19,9 +19,9 @@ export const TimeSpent = (props) => {
   }, task.status === TaskStatus.WIP ? 1000 : 0);
   switch (task.status) {
     case TaskStatus.WIP:
-      return <span className="block sm:inline-block text-sm text-orange-500">{counterAsString(counter)}</span>;
+      return <span className="block sm:inline-block text-sm text-orange-500 dark:text-orange-300">{counterAsString(counter)}</span>;
     case TaskStatus.DONE:
-      return <span className="block sm:inline-block text-sm text-gray-400">{counterAsString(counter)}</span>;
+      return <span className="block sm:inline-block text-sm text-gray-400 dark:text-gray-600">{counterAsString(counter)}</span>;
     default:
       return counter ? <span className="block sm:inline-block text-sm text-tomato-400">{counterAsString(counter)}</span> : null;
   }
