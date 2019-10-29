@@ -74,4 +74,5 @@ export const counterAsLog = (counter) => {
 
 export const taskAsString = t => marked(t).replace('<p>', '').replace('</p>', '');
 
-export const isSameDay = (a, b) => Math.abs(a - b) <= 86400000;
+const equalDate = (a, b) => (new Date(a)).getDate() === (new Date(b)).getDate();
+export const isSameDay = (a, b) => equalDate(a, b) && Math.abs(a - b) <= 86400000;
