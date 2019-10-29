@@ -207,7 +207,7 @@ const Today = props => {
   const today = state.tasks.reduce((tasks, t) => {
     if (t.logs) {
       const works = t.logs.reduce((logs, l, id) => {
-        if (isSameDay(now, l.start)) {
+        if (l.start && isSameDay(now, l.start)) {
           logs.push({
             task: t.title,
             start: l.start,
@@ -263,6 +263,11 @@ const stopWorkLogging = (t: TaskItem) => {
     if (lastLog.start && !lastLog.end) {
       lastLog.end = Date.now();
     }
+  } else {
+    t.logs = [ {
+      start: Date.now(),
+      end: Date.now()
+    } as Worklog ];
   }
   return t;
 };
