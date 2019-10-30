@@ -66,3 +66,11 @@ npm run dev
 ## License
 
 Pomoday is published under BSD 3-Clause license.
+
+## Backers and Sponsors
+
+I would like to give a special thanks to all of the backers who sponsored this project since day-zero.
+
+| <a href="https://github.com/ledongthuc"><img src="https://avatars1.githubusercontent.com/u/1828895?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/trungfinity"><img src="https://avatars1.githubusercontent.com/u/6896444?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/mquy"><img src="https://avatars0.githubusercontent.com/u/1636026?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/quannt"><img src="https://avatars1.githubusercontent.com/u/3423859?s=460&v=4" width="48" height="48"/></a> |
+|:--:|:--:|:--:|:--:|
+|[**ledongthuc**](https://github.com/ledongthuc)|[**trungfinity**](https://github.com/trungfinity)|[**mquy**](https://github.com/mquy)|[**quannt**](https://github.com/quannt)|
