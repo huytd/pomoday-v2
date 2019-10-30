@@ -241,7 +241,7 @@ export const App = () => {
 
   return <StateContext.Provider value={[state, setState]}>
     <div className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${state.darkMode ? 'dark' : 'light'}`}>
-      <div className="flex-1 flex flex-col sm:flex-row">
+      <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background">
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
             <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
