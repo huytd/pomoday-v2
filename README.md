@@ -59,6 +59,10 @@ To run it locally during development, use:
 npm run dev
 ```
 
+## Similar Projects
+
+- [taskbook](https://github.com/klaussinani/taskbook): This is an awesome task management application that actually works, and works very well for everyone who likes to live in a command line. Pomoday was also heavily inspired by Taskbook, as you can see from the UI and the keyboard-only command interfaces.
+
 ## License
 
 Pomoday is published under BSD 3-Clause license.
