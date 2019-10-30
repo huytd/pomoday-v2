@@ -68,3 +68,17 @@ code {
     display: inline-block;
   }
 }
+
+@keyframes shadow-pulse
+{
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 15px rgba(0, 0, 0, 0);
+  }
+}
+
+.pulse {
+  animation: shadow-pulse 1s infinite;
+}

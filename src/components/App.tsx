@@ -22,7 +22,8 @@ const getInitialState = () => {
     tasks: [] as TaskItem[],
     showHelp: true,
     showToday: false,
-    darkMode: false
+    darkMode: false,
+    sawTheInput: false
   };
 };
 
@@ -37,6 +38,12 @@ export const App = () => {
   const onKeyPress = e => {
     if (inputRef && inputRef.current) {
       const key = e.which || e.keyCode;
+      if (!state.sawTheInput) {
+        setState({
+          ...state,
+          sawTheInput: true
+        });
+      }
       if (key === 13) {
         const cmd = parseCommand(inputRef.current.value);
         if (cmd) {
@@ -233,7 +240,7 @@ export const App = () => {
   })
 
   return <StateContext.Provider value={[state, setState]}>
-    <div className={`w-full h-full flex flex-col font-mono text-foreground bg-background ${state.darkMode ? 'dark' : 'light'}`}>
+    <div className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${state.darkMode ? 'dark' : 'light'}`}>
       <div className="flex-1 flex flex-col sm:flex-row">
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
@@ -278,7 +285,8 @@ export const App = () => {
         &nbsp; <b>help</b>: Show this help text<br/>
       </div> : null}
     </div>
-    <input ref={inputRef} className="bg-control w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
+    { state.sawTheInput ? null : <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div> }
+    <input ref={inputRef} className={`bg-control w-full p-2 px-3 text-sm fixed bottom-0 left-0`} tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
   </div>
   </StateContext.Provider>;
 };
