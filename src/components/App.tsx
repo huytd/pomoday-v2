@@ -21,7 +21,8 @@ const getInitialState = () => {
   return {
     tasks: [] as TaskItem[],
     showHelp: true,
-    showToday: false
+    showToday: false,
+    darkMode: false
   };
 };
 
@@ -185,6 +186,18 @@ export const App = () => {
                 showToday: !state.showToday
               });
               break;
+            case "dark":
+              setState({
+                ...state,
+                darkMode: true
+              });
+              break;
+            case "light":
+              setState({
+                ...state,
+                darkMode: false
+              });
+              break;
           }
         }
         inputRef.current.value = "";
@@ -220,7 +233,7 @@ export const App = () => {
   })
 
   return <StateContext.Provider value={[state, setState]}>
-    <div className="w-full h-full flex flex-col font-mono text-foreground bg-background light">
+    <div className={`w-full h-full flex flex-col font-mono text-foreground bg-background ${state.darkMode ? 'dark' : 'light'}`}>
       <div className="flex-1 flex flex-col sm:flex-row">
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
@@ -245,6 +258,8 @@ export const App = () => {
         &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Toggle a flag<br/>
         &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task<br/>
         &nbsp; <b>today</b>: Show today activities<br/>
+        &nbsp; <b>dark</b>: Enable dark mode<br/>
+        &nbsp; <b>light</b>: Enable light mode<br/>
         <br/>
         Example:<br/>
         &nbsp; <code>t @work This is a new task</code><br/>

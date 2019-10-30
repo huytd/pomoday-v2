@@ -13,7 +13,7 @@ const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(\d+)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(\d+)/i);
-const parseOtherCommand = (str: string) => str.match(/^(close-help|help|today)/i);
+const parseOtherCommand = (str: string) => str.match(/^(close-help|help|today|dark|light)/i);
 
 export const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);
