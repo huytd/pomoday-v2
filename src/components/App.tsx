@@ -220,8 +220,7 @@ export const App = () => {
   })
 
   return <StateContext.Provider value={[state, setState]}>
-    <div className="w-full h-full flex flex-col font-mono dark:bg-gray-800 dark:text-white">
-      <div className="p-2 bg-gray-100 dark:bg-gray-900 dark:opacity-25 text-sm"></div>
+    <div className="w-full h-full flex flex-col font-mono text-foreground bg-background light">
       <div className="flex-1 flex flex-col sm:flex-row">
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
@@ -230,12 +229,12 @@ export const App = () => {
             <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} text="" />
           ])}
           <Row type={RowType.TEXT} text={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />
-          <Row type={RowType.TEXT} text={`<span class="text-green-600 dark:text-lime-400">${summary.done}</span> done · <span class="text-orange-500 dark:text-orange-300">${summary.wip}</span> in-progress · <span class="text-purple-500 dark:text-indigo-200">${summary.pending}</span> waiting`} />
+          <Row type={RowType.TEXT} text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`} />
         </div>
-        {state.showToday ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l dark:border-gray-900">
+        {state.showToday ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
           <Today />
         </div> : null}
-        {state.showHelp ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-gray-700 sm:text-gray-500 text-left border-l dark:border-gray-900" style={{transition: 'all 0.5s'}}>
+        {state.showHelp ? <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control" style={{transition: 'all 0.5s'}}>
         Type the command in the input box below, starting with:<br/>
         &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task<br/>
         &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a task<br/>
@@ -264,7 +263,7 @@ export const App = () => {
         &nbsp; <b>help</b>: Show this help text<br/>
       </div> : null}
     </div>
-    <input ref={inputRef} className="bg-gray-300 dark:bg-gray-900 dark:text-white w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
+    <input ref={inputRef} className="bg-control w-full p-2 text-sm fixed bottom-0 left-0" tabIndex={0} autoFocus={true} onKeyPress={onKeyPress} placeholder="enter anything here..." />
   </div>
   </StateContext.Provider>;
 };

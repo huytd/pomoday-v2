@@ -8,7 +8,7 @@ export const TaskItemDisplay = props => {
   return <>
     <div className="w-12 text-right mr-2">{task.id}. </div>
     <div className="flex-1 text-left">
-      <span className={`task-content inline-block ${task.status === TaskStatus.DONE ? 'text-gray-500 dark:text-gray-600 line-through' : ''}`} dangerouslySetInnerHTML={{__html: html}}></span>
+      <span className={`task-content inline-block ${task.status === TaskStatus.DONE ? 'text-stall-light line-through' : ''}`} dangerouslySetInnerHTML={{__html: html}}></span>
       {' '}
       <TimeSpent task={task} />
     </div>
