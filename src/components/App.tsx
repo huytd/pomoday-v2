@@ -245,7 +245,7 @@ export const App = () => {
         <div className="flex-1 p-5">
           {Object.keys(taskGroups).map((g, i) => [
             <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
-            taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}`} type={RowType.TASK} task={t} />),
+            taskGroups[g].map((t, j) => <Row key={`tag-${i}-inner-task-${j}-${t.id}`} type={RowType.TASK} task={t} />),
             <Row key={`tag-${i}-separator-${i}`} type={RowType.TEXT} text="" />
           ])}
           <Row type={RowType.TEXT} text={`${(summary.done/state.tasks.length * 100 || 0).toFixed(0)}% of all tasks complete.`} />

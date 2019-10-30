@@ -16,10 +16,6 @@ export const TimeSpent = (props) => {
 
   const [counter, setCounter] = React.useState(totalTime);
 
-  if (~~totalTime !== counter) {
-    setCounter(~~totalTime);
-  }
-
   useInterval(() => {
     setCounter(counter + 1);
   }, task.status === TaskStatus.WIP ? 1000 : 0);
