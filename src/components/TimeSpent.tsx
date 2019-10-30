@@ -13,10 +13,17 @@ export const TimeSpent = (props) => {
     }
     return total;
   }, 0) / 1000;
+
   const [counter, setCounter] = React.useState(totalTime);
+
+  if (~~totalTime !== counter) {
+    setCounter(~~totalTime);
+  }
+
   useInterval(() => {
     setCounter(counter + 1);
   }, task.status === TaskStatus.WIP ? 1000 : 0);
+
   switch (task.status) {
     case TaskStatus.WIP:
       return <span className="block sm:inline-block text-sm text-orange">{counterAsString(counter)}</span>;
