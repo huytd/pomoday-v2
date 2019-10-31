@@ -1,4 +1,9 @@
 import marked from 'marked';
+import Queue from './queue';
+
+const MAX_COMMAND_QUEUE_LENGTH = 10;
+
+export const createHistoryQueue = () => new Queue<string>(MAX_COMMAND_QUEUE_LENGTH);
 
 export enum RowType {
   TAG,

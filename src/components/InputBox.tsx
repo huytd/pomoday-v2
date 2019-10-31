@@ -1,7 +1,8 @@
 import * as React from 'react';
 import {StateContext} from './App';
 import {parseCommand} from '../helpers/commands';
-import { TaskStatus, stopWorkLogging, TaskItem } from '../helpers/utils';
+import { TaskStatus, stopWorkLogging, TaskItem, createHistoryQueue } from '../helpers/utils';
+import { updateElementAccess } from 'typescript';
 
 export const InputBox = props => {
     const inputRef = React.useRef(null);
@@ -18,24 +19,21 @@ export const InputBox = props => {
       }
       if (key === 13) {
         const cmd = parseCommand(inputRef.current.value);
+        let tasksToUpdate = null;
         if (cmd) {
           switch (cmd.command.toLowerCase()) {
             case "mv":
             case "move":
-              const mupdated = state.tasks.map(t => {
+              tasksToUpdate = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   t.tag = cmd.tag;
                 }
                 return t;
               });
-              setState({
-                ...state,
-                tasks: mupdated
-              });
               break;
             case "b":
             case "begin":
-              const bupdated = state.tasks.map(t => {
+              tasksToUpdate = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   if (t.status !== TaskStatus.WIP) {
                     t.status = TaskStatus.WIP;
@@ -44,14 +42,10 @@ export const InputBox = props => {
                 }
                 return t;
               });
-              setState({
-                ...state,
-                tasks: bupdated
-              });
               break;
             case "c":
             case "check":
-              const cupdated = state.tasks.map(t => {
+              tasksToUpdate = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   t.status = t.status === TaskStatus.DONE ? TaskStatus.WAIT : TaskStatus.DONE;
                   if (t.status === TaskStatus.DONE) {
@@ -60,41 +54,29 @@ export const InputBox = props => {
                 }
                 return t;
               });
-              setState({
-                ...state,
-                tasks: cupdated
-              });
               break;
             case "d":
             case "delete":
-              const dupdated = state.tasks.reduce((tasks, t) => {
+              tasksToUpdate = state.tasks.reduce((tasks, t) => {
                 if (t.id !== cmd.id) {
                   tasks.push(t);
                 }
                 return tasks;
               }, []);
-              setState({
-                ...state,
-                tasks: dupdated
-              });
               break;
             case "fl":
             case "flag":
-              const flupdated = state.tasks.map(t => {
+              tasksToUpdate = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   t.status = t.status === TaskStatus.FLAG ? TaskStatus.WAIT : TaskStatus.FLAG;
                   t = stopWorkLogging(t);
                 }
                 return t;
               });
-              setState({
-                ...state,
-                tasks: flupdated
-              });
               break;
             case "st":
             case "stop":
-              const stupdated = state.tasks.map(t => {
+              tasksToUpdate = state.tasks.map(t => {
                 if (t.id === cmd.id) {
                   if (t.status === TaskStatus.WIP) {
                     t.status = TaskStatus.WAIT;
@@ -102,10 +84,6 @@ export const InputBox = props => {
                   }
                 }
                 return t;
-              });
-              setState({
-                ...state,
-                tasks: stupdated
               });
               break;
             case "t":
@@ -119,15 +97,12 @@ export const InputBox = props => {
                   }
                   return maxId;
                 }, 0);
-                setState({
-                  ...state,
-                  tasks: state.tasks.concat({
+                tasksToUpdate = state.tasks.concat({
                     id: nextId + 1,
                     tag: tag,
                     title: task,
                     status: TaskStatus.WAIT
-                  } as TaskItem)
-                })
+                } as TaskItem);
               }
               break;
             case "e":
@@ -135,14 +110,11 @@ export const InputBox = props => {
               const id = cmd.id;
               const task = cmd.text;
               if (task && task.length) {
-                setState({
-                  ...state,
-                  tasks: state.tasks.map(t => {
+                tasksToUpdate = state.tasks.map(t => {
                     if (t.id === id) {
-                      t.title = task;
+                        t.title = task;
                     }
                     return t;
-                  })
                 });
               }
             }
@@ -179,6 +151,21 @@ export const InputBox = props => {
               break;
           }
         }
+        let updateCandidate = {
+            ...state,
+        };
+        if (tasksToUpdate) {
+            updateCandidate = {
+                ...updateCandidate,
+                tasks: tasksToUpdate
+            };
+        }
+        // TODO: History when deserialized now become an object without any interface, not a Queue
+        const history = state.history || createHistoryQueue();
+        setState({
+            ...updateCandidate,
+            history: history.push(inputRef.current.value)
+        });
         inputRef.current.value = "";
       }
     }
