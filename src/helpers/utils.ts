@@ -1,4 +1,16 @@
 import marked from 'marked';
+import Queue from './queue';
+import { serialize } from 'uri-js';
+
+export const MAX_COMMAND_QUEUE_LENGTH = 10;
+
+export const getHistoryQueue = (serialized?: any) => {
+  let ret = new Queue<string>(MAX_COMMAND_QUEUE_LENGTH);
+  if (serialized) {
+    ret = ret.deserialize(serialized);
+  }
+  return ret;
+};
 
 export enum RowType {
   TAG,
