@@ -56,6 +56,9 @@ export const InputBox = props => {
         if (key === KEY_RETURN) {
           const cmd = parseCommand(inputRef.current.value);
           let tasksToUpdate = null;
+          let updateCandidate = {
+              ...state,
+            };
           if (cmd) {
             switch (cmd.command.toLowerCase()) {
               case "mv":
@@ -156,47 +159,43 @@ export const InputBox = props => {
               }
                 break;
               case "help":
-                setState({
-                  ...state,
+                updateCandidate = {
+                  ...updateCandidate,
                   showHelp: true
-                });
+                };
                 break;
               case "close-help":
-                setState({
-                  ...state,
+                updateCandidate = {
+                  ...updateCandidate,
                   showHelp: false
-                });
+                };
                 break;
               case "today":
-                setState({
-                  ...state,
+                updateCandidate = {
+                  ...updateCandidate,
                   showToday: !state.showToday
-                });
+                };
                 break;
               case "dark":
-                setState({
-                  ...state,
+                updateCandidate = {
+                  ...updateCandidate,
                   darkMode: true
-                });
+                };
                 break;
               case "light":
-                setState({
-                  ...state,
+                updateCandidate = {
+                  ...updateCandidate,
                   darkMode: false
-                });
+                };
                 break;
             }
           }
-          let updateCandidate = {
-            ...state,
-          };
           if (tasksToUpdate) {
             updateCandidate = {
               ...updateCandidate,
               tasks: tasksToUpdate
             };
           }
-          // TODO: History when deserialized now become an object without any interface, not a Queue
           setState({
             ...updateCandidate,
             history: history.push(inputRef.current.value)
