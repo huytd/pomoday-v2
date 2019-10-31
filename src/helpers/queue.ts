@@ -6,6 +6,12 @@ export default class Queue<T> {
     this.length = length;
   }
 
+  deserialize(serialized: any): Queue<T> {
+    this.store = serialized.store;
+    this.length = serialized.length;
+    return this;
+  }
+
   push(item: T) {
     this.store = [item].concat(this.store.slice(0, this.length - 1));
     return this;

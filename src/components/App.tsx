@@ -1,7 +1,7 @@
 import * as React from 'react';
 import {Row} from './Row';
 import {Today} from './Today';
-import {TaskItem, TaskStatus, RowType, createHistoryQueue} from '../helpers/utils';
+import {TaskItem, TaskStatus, RowType, getHistoryQueue} from '../helpers/utils';
 import { InputBox } from './InputBox';
 
 export const StateContext = React.createContext<any>(null);
@@ -24,7 +24,7 @@ const getInitialState = () => {
     showToday: false,
     darkMode: false,
     sawTheInput: false,
-    history: createHistoryQueue()
+    history: getHistoryQueue()
   };
 };
 
