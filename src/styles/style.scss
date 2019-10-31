@@ -8,7 +8,7 @@
     --green: #4caf50;
     --orange: #ff9800;
     --control: #e2e8f0;
-    --background: #FAFAFA;
+    --background: #fafafa;
     --foreground: #222222;
     --foreground-dim: #a0aec0;
     --foreground-light: #cbd5e0;
@@ -34,7 +34,9 @@
 body {
   font-size: 14px;
   line-height: 1.6em;
-  &::-webkit-scrollbar { width: 0 !important }
+  &::-webkit-scrollbar {
+    width: 0 !important;
+  }
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
 }
@@ -54,11 +56,11 @@ input:focus {
 
 code {
   &::before {
-    content: "「 ";
+    content: '「 ';
     opacity: 0.5;
   }
   &::after {
-    content: " 」";
+    content: ' 」';
     opacity: 0.5;
   }
 }
@@ -69,8 +71,7 @@ code {
   }
 }
 
-@keyframes shadow-pulse
-{
+@keyframes shadow-pulse {
   0% {
     box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
   }

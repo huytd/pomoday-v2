@@ -1,26 +1,34 @@
 <html>
-    <head>
-      <!-- Global site tag (gtag.js) - Google Analytics -->
-      <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150940605-1"></script>
-      <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
+  <head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-150940605-1"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-        gtag('config', 'UA-150940605-1', {
-          'linker': {
-            'domains': ['pomoday.app', 'pomoday.com']
-          }
-        });
-      </script>
-      <meta charset="utf-8"/>
-      <meta name="apple-mobile-web-app-capable" content="yes"/>
-      <meta name="mobile-web-app-capable" content="yes">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
-      <title>Pomoday</title>
-    </head>
-    <body>
-        <div id="root"></div>
-        <script src="./index.ts"></script>
-    </body>
+      gtag('config', 'UA-150940605-1', {
+        linker: {
+          domains: ['pomoday.app', 'pomoday.com'],
+        },
+      });
+    </script>
+    <meta charset="utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, user-scalable=no"
+    />
+    <title>Pomoday</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="./index.ts"></script>
+  </body>
 </html>

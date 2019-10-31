@@ -1,7 +1,7 @@
 {
-  "name": "your-project-name-here",
-  "version": "1.0.0",
-  "main": "index.js",
+  "name": "pomoday",
+  "version": "2.0.0",
+  "main": "src/index.ts",
   "author": "Huy Tran <kingbazoka@gmail.com>",
   "license": "BSD-3-Clause",
   "scripts": {
@@ -17,5 +17,25 @@
     "sass": "^1.23.0",
     "tailwindcss": "^1.1.2",
     "typescript": "^3.6.3"
+  },
+  "devDependencies": {
+    "husky": "3.0.9",
+    "lint-staged": "9.4.2",
+    "prettier": "1.18.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": [
+      "prettier --write",
+      "git add"
+    ],
+    "**/src/**/*.{json,md,scss}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
