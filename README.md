@@ -25,8 +25,8 @@
 
 Pomoday is an easy to use, yet powerful and flexible web-based task management software that you can use with just a keyboard.
 
-It's flexible and don't tie with any productivity methodologies, that mean, you
-can customize and use it in whatever way you want, try implement yourself a GTD or Kanban or
+It's flexible and doesn't tie with any productivity methodologies, that means, you
+can customize and use it in anyway you want, try implementing yourself a GTD or Kanban or
 Pomodoro workflow with it.
 
 ## Features
@@ -40,7 +40,7 @@ Pomodoro workflow with it.
 
 ## Usage and Installation
 
-There are two way to use Pomoday:
+There are two ways to use Pomoday:
 
 ### Online version
 
@@ -66,7 +66,7 @@ To host Pomoday locally or on your own server:
   ```
 4. Now you can deploy the `dist` folder anywhere, just like a static web page
 
-It's recomended to deploy it to [https://now.sh](now.sh), because it's easy:
+It's recomended to deploy it to [now.sh](https://now.sh), because it's easy:
 
 ```
 $ cd dist
