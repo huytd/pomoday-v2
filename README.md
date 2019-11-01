@@ -1,4 +1,25 @@
-# Pomoday - Be productive without leaving your keyboard
+<center>
+<img src="./logo.png" width="300px;" />
+<div style="font-weight: bold; font-family: monospace; padding-bottom: 15px;">Be productive without leaving your keyboard</div>
+<img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/>
+<img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/>
+</center>
+
+---
+
+- [What is Pomoday?](#what-is-pomoday)
+- [Features](#features)
+- [Usage and Installation](#usage-and-installation)
+    - [Online version](#online-version)
+    - [Self-hosted](#self-hosted-version)
+- [Development](#development)
+- [Similar Projects](#similar-projects)
+- [Backers and Sponsors](#backers-and-sponsors)
+- [License](#license)
+
+---
+
+## What is Pomoday?
 
 ![](https://www.pomoday.com/screenshot.png)
 
@@ -17,14 +38,15 @@ Pomodoro workflow with it.
 5. Dark mode
 6. (A lot coming...)
 
-## How to use
+## Usage and Installation
 
 There are two way to use Pomoday:
 
-1. Use it online at https://pomoday.app
-2. Host it yourself (see instruction below)
+### Online version
 
-## Host it yourself
+You can use the online version at https://pomoday.app
+
+### Self-hosted version
 
 Please make sure you have `node` and `npm` installed on your machine.
 
@@ -63,10 +85,6 @@ npm run dev
 
 - [taskbook](https://github.com/klaussinani/taskbook): This is an awesome task management application that actually works, and works very well for everyone who likes to live in a command line. Pomoday was also heavily inspired by Taskbook, as you can see from the UI and the keyboard-only command interfaces.
 
-## License
-
-Pomoday is published under BSD 3-Clause license.
-
 ## Backers and Sponsors
 
 I would like to give a special thanks to all of the backers who sponsored this project since day-zero.
@@ -74,3 +92,8 @@ I would like to give a special thanks to all of the backers who sponsored this p
 | <a href="https://github.com/ledongthuc"><img src="https://avatars1.githubusercontent.com/u/1828895?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/trungfinity"><img src="https://avatars1.githubusercontent.com/u/6896444?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/mquy"><img src="https://avatars0.githubusercontent.com/u/1636026?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/quannt"><img src="https://avatars1.githubusercontent.com/u/3423859?s=460&v=4" width="48" height="48"/></a> |
 |:--:|:--:|:--:|:--:|
 |[**ledongthuc**](https://github.com/ledongthuc)|[**trungfinity**](https://github.com/trungfinity)|[**mquy**](https://github.com/mquy)|[**quannt**](https://github.com/quannt)|
+
+## License
+
+Pomoday is published under BSD 3-Clause license.
+
