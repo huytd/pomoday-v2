@@ -1,9 +1,7 @@
-<center>
-<img src="./logo.png" width="300px;" />
-<div style="font-weight: bold; font-family: monospace; padding-bottom: 15px;">Be productive without leaving your keyboard</div>
-<img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/>
-</center>
+<p style="text-align: center;"><img src="./logo.png" width="300px;" /></p>
+<p style="font-weight: bold; text-align: center; font-family: monospace; padding-bottom: 15px;">Be productive without leaving your keyboard</p>
+
+<p style="text-align: center;"><img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/> <img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/></p>
 
 ---
 
