@@ -92,11 +92,13 @@ export const InputBox = props => {
           ...state,
         };
         if (cmd) {
+          const ids = cmd.id ? cmd.id.match(/\d+/g).map(s => parseInt(s)) : null;
           switch (cmd.command.toLowerCase()) {
             case 'mv':
             case 'move':
+              const id = ids[0];
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
+                if (t.id === id) {
                   t.tag = cmd.tag;
                 }
                 return t;
@@ -105,7 +107,7 @@ export const InputBox = props => {
             case 'b':
             case 'begin':
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
+                if (ids.indexOf(t.id) !== -1) {
                   if (t.status !== TaskStatus.WIP) {
                     t.status = TaskStatus.WIP;
                     t.logs = (t.logs || []).concat({
@@ -120,7 +122,7 @@ export const InputBox = props => {
             case 'c':
             case 'check':
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
+                if (ids.indexOf(t.id) !== -1) {
                   t.status =
                     t.status === TaskStatus.DONE
                       ? TaskStatus.WAIT
@@ -135,31 +137,7 @@ export const InputBox = props => {
             case 'd':
             case 'delete':
               tasksToUpdate = state.tasks.reduce((tasks, t) => {
-                if (t.id !== cmd.id) {
-                  tasks.push(t);
-                }
-                return t;
-              });
-              break;
-            case 'c':
-            case 'check':
-              tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
-                  t.status =
-                    t.status === TaskStatus.DONE
-                      ? TaskStatus.WAIT
-                      : TaskStatus.DONE;
-                  if (t.status === TaskStatus.DONE) {
-                    t = stopWorkLogging(t);
-                  }
-                }
-                return t;
-              });
-              break;
-            case 'd':
-            case 'delete':
-              tasksToUpdate = state.tasks.reduce((tasks, t) => {
-                if (t.id !== cmd.id) {
+                if (ids.indexOf(t.id) === -1) {
                   tasks.push(t);
                 }
                 return tasks;
@@ -168,7 +146,7 @@ export const InputBox = props => {
             case 'fl':
             case 'flag':
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
+                if (ids.indexOf(t.id) !== -1) {
                   t.status =
                     t.status === TaskStatus.FLAG
                       ? TaskStatus.WAIT
@@ -181,7 +159,7 @@ export const InputBox = props => {
             case 'st':
             case 'stop':
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === cmd.id) {
+                if (ids.indexOf(t.id) !== -1) {
                   if (t.status === TaskStatus.WIP) {
                     t.status = TaskStatus.WAIT;
                     t = stopWorkLogging(t);
@@ -215,7 +193,7 @@ export const InputBox = props => {
             case 'e':
             case 'edit':
               {
-                const id = cmd.id;
+                const id = ids[0];
                 const task = cmd.text;
                 if (task && task.length) {
                   tasksToUpdate = state.tasks.map(t => {
