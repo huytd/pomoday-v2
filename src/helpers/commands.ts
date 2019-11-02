@@ -15,6 +15,8 @@ const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
+const parseTagRenameCommand = (str: string) =>
+  str.match(/^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
 const parseOtherCommand = (str: string) =>
   str.match(/^(close-help|help|today|dark|light)/i);
 
@@ -43,6 +45,14 @@ export const parseCommand = (input: string): Command => {
       command: matchMove[1],
       id: matchMove[2],
       tag: matchMove[3],
+    } as Command;
+  }
+
+  const matchTagRe = parseTagRenameCommand(input);
+  if (matchTagRe) {
+    return {
+      command: matchTagRe[1],
+      tag: matchTagRe[2] + ' ' + matchTagRe[3],
     } as Command;
   }
 

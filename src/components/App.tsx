@@ -134,6 +134,8 @@ export const App = () => {
               <br />
               &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task
               <br />
+              &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a @tag-b: Rename a tag
+              <br />
               &nbsp; <b>today</b>: Show today activities
               <br />
               &nbsp; <b>dark</b>: Enable dark mode
@@ -163,6 +165,8 @@ export const App = () => {
               &nbsp; <code>st 1</code> or <code>stop 1</code>
               <br />
               &nbsp; <code>edit 1 a new task description goes here</code>
+              <br />
+              &nbsp; <code>tr @work @play</code>
               <br />
               <br />
               Other commands:
