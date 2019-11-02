@@ -23,6 +23,10 @@ export default class Queue<T> {
     }
     return undefined;
   }
+
+  match(comparator: (item: T) => boolean): T[] {
+    return this.store.filter(comparator);
+  }
 }
 
 // TEST, YES, I DO WRITE TESTED CODE!!!
@@ -34,3 +38,12 @@ export default class Queue<T> {
 //   console.log(queue.peek(i));
 // }
 // console.log(queue);
+
+// Test the matcher
+// const queue = new Queue<string>(5);
+// queue.push("foo");
+// queue.push("bar");
+// queue.push("foobeep");
+// queue.push("barboop");
+// const matched = queue.match((item: string) => item.indexOf("foo") !== -1);
+// console.log(matched);

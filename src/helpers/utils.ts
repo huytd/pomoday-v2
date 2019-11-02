@@ -88,3 +88,25 @@ export const taskAsString = t => marked(t).replace('<p>', '').replace('</p>', ''
 
 const equalDate = (a, b) => (new Date(a)).getDate() === (new Date(b)).getDate();
 export const isSameDay = (a, b) => equalDate(a, b) && Math.abs(a - b) <= 86400000;
+
+export const findCommon = (items: string[]): string => {
+  if (items && items.length) {
+    const minLength = items.reduce((l, i) => (l < i.length) ? i.length : l, items[0].length);
+    let len = 0;
+    for (len = 0; len < minLength; len++) {
+      const base = items[0].charAt(len);
+      let allMatched = true;
+      for (let j = 1; j < items.length; j++) {
+        if (items[j].charAt(len) !== base) {
+          allMatched = false;
+          break;
+        }
+      }
+      if (!allMatched) {
+        break;
+      }
+    }
+    return items[0].substr(0, len);
+  }
+  return "";
+};
