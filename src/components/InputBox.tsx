@@ -204,6 +204,19 @@ export const InputBox = props => {
                 }
               }
               break;
+            case 'tr':
+            case 'tagre':
+            case 'tagrename':
+              {
+                const [ from, to ] = cmd.tag.split(' ');
+                tasksToUpdate = state.tasks.map(t => {
+                  if (t.tag.match(from)) {
+                    t.tag = to;
+                  }
+                  return t;
+                });
+              }
+              break;
             case 'help':
               updateCandidate = {
                 ...updateCandidate,
