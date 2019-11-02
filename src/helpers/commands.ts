@@ -9,7 +9,7 @@ const parseTaskCommand = (str: string) =>
   str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
 const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
 const parseMoveCommand = (str: string) =>
-  str.match(/^(mv|move)\s(\d+)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
+  str.match(/^(mv|move)\s((?:\d+\s)+)(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
 const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(.*)/i);
 const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);

@@ -96,9 +96,8 @@ export const InputBox = props => {
           switch (cmd.command.toLowerCase()) {
             case 'mv':
             case 'move':
-              const id = ids[0];
               tasksToUpdate = state.tasks.map(t => {
-                if (t.id === id) {
+                if (ids.indexOf(t.id) !== -1) {
                   t.tag = cmd.tag;
                 }
                 return t;
