@@ -2,19 +2,19 @@ export type Command = {
   command: string;
   tag?: string;
   text?: string;
-  id?: number;
+  id?: string;
 } | null;
 
 const parseTaskCommand = (str: string) =>
   str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
 const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
 const parseMoveCommand = (str: string) =>
-  str.match(/^(mv|move)\s(\d+)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
-const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(\d+)/i);
-const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(\d+)/i);
-const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(\d+)/i);
-const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(\d+)/i);
-const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(\d+)/i);
+  str.match(/^(mv|move)\s((?:\d+\s)+)(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
+const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(.*)/i);
+const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
+const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
+const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
+const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
 const parseOtherCommand = (str: string) =>
   str.match(/^(close-help|help|today|dark|light)/i);
 
@@ -32,7 +32,7 @@ export const parseCommand = (input: string): Command => {
   if (matchEdit) {
     return {
       command: matchEdit[1],
-      id: parseInt(matchEdit[2]),
+      id: matchEdit[2],
       text: matchEdit[3].trim(),
     } as Command;
   }
@@ -41,7 +41,7 @@ export const parseCommand = (input: string): Command => {
   if (matchMove) {
     return {
       command: matchMove[1],
-      id: parseInt(matchMove[2]),
+      id: matchMove[2],
       tag: matchMove[3],
     } as Command;
   }
@@ -55,7 +55,7 @@ export const parseCommand = (input: string): Command => {
   if (matchOther) {
     return {
       command: matchOther[1],
-      id: parseInt(matchOther[2]),
+      id: matchOther[2],
     };
   }
 
