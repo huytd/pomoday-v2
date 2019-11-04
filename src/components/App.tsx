@@ -8,6 +8,7 @@ import {
   getHistoryQueue,
 } from '../helpers/utils';
 import { InputBox } from './InputBox';
+import { GoogleAnalytics } from './GoogleAnalytics';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -182,6 +183,7 @@ export const App = () => {
           <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>
         )}
         <InputBox />
+        <GoogleAnalytics />
       </div>
     </StateContext.Provider>
   );
