@@ -81,6 +81,15 @@ To run it locally during development, use:
 npm run dev
 ```
 
+## Docker
+
+This repo includes a `Dockerfile` and a `docker-compose.yml` to easily run the project in a container. Just run the following two commands to build the container image and start it up:
+
+```
+docker-compose build
+docker-compose up -d
+```
+
 ## Similar Projects
 
 - [taskbook](https://github.com/klaussinani/taskbook): This is an awesome task management application that actually works, and works very well for everyone who likes to live in a command line. Pomoday was also heavily inspired by Taskbook, as you can see from the UI and the keyboard-only command interfaces.

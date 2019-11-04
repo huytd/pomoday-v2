@@ -1,0 +1,8 @@
+version: '3.5'
+services:
+  pomoday:
+    build: ./
+    image: pomoday
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
