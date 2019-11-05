@@ -86,8 +86,8 @@ npm run dev
 This repo includes a `Dockerfile` and a `docker-compose.yml` to easily run the project in a container. Just run the following two commands to build the container image and start it up:
 
 ```
-docker-compose build
-docker-compose up -d
+$ docker-compose build
+$ docker-compose up -d
 ```
 
 ## Similar Projects
