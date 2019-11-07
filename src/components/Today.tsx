@@ -60,11 +60,11 @@ export const Today = props => {
                 : 'border-stall-dim'
             }`}>
             <span className="block text-stall-dim">
-              {new Date(t.start).toLocaleTimeString()}
+              {new Date(t.start).toLocaleTimeString().padStart(11, '0')}
             </span>
             {t.end ? (
               <span className="block">
-                {new Date(t.end).toLocaleTimeString()}
+                {new Date(t.end).toLocaleTimeString().padStart(11, '0')}
               </span>
             ) : null}
           </div>
