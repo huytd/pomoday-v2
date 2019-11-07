@@ -8,6 +8,7 @@ import {
   getHistoryQueue,
 } from '../helpers/utils';
 import { InputBox } from './InputBox';
+import { GoogleAnalytics } from './GoogleAnalytics';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -181,6 +182,7 @@ export const App = () => {
         </div>
         <InputBox />
       </div>
+      <GoogleAnalytics />
     </StateContext.Provider>
   );
 };

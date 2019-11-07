@@ -1,6 +1,5 @@
 import marked from 'marked';
 import Queue from './queue';
-import { serialize } from 'uri-js';
 
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
 
