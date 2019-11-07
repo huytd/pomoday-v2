@@ -135,7 +135,8 @@ export const App = () => {
               <br />
               &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task
               <br />
-              &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a @tag-b: Rename a tag
+              &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a
+              @tag-b: Rename a tag
               <br />
               &nbsp; <b>today</b>: Show today activities
               <br />
@@ -183,8 +184,8 @@ export const App = () => {
           <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>
         )}
         <InputBox />
-        <GoogleAnalytics />
       </div>
+      <GoogleAnalytics />
     </StateContext.Provider>
   );
 };
