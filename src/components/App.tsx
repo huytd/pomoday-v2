@@ -77,42 +77,44 @@ export const App = () => {
         className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${
           state.darkMode ? 'dark' : 'light'
         }`}>
-        <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background">
-          <div className="flex-1 p-5">
-            {Object.keys(taskGroups).map((g, i) => [
-              <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
-              taskGroups[g].map((t, j) => (
+        <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
+          <div className="flex-1 p-5 h-full overflow-y-auto">
+            <div>
+              {Object.keys(taskGroups).map((g, i) => [
+                <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
+                taskGroups[g].map((t, j) => (
+                  <Row
+                    key={`tag-${i}-inner-task-${j}-${t.id}`}
+                    type={RowType.TASK}
+                    task={t}
+                  />
+                )),
                 <Row
-                  key={`tag-${i}-inner-task-${j}-${t.id}`}
-                  type={RowType.TASK}
-                  task={t}
-                />
-              )),
+                  key={`tag-${i}-separator-${i}`}
+                  type={RowType.TEXT}
+                  text=""
+                />,
+              ])}
               <Row
-                key={`tag-${i}-separator-${i}`}
                 type={RowType.TEXT}
-                text=""
-              />,
-            ])}
-            <Row
-              type={RowType.TEXT}
-              text={`${((summary.done / state.tasks.length) * 100 || 0).toFixed(
-                0,
-              )}% of all tasks complete.`}
-            />
-            <Row
-              type={RowType.TEXT}
-              text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`}
-            />
+                text={`${(
+                  (summary.done / state.tasks.length) * 100 || 0
+                ).toFixed(0)}% of all tasks complete.`}
+              />
+              <Row
+                type={RowType.TEXT}
+                text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`}
+              />
+            </div>
           </div>
           {state.showToday ? (
-            <div className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
+            <div className="w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
               <Today />
             </div>
           ) : null}
           {state.showHelp ? (
             <div
-              className="w-full mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control"
+              className="w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control"
               style={{ transition: 'all 0.5s' }}>
               Type the command in the input box below, starting with:
               <br />

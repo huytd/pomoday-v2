@@ -34,15 +34,18 @@
 body {
   font-size: 14px;
   line-height: 1.6em;
+}
+
+input:focus {
+  outline: none;
+}
+
+.overflow-y-auto {
   &::-webkit-scrollbar {
     width: 0 !important;
   }
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
-}
-
-input:focus {
-  outline: none;
 }
 
 @tailwind components;
