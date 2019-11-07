@@ -3,7 +3,7 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
   content: [
     './src/**/*.html',
     './src/**/*.tsx',
-    // etc.
+    'index.html',
   ],
   whitelist: [
     'h1',
@@ -22,6 +22,8 @@ const purgecss = require('@fullhuman/postcss-purgecss')({
     'hr',
     'table',
     'img',
+    'div',
+    'span'
   ],
 
   // Include any special characters you're using in this regular expression

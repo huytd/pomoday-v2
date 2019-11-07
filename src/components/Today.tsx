@@ -5,6 +5,7 @@ import {
   TaskStatus,
   taskAsString,
   counterAsLog,
+  getStatus,
 } from '../helpers/utils';
 
 export const Today = props => {
@@ -34,36 +35,60 @@ export const Today = props => {
   today.sort((a, b) => a.start - b.start);
   const totalTime =
     today.reduce((total, t) => total + ((t.end || now) - t.start), 0) / 1000;
+
+  const todayAsString = () => {
+    const [_, month, day, year] = new Date().toDateString().split(' ');
+    return (
+      <>
+        <div className="font-bold">Today Overview</div>
+        <div className="font-normal uppercase text-xs">{`${month} ${day}, ${year}`}</div>
+      </>
+    );
+  };
+
   return (
     <>
-      <div className="font-bold mb-4">Today Activities</div>
+      <div className="mb-4">{todayAsString()}</div>
       {today.map((t, i) => (
         <div className="mb-2 flex flex-row" key={i}>
-          <div className="w-8 text-right mr-2">{i + 1}.</div>
+          <div
+            className={`text-right text-xs pr-3 mr-3 border-r-2 ${
+              t.done
+                ? 'border-green'
+                : !t.end
+                ? 'border-orange'
+                : 'border-stall-dim'
+            }`}>
+            <span className="block text-stall-dim">
+              {new Date(t.start).toLocaleTimeString()}
+            </span>
+            {t.end ? (
+              <span className="block">
+                {new Date(t.end).toLocaleTimeString()}
+              </span>
+            ) : null}
+          </div>
           <div className="flex-1">
             <div
-              dangerouslySetInnerHTML={{ __html: taskAsString(t.task) }}></div>
+              dangerouslySetInnerHTML={{
+                __html:
+                  getStatus(!t.done && !t.end ? TaskStatus.WIP : null) +
+                  ' ' +
+                  taskAsString(t.task),
+              }}></div>
             <div className="text-xs text-stall-dim">
-              {new Date(t.start).toLocaleTimeString()} -{' '}
-              {!t.end ? (
-                <span className="text-orange">ON GOING</span>
-              ) : (
-                <span>{counterAsLog((t.end - t.start) / 1000)}</span>
-              )}{' '}
-              {t.done
-                ? [
-                    <span key={`separator--${i}`}>- </span>,
-                    <span key={`status-text--${i}`} className="text-green">
-                      FINISHED
-                    </span>,
-                  ]
-                : null}
+              {!t.end ? null : (
+                <span>
+                  {t.done ? <span className="text-green">✔</span> : null}{' '}
+                  {counterAsLog((t.end - t.start) / 1000)}
+                </span>
+              )}
             </div>
           </div>
         </div>
       ))}
       <div className="mt-4">
-        Total time spent:{' '}
+        Time spent:{' '}
         <span className="text-tomato">{counterAsLog(totalTime)}</span>
       </div>
     </>

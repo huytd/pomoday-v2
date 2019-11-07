@@ -5,8 +5,8 @@
   "author": "Huy Tran <kingbazoka@gmail.com>",
   "license": "BSD-3-Clause",
   "scripts": {
-    "dev": "parcel ./src/index.html",
-    "dist": "parcel build ./src/index.html --public-url ./"
+    "dev": "NODE_ENV=development parcel ./src/index.html",
+    "dist": "NODE_ENV=production parcel build ./src/index.html --public-url ./"
   },
   "dependencies": {
     "@types/react-dom": "^16.9.1",
