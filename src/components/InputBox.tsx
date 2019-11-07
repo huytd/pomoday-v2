@@ -92,7 +92,9 @@ export const InputBox = props => {
           ...state,
         };
         if (cmd) {
-          const ids = cmd.id ? cmd.id.match(/\d+/g).map(s => parseInt(s)) : null;
+          const ids = cmd.id
+            ? cmd.id.match(/\d+/g).map(s => parseInt(s))
+            : null;
           switch (cmd.command.toLowerCase()) {
             case 'mv':
             case 'move':
@@ -208,7 +210,7 @@ export const InputBox = props => {
             case 'tagre':
             case 'tagrename':
               {
-                const [ from, to ] = cmd.tag.split(' ');
+                const [from, to] = cmd.tag.split(' ');
                 tasksToUpdate = state.tasks.map(t => {
                   if (t.tag.match(from)) {
                     t.tag = to;
@@ -267,6 +269,9 @@ export const InputBox = props => {
   return (
     <div className="bg-control w-full h-10 text-sm fixed bottom-0 left-0">
       <div className="w-full h-full relative h-8">
+        {state.sawTheInput ? null : (
+          <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>
+        )}
         <input
           ref={inputRef}
           className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10"
