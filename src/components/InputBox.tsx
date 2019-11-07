@@ -19,6 +19,7 @@ const KEY_DOWN = 40;
 const KEY_F = 70;
 const KEY_P = 80;
 const KEY_N = 78;
+const KEY_INPUT = 73;
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -92,7 +93,9 @@ export const InputBox = props => {
           ...state,
         };
         if (cmd) {
-          const ids = cmd.id ? cmd.id.match(/\d+/g).map(s => parseInt(s)) : null;
+          const ids = cmd.id
+            ? cmd.id.match(/\d+/g).map(s => parseInt(s))
+            : null;
           switch (cmd.command.toLowerCase()) {
             case 'mv':
             case 'move':
@@ -208,7 +211,7 @@ export const InputBox = props => {
             case 'tagre':
             case 'tagrename':
               {
-                const [ from, to ] = cmd.tag.split(' ');
+                const [from, to] = cmd.tag.split(' ');
                 tasksToUpdate = state.tasks.map(t => {
                   if (t.tag.match(from)) {
                     t.tag = to;
@@ -263,6 +266,21 @@ export const InputBox = props => {
       }
     }
   };
+
+  const focusInput = event => {
+    const inputIsFocused = inputRef.current === document.activeElement;
+    if (event.keyCode === KEY_INPUT && !inputIsFocused) {
+      inputRef.current.focus();
+    }
+  };
+
+  React.useEffect(() => {
+    document.addEventListener('keyup', focusInput, false);
+
+    return () => {
+      document.removeEventListener('keyup', focusInput, false);
+    };
+  }, []);
 
   return (
     <div className="bg-control w-full h-10 text-sm fixed bottom-0 left-0">
