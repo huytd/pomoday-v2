@@ -220,6 +220,96 @@ export const InputBox = props => {
                 });
               }
               break;
+            /* Visibility */
+            case 'hide':
+              switch (cmd.text) {
+                case 'finished':
+                case 'done':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      done: false,
+                    },
+                  };
+                  break;
+                case 'flag':
+                case 'flagged':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      flagged: false,
+                    },
+                  };
+                  break;
+                case 'ongoing':
+                case 'wip':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wip: false,
+                    },
+                  };
+                  break;
+                case 'pending':
+                case 'wait':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wait: false,
+                    },
+                  };
+                  break;
+              }
+              break;
+            case 'show':
+              switch (cmd.text) {
+                case 'finished':
+                case 'done':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      done: true,
+                    },
+                  };
+                  break;
+                case 'flag':
+                case 'flagged':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      flagged: true,
+                    },
+                  };
+                  break;
+                case 'wip':
+                case 'ongoing':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wip: true,
+                    },
+                  };
+                  break;
+                case 'pending':
+                case 'wait':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wait: true,
+                    },
+                  };
+                  break;
+              }
+              break;
+            /* Single command */
             case 'help':
               updateCandidate = {
                 ...updateCandidate,

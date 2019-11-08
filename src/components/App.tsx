@@ -12,6 +12,21 @@ import { GoogleAnalytics } from './GoogleAnalytics';
 
 export const StateContext = React.createContext<any>(null);
 
+const defaultState = {
+  tasks: [] as TaskItem[],
+  showHelp: true,
+  showToday: false,
+  darkMode: false,
+  sawTheInput: false,
+  taskVisibility: {
+    done: true,
+    flagged: true,
+    wait: true,
+    wip: true,
+  },
+  history: getHistoryQueue(),
+};
+
 const getInitialState = () => {
   if (window.localStorage) {
     const saved = window.localStorage.getItem('pomoday');
@@ -19,19 +34,17 @@ const getInitialState = () => {
       try {
         const parsed = JSON.parse(saved);
         if (parsed) {
+          for (let key in defaultState) {
+            if (!parsed.hasOwnProperty(key)) {
+              parsed[key] = defaultState[key];
+            }
+          }
           return parsed;
         }
       } catch {}
     }
   }
-  return {
-    tasks: [] as TaskItem[],
-    showHelp: true,
-    showToday: false,
-    darkMode: false,
-    sawTheInput: false,
-    history: getHistoryQueue(),
-  };
+  return defaultState;
 };
 
 export const App = () => {
@@ -41,13 +54,45 @@ export const App = () => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
   }, [state]);
 
-  const taskGroups = state.tasks.reduce((groups, t) => {
-    if (!groups[t.tag]) {
-      groups[t.tag] = [];
-    }
-    groups[t.tag].push(t);
-    return groups;
-  }, {});
+  const getVisibilityStatusText = (): string[] => {
+    const hidden = Object.keys(state.taskVisibility)
+      .reduce((arr, k) => {
+        if (state.taskVisibility[k] === false) {
+          arr.push(k);
+        }
+        return arr;
+      }, [])
+      .map(t => {
+        if (t === 'done') return 'Finished';
+        if (t === 'flagged') return 'Flagged';
+        if (t === 'wait') return 'Pending';
+        if (t === 'wip') return 'On Going';
+      });
+    return hidden;
+  };
+
+  const taskGroups = state.tasks.reduce(
+    (groups, t: TaskItem) => {
+      if (!groups.display[t.tag]) {
+        groups.display[t.tag] = [];
+      }
+      if (
+        (t.status === TaskStatus.DONE && state.taskVisibility.done) ||
+        (t.status === TaskStatus.FLAG && state.taskVisibility.flagged) ||
+        (t.status === TaskStatus.WAIT && state.taskVisibility.wait) ||
+        (t.status === TaskStatus.WIP && state.taskVisibility.wip)
+      ) {
+        groups.display[t.tag].push(t);
+      } else {
+        groups.hidden.push(t);
+      }
+      return groups;
+    },
+    {
+      display: {},
+      hidden: [],
+    },
+  );
 
   const summary = state.tasks.reduce(
     (stats, t) => {
@@ -79,10 +124,16 @@ export const App = () => {
         }`}>
         <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
           <div className="flex-1 p-5 h-full overflow-y-auto">
+            {taskGroups.hidden.length ? (
+              <div className="pb-5 text-stall-dim">
+                {taskGroups.hidden.length} tasks in{' '}
+                {getVisibilityStatusText().join(', ')} group are hidden.
+              </div>
+            ) : null}
             <div>
-              {Object.keys(taskGroups).map((g, i) => [
+              {Object.keys(taskGroups.display).map((g, i) => [
                 <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
-                taskGroups[g].map((t, j) => (
+                taskGroups.display[g].map((t, j) => (
                   <Row
                     key={`tag-${i}-inner-task-${j}-${t.id}`}
                     type={RowType.TASK}

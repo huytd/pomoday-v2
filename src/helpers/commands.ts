@@ -16,7 +16,13 @@ const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
 const parseTagRenameCommand = (str: string) =>
-  str.match(/^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
+  str.match(
+    /^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i,
+  );
+const parseVisibilityCommand = (str: string) =>
+  str.match(
+    /^(hide|show)\s\b(done|finished|wait|pending|ongoing|wip|flag|flagged)\b/i,
+  );
 const parseOtherCommand = (str: string) =>
   str.match(/^(close-help|help|today|dark|light)/i);
 
@@ -67,6 +73,14 @@ export const parseCommand = (input: string): Command => {
       command: matchOther[1],
       id: matchOther[2],
     };
+  }
+
+  const matchVisibility = parseVisibilityCommand(input);
+  if (matchVisibility) {
+    return {
+      command: matchVisibility[1],
+      text: matchVisibility[2],
+    } as Command;
   }
 
   const matchHelp = parseOtherCommand(input);
