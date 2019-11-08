@@ -6,6 +6,7 @@ import { RowType } from '../helpers/utils';
 export const Row = props => {
   const type = props.type;
   const text = props.text || '';
+  const sidetext = props.sidetext || '';
   const task = props.task || undefined;
   return (
     <div
@@ -25,6 +26,9 @@ export const Row = props => {
       ) : (
         text
       )}
+      {sidetext ? (
+        <span className="inline-block text-stall-dim ml-2">{sidetext}</span>
+      ) : null}
     </div>
   );
 };

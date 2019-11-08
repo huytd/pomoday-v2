@@ -116,6 +116,21 @@ export const App = () => {
     },
   );
 
+  const countDone = (group, g) => {
+    return (
+      group.hidden.filter(t => t.tag === g && t.status === TaskStatus.DONE)
+        .length +
+      group.display[g].filter(t => t.status === TaskStatus.DONE).length
+    );
+  };
+
+  const countTotal = (group, g) => {
+    return (
+      taskGroups.display[g].length +
+      group.hidden.filter(t => t.tag === g).length
+    );
+  };
+
   return (
     <StateContext.Provider value={[state, setState]}>
       <div
@@ -132,7 +147,15 @@ export const App = () => {
             ) : null}
             <div>
               {Object.keys(taskGroups.display).map((g, i) => [
-                <Row key={`tag-${i}`} type={RowType.TAG} text={g} />,
+                <Row
+                  key={`tag-${i}`}
+                  type={RowType.TAG}
+                  text={g}
+                  sidetext={`[${countDone(taskGroups, g)}/${countTotal(
+                    taskGroups,
+                    g,
+                  )}]`}
+                />,
                 taskGroups.display[g].map((t, j) => (
                   <Row
                     key={`tag-${i}-inner-task-${j}-${t.id}`}
