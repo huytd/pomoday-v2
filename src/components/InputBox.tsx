@@ -20,6 +20,7 @@ const KEY_F = 70;
 const KEY_P = 80;
 const KEY_N = 78;
 const KEY_INPUT = 73;
+const KEY_ESC = 27;
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -362,6 +363,9 @@ export const InputBox = props => {
     if (event.keyCode === KEY_INPUT && !inputIsFocused) {
       inputRef.current.focus();
     }
+    if (event.keyCode === KEY_ESC && inputIsFocused) {
+      inputRef.current.blur();
+    }
   };
 
   React.useEffect(() => {
@@ -380,17 +384,17 @@ export const InputBox = props => {
         )}
         <input
           ref={inputRef}
-          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10"
+          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10 border-l-4 border-transparent focus:border-green focus:bg-focus"
           tabIndex={0}
           autoFocus={true}
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}
-          placeholder="Enter your command here. Press UP/DOWN for the previous commands."
+          placeholder="Press 'i' or 'Tab' to start typing..."
         />
         <input
           ref={suggestRef}
-          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
+          className="bg-transparent border-l-4 border-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
           disabled={true}
           value={''}
         />
