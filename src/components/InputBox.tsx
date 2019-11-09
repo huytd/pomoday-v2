@@ -95,7 +95,7 @@ export const InputBox = props => {
         };
         if (cmd) {
           const ids = cmd.id
-            ? cmd.id.match(/\d+/g).map(s => parseInt(s))
+            ? (cmd.id.match(/\d+/g) || []).map(s => parseInt(s))
             : null;
           switch (cmd.command.toLowerCase()) {
             case 'mv':
@@ -139,12 +139,26 @@ export const InputBox = props => {
               break;
             case 'd':
             case 'delete':
-              tasksToUpdate = state.tasks.reduce((tasks, t) => {
-                if (ids.indexOf(t.id) === -1) {
-                  tasks.push(t);
+              if (!ids.length) {
+                // Delete by tag
+                const tag = (cmd.id.match(/^(@.*)/) || []).pop();
+                if (tag) {
+                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
+                    if (t.tag !== tag) {
+                      tasks.push(t);
+                    }
+                    return tasks;
+                  }, []);
                 }
-                return tasks;
-              }, []);
+              } else {
+                // Delete by id
+                tasksToUpdate = state.tasks.reduce((tasks, t) => {
+                  if (ids.indexOf(t.id) === -1) {
+                    tasks.push(t);
+                  }
+                  return tasks;
+                }, []);
+              }
               break;
             case 'fl':
             case 'flag':
