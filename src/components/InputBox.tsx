@@ -150,6 +150,41 @@ export const InputBox = props => {
                     return tasks;
                   }, []);
                 }
+                // Delete by status
+                const status = (
+                  cmd.id.match(
+                    /^(finished|done|flag|flagged|ongoing|wip|wait|pending)/,
+                  ) || []
+                ).pop();
+                if (status) {
+                  let taskStatus = null;
+                  switch (status) {
+                    case 'finished':
+                    case 'done':
+                      taskStatus = TaskStatus.DONE;
+                      break;
+                    case 'flag':
+                    case 'flagged':
+                      taskStatus = TaskStatus.FLAG;
+                      break;
+                    case 'ongoing':
+                    case 'wip':
+                      taskStatus = TaskStatus.WIP;
+                      break;
+                    case 'wait':
+                    case 'pending':
+                      taskStatus = TaskStatus.WAIT;
+                      break;
+                  }
+                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
+                    if (taskStatus) {
+                      if (t.status !== taskStatus) {
+                        tasks.push(t);
+                      }
+                    }
+                    return tasks;
+                  }, []);
+                }
               } else {
                 // Delete by id
                 tasksToUpdate = state.tasks.reduce((tasks, t) => {
