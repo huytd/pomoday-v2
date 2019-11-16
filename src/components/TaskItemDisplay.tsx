@@ -7,8 +7,10 @@ export const TaskItemDisplay = props => {
   const html = getStatus(task.status) + ' ' + taskAsString(task.title);
   return (
     <>
-      <div className="el-task-id w-12 text-right mr-2">{task.id}. </div>
-      <div className="el-task-content flex-1 text-left">
+      <div className="el-task-id self-center w-12 text-right mr-2">
+        {task.id}.{' '}
+      </div>
+      <div className="el-task-content self-center flex-1 text-left">
         <span
           className={`task-content inline-block ${
             task.status === TaskStatus.DONE
