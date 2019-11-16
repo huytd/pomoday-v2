@@ -9,6 +9,7 @@ import {
 } from '../helpers/utils';
 import { InputBox } from './InputBox';
 import { GoogleAnalytics } from './GoogleAnalytics';
+import { CodeEditor } from './CodeEditor';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -25,6 +26,8 @@ const defaultState = {
     wip: true,
   },
   history: getHistoryQueue(),
+  showCustomCSS: false,
+  customCSS: '',
 };
 
 const getInitialState = () => {
@@ -133,12 +136,13 @@ export const App = () => {
 
   return (
     <StateContext.Provider value={[state, setState]}>
+      <style dangerouslySetInnerHTML={{ __html: state.customCSS }}></style>
       <div
         className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${
           state.darkMode ? 'dark' : 'light'
         }`}>
         <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
-          <div className="flex-1 p-5 h-full overflow-y-auto">
+          <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
             {taskGroups.hidden.length ? (
               <div className="pb-5 text-stall-dim">
                 {taskGroups.hidden.length} tasks in{' '}
@@ -182,13 +186,13 @@ export const App = () => {
             </div>
           </div>
           {state.showToday ? (
-            <div className="w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
+            <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
               <Today />
             </div>
           ) : null}
           {state.showHelp ? (
             <div
-              className="w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control"
+              className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control"
               style={{ transition: 'all 0.5s' }}>
               Type the command in the input box below, starting with:
               <br />
@@ -253,6 +257,11 @@ export const App = () => {
               <br />
               &nbsp; <b>help</b>: Show this help text
               <br />
+            </div>
+          ) : null}
+          {state.showCustomCSS ? (
+            <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control flex">
+              <CodeEditor />
             </div>
           ) : null}
         </div>

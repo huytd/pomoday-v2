@@ -1,6 +1,17 @@
 import marked from 'marked';
 import Queue from './queue';
 
+export const KEY_TAB = 9;
+export const KEY_RETURN = 13;
+export const KEY_UP = 38;
+export const KEY_RIGHT = 39;
+export const KEY_DOWN = 40;
+export const KEY_F = 70;
+export const KEY_P = 80;
+export const KEY_N = 78;
+export const KEY_INPUT = 73;
+export const KEY_ESC = 27;
+
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
 
 export const getHistoryQueue = (serialized?: any) => {

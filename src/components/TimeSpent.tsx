@@ -26,19 +26,19 @@ export const TimeSpent = props => {
   switch (task.status) {
     case TaskStatus.WIP:
       return (
-        <span className="block sm:inline-block text-sm text-orange">
+        <span className="el-time-counter time-wip block sm:inline-block text-sm text-orange">
           {counterAsString(counter)}
         </span>
       );
     case TaskStatus.DONE:
       return (
-        <span className="block sm:inline-block text-sm text-stall-dim">
+        <span className="el-time-counter time-done block sm:inline-block text-sm text-stall-dim">
           {counterAsString(counter)}
         </span>
       );
     default:
       return counter ? (
-        <span className="block sm:inline-block text-sm text-tomato">
+        <span className="el-time-counter time-started block sm:inline-block text-sm text-tomato">
           {counterAsString(counter)}
         </span>
       ) : null;

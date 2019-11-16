@@ -24,7 +24,7 @@ const parseVisibilityCommand = (str: string) =>
     /^(hide|show)\s\b(done|finished|wait|pending|ongoing|wip|flag|flagged)\b/i,
   );
 const parseOtherCommand = (str: string) =>
-  str.match(/^(close-help|help|today|dark|light)/i);
+  str.match(/^(close-help|help|today|dark|light|customize)/i);
 
 export const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);

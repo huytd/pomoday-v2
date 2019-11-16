@@ -8,19 +8,18 @@ import {
   getHistoryQueue,
   MAX_COMMAND_QUEUE_LENGTH,
   findCommon,
+  KEY_TAB,
+  KEY_RIGHT,
+  KEY_F,
+  KEY_UP,
+  KEY_P,
+  KEY_DOWN,
+  KEY_N,
+  KEY_RETURN,
+  KEY_INPUT,
+  KEY_ESC,
 } from '../helpers/utils';
 import Queue from '../helpers/queue';
-
-const KEY_TAB = 9;
-const KEY_RETURN = 13;
-const KEY_UP = 38;
-const KEY_RIGHT = 39;
-const KEY_DOWN = 40;
-const KEY_F = 70;
-const KEY_P = 80;
-const KEY_N = 78;
-const KEY_INPUT = 73;
-const KEY_ESC = 27;
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -390,6 +389,12 @@ export const InputBox = props => {
                 darkMode: false,
               };
               break;
+            case 'customize':
+              updateCandidate = {
+                ...updateCandidate,
+                showCustomCSS: !updateCandidate.showCustomCSS,
+              };
+              break;
           }
         }
         if (tasksToUpdate) {
@@ -409,7 +414,8 @@ export const InputBox = props => {
 
   const focusInput = event => {
     const inputIsFocused = inputRef.current === document.activeElement;
-    if (event.keyCode === KEY_INPUT && !inputIsFocused) {
+    const isIdle = !state.showCustomCSS;
+    if (event.keyCode === KEY_INPUT && !inputIsFocused && isIdle) {
       inputRef.current.focus();
     }
     if (event.keyCode === KEY_ESC && inputIsFocused) {

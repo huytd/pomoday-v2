@@ -12,22 +12,24 @@ export const Row = props => {
     <div
       className={`row ${
         type === RowType.TAG
-          ? 'font-bold underline'
+          ? 'el-tag font-bold underline'
           : type === RowType.TEXT && !text.length
-          ? 'p-3'
-          : 'flex flex-row'
+          ? 'el-space p-3'
+          : 'el-text flex flex-row'
       }`}>
       {type === RowType.TASK ? (
         <TaskItemDisplay task={task} />
       ) : type === RowType.TEXT ? (
         <span
-          className="inline-block"
+          className="el-text inline-block"
           dangerouslySetInnerHTML={{ __html: marked(text) }}></span>
       ) : (
         text
       )}
       {sidetext ? (
-        <span className="inline-block text-stall-dim ml-2">{sidetext}</span>
+        <span className="el-side-text inline-block text-stall-dim ml-2">
+          {sidetext}
+        </span>
       ) : null}
     </div>
   );
