@@ -191,9 +191,7 @@ export const App = () => {
             </div>
           ) : null}
           {state.showHelp ? (
-            <div
-              className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control"
-              style={{ transition: 'all 0.5s' }}>
+            <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
               Type the command in the input box below, starting with:
               <br />
               &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task

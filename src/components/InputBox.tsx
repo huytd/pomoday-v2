@@ -414,8 +414,9 @@ export const InputBox = props => {
 
   const focusInput = event => {
     const inputIsFocused = inputRef.current === document.activeElement;
-    const isIdle = !state.showCustomCSS;
-    if (event.keyCode === KEY_INPUT && !inputIsFocused && isIdle) {
+    const activeIsEditor =
+      document.activeElement.tagName.match(/input|textarea/i) !== null;
+    if (event.keyCode === KEY_INPUT && !inputIsFocused && !activeIsEditor) {
       inputRef.current.focus();
     }
     if (event.keyCode === KEY_ESC && inputIsFocused) {
@@ -432,7 +433,7 @@ export const InputBox = props => {
   }, []);
 
   return (
-    <div className="bg-control w-full h-10 text-sm fixed bottom-0 left-0">
+    <div className="el-editor bg-control w-full h-10 text-sm fixed bottom-0 left-0">
       <div className="w-full h-full relative h-8">
         {state.sawTheInput ? null : (
           <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>

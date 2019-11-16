@@ -45,9 +45,8 @@ export const CodeEditor = props => {
       ref={customCSSRef}
       onKeyPress={processEnterKey}
       onChange={updateCustomCSS}
-      className="flex-1 bg-transparent resize-none"
-      placeholder="Enter custom CSS styles here...">
-      {state.customCSS}
-    </textarea>
+      className="flex-1 bg-transparent resize-none focus:outline-none"
+      placeholder="Enter custom CSS styles here..."
+      value={state.customCSS}></textarea>
   );
 };
