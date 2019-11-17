@@ -15,6 +15,8 @@ const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
+const parseArchiveCommand = (str: string) =>
+  str.match(/^(a(?:rchive)?)\s(.*)/i);
 const parseTagRenameCommand = (str: string) =>
   str.match(
     /^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i,
@@ -24,7 +26,7 @@ const parseVisibilityCommand = (str: string) =>
     /^(hide|show)\s\b(done|finished|wait|pending|ongoing|wip|flag|flagged)\b/i,
   );
 const parseOtherCommand = (str: string) =>
-  str.match(/^(close-help|help|today|dark|light|customize)/i);
+  str.match(/^(close-help|help|today|dark|light|customize|list-archived)/i);
 
 export const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);
@@ -67,7 +69,8 @@ export const parseCommand = (input: string): Command => {
     parseBeginCommand(input) ||
     parseDeleteCommand(input) ||
     parseFlagCommand(input) ||
-    parseStopCommand(input);
+    parseStopCommand(input) ||
+    parseArchiveCommand(input);
   if (matchOther) {
     return {
       command: matchOther[1],

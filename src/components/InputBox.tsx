@@ -219,6 +219,19 @@ export const InputBox = props => {
                 return t;
               });
               break;
+            case 'a':
+            case 'archive':
+              tasksToUpdate = state.tasks.map(t => {
+                if (ids.indexOf(t.id) !== -1) {
+                  if (!t.archived) {
+                    t.archived = true;
+                  } else {
+                    t.archived = false;
+                  }
+                }
+                return t;
+              });
+              break;
             case 't':
             case 'task':
               const tag = cmd.tag || '@uncategorized';
@@ -393,6 +406,12 @@ export const InputBox = props => {
               updateCandidate = {
                 ...updateCandidate,
                 showCustomCSS: !updateCandidate.showCustomCSS,
+              };
+              break;
+            case 'list-archived':
+              updateCandidate = {
+                ...updateCandidate,
+                showArchived: !updateCandidate.showArchived,
               };
               break;
           }

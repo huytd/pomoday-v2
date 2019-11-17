@@ -88,3 +88,19 @@ code {
 .pulse {
   animation: shadow-pulse 1s infinite;
 }
+
+.el-sideview-header {
+  @apply relative;
+  &::before {
+    content: '#';
+    position: absolute;
+    left: -0.75rem;
+    opacity: 0.5;
+  }
+}
+
+.el-archived-list {
+  .task-content span {
+    @apply text-stall-dim;
+  }
+}

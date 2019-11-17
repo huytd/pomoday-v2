@@ -47,6 +47,7 @@ export type TaskItem = {
   title: string;
   status: TaskStatus;
   logs: Worklog[];
+  archived: boolean;
 };
 
 export const getStatus = (status?: TaskStatus) => {

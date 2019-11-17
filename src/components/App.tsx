@@ -10,6 +10,7 @@ import {
 import { InputBox } from './InputBox';
 import { GoogleAnalytics } from './GoogleAnalytics';
 import { CodeEditor } from './CodeEditor';
+import { ArchivedList } from './ArchivedList';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -28,6 +29,7 @@ const defaultState = {
   history: getHistoryQueue(),
   showCustomCSS: false,
   customCSS: '',
+  showArchived: false,
 };
 
 const getInitialState = () => {
@@ -74,28 +76,30 @@ export const App = () => {
     return hidden;
   };
 
-  const taskGroups = state.tasks.reduce(
-    (groups, t: TaskItem) => {
-      if (!groups.display[t.tag]) {
-        groups.display[t.tag] = [];
-      }
-      if (
-        (t.status === TaskStatus.DONE && state.taskVisibility.done) ||
-        (t.status === TaskStatus.FLAG && state.taskVisibility.flagged) ||
-        (t.status === TaskStatus.WAIT && state.taskVisibility.wait) ||
-        (t.status === TaskStatus.WIP && state.taskVisibility.wip)
-      ) {
-        groups.display[t.tag].push(t);
-      } else {
-        groups.hidden.push(t);
-      }
-      return groups;
-    },
-    {
-      display: {},
-      hidden: [],
-    },
-  );
+  const taskGroups = state.tasks
+    .filter(t => !t.archived)
+    .reduce(
+      (groups, t: TaskItem) => {
+        if (!groups.display[t.tag]) {
+          groups.display[t.tag] = [];
+        }
+        if (
+          (t.status === TaskStatus.DONE && state.taskVisibility.done) ||
+          (t.status === TaskStatus.FLAG && state.taskVisibility.flagged) ||
+          (t.status === TaskStatus.WAIT && state.taskVisibility.wait) ||
+          (t.status === TaskStatus.WIP && state.taskVisibility.wip)
+        ) {
+          groups.display[t.tag].push(t);
+        } else {
+          groups.hidden.push(t);
+        }
+        return groups;
+      },
+      {
+        display: {},
+        hidden: [],
+      },
+    );
 
   const summary = state.tasks.reduce(
     (stats, t) => {
@@ -142,6 +146,7 @@ export const App = () => {
           state.darkMode ? 'dark' : 'light'
         }`}>
         <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
+          {/* Today */}
           <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
             {taskGroups.hidden.length ? (
               <div className="pb-5 text-stall-dim">
@@ -185,11 +190,13 @@ export const App = () => {
               />
             </div>
           </div>
+          {/* Today */}
           {state.showToday ? (
             <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
               <Today />
             </div>
           ) : null}
+          {/* Help */}
           {state.showHelp ? (
             <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
               Type the command in the input box below, starting with:
@@ -257,9 +264,16 @@ export const App = () => {
               <br />
             </div>
           ) : null}
+          {/* Custom CSS */}
           {state.showCustomCSS ? (
             <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control flex">
               <CodeEditor />
+            </div>
+          ) : null}
+          {/* Archived List */}
+          {state.showArchived ? (
+            <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control flex">
+              <ArchivedList />
             </div>
           ) : null}
         </div>
