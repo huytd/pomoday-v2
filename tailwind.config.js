@@ -1,4 +1,8 @@
 module.exports = {
+  variants: {
+    borderColor: ['responsive', 'hover', 'focus'],
+    backgroundColor: ['responsive', 'hover', 'focus'],
+  },
   theme: {
     colors: {
       transparent: "var(--transparent)",
@@ -9,6 +13,7 @@ module.exports = {
       green: "var(--green)",
       orange: "var(--orange)",
       control: "var(--control)",
+      focus: "var(--control-focus)",
       background: "var(--background)",
       foreground: "var(--foreground)",
       stall: {

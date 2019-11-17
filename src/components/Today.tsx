@@ -40,8 +40,10 @@ export const Today = props => {
     const [_, month, day, year] = new Date().toDateString().split(' ');
     return (
       <>
-        <div className="font-bold">Today Overview</div>
-        <div className="font-normal uppercase text-xs">{`${month} ${day}, ${year}`}</div>
+        <div className="el-sideview-header font-bold uppercase">
+          Today Overview
+        </div>
+        <div className="el-sideview-sub-header font-normal uppercase text-xs">{`${month} ${day}, ${year}`}</div>
       </>
     );
   };

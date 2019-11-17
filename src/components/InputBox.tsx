@@ -8,18 +8,18 @@ import {
   getHistoryQueue,
   MAX_COMMAND_QUEUE_LENGTH,
   findCommon,
+  KEY_TAB,
+  KEY_RIGHT,
+  KEY_F,
+  KEY_UP,
+  KEY_P,
+  KEY_DOWN,
+  KEY_N,
+  KEY_RETURN,
+  KEY_INPUT,
+  KEY_ESC,
 } from '../helpers/utils';
 import Queue from '../helpers/queue';
-
-const KEY_TAB = 9;
-const KEY_RETURN = 13;
-const KEY_UP = 38;
-const KEY_RIGHT = 39;
-const KEY_DOWN = 40;
-const KEY_F = 70;
-const KEY_P = 80;
-const KEY_N = 78;
-const KEY_INPUT = 73;
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -94,7 +94,7 @@ export const InputBox = props => {
         };
         if (cmd) {
           const ids = cmd.id
-            ? cmd.id.match(/\d+/g).map(s => parseInt(s))
+            ? (cmd.id.match(/\d+/g) || []).map(s => parseInt(s))
             : null;
           switch (cmd.command.toLowerCase()) {
             case 'mv':
@@ -138,12 +138,61 @@ export const InputBox = props => {
               break;
             case 'd':
             case 'delete':
-              tasksToUpdate = state.tasks.reduce((tasks, t) => {
-                if (ids.indexOf(t.id) === -1) {
-                  tasks.push(t);
+              if (!ids.length) {
+                // Delete by tag
+                const tag = (cmd.id.match(/^(@.*)/) || []).pop();
+                if (tag) {
+                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
+                    if (t.tag !== tag) {
+                      tasks.push(t);
+                    }
+                    return tasks;
+                  }, []);
                 }
-                return tasks;
-              }, []);
+                // Delete by status
+                const status = (
+                  cmd.id.match(
+                    /^(finished|done|flag|flagged|ongoing|wip|wait|pending)/,
+                  ) || []
+                ).pop();
+                if (status) {
+                  let taskStatus = null;
+                  switch (status) {
+                    case 'finished':
+                    case 'done':
+                      taskStatus = TaskStatus.DONE;
+                      break;
+                    case 'flag':
+                    case 'flagged':
+                      taskStatus = TaskStatus.FLAG;
+                      break;
+                    case 'ongoing':
+                    case 'wip':
+                      taskStatus = TaskStatus.WIP;
+                      break;
+                    case 'wait':
+                    case 'pending':
+                      taskStatus = TaskStatus.WAIT;
+                      break;
+                  }
+                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
+                    if (taskStatus) {
+                      if (t.status !== taskStatus) {
+                        tasks.push(t);
+                      }
+                    }
+                    return tasks;
+                  }, []);
+                }
+              } else {
+                // Delete by id
+                tasksToUpdate = state.tasks.reduce((tasks, t) => {
+                  if (ids.indexOf(t.id) === -1) {
+                    tasks.push(t);
+                  }
+                  return tasks;
+                }, []);
+              }
               break;
             case 'fl':
             case 'flag':
@@ -165,6 +214,19 @@ export const InputBox = props => {
                   if (t.status === TaskStatus.WIP) {
                     t.status = TaskStatus.WAIT;
                     t = stopWorkLogging(t);
+                  }
+                }
+                return t;
+              });
+              break;
+            case 'a':
+            case 'archive':
+              tasksToUpdate = state.tasks.map(t => {
+                if (ids.indexOf(t.id) !== -1) {
+                  if (!t.archived) {
+                    t.archived = true;
+                  } else {
+                    t.archived = false;
                   }
                 }
                 return t;
@@ -220,6 +282,96 @@ export const InputBox = props => {
                 });
               }
               break;
+            /* Visibility */
+            case 'hide':
+              switch (cmd.text) {
+                case 'finished':
+                case 'done':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      done: false,
+                    },
+                  };
+                  break;
+                case 'flag':
+                case 'flagged':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      flagged: false,
+                    },
+                  };
+                  break;
+                case 'ongoing':
+                case 'wip':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wip: false,
+                    },
+                  };
+                  break;
+                case 'pending':
+                case 'wait':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wait: false,
+                    },
+                  };
+                  break;
+              }
+              break;
+            case 'show':
+              switch (cmd.text) {
+                case 'finished':
+                case 'done':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      done: true,
+                    },
+                  };
+                  break;
+                case 'flag':
+                case 'flagged':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      flagged: true,
+                    },
+                  };
+                  break;
+                case 'wip':
+                case 'ongoing':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wip: true,
+                    },
+                  };
+                  break;
+                case 'pending':
+                case 'wait':
+                  updateCandidate = {
+                    ...updateCandidate,
+                    taskVisibility: {
+                      ...updateCandidate.taskVisibility,
+                      wait: true,
+                    },
+                  };
+                  break;
+              }
+              break;
+            /* Single command */
             case 'help':
               updateCandidate = {
                 ...updateCandidate,
@@ -250,6 +402,18 @@ export const InputBox = props => {
                 darkMode: false,
               };
               break;
+            case 'customize':
+              updateCandidate = {
+                ...updateCandidate,
+                showCustomCSS: !updateCandidate.showCustomCSS,
+              };
+              break;
+            case 'list-archived':
+              updateCandidate = {
+                ...updateCandidate,
+                showArchived: !updateCandidate.showArchived,
+              };
+              break;
           }
         }
         if (tasksToUpdate) {
@@ -269,8 +433,13 @@ export const InputBox = props => {
 
   const focusInput = event => {
     const inputIsFocused = inputRef.current === document.activeElement;
-    if (event.keyCode === KEY_INPUT && !inputIsFocused) {
+    const activeIsEditor =
+      document.activeElement.tagName.match(/input|textarea/i) !== null;
+    if (event.keyCode === KEY_INPUT && !inputIsFocused && !activeIsEditor) {
       inputRef.current.focus();
+    }
+    if (event.keyCode === KEY_ESC && inputIsFocused) {
+      inputRef.current.blur();
     }
   };
 
@@ -283,24 +452,24 @@ export const InputBox = props => {
   }, []);
 
   return (
-    <div className="bg-control w-full h-10 text-sm fixed bottom-0 left-0">
+    <div className="el-editor bg-control w-full h-10 text-sm fixed bottom-0 left-0">
       <div className="w-full h-full relative h-8">
         {state.sawTheInput ? null : (
           <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>
         )}
         <input
           ref={inputRef}
-          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10"
+          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10 border-l-4 border-transparent focus:border-green focus:bg-focus"
           tabIndex={0}
           autoFocus={true}
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}
-          placeholder="Enter your command here. Press UP/DOWN for the previous commands."
+          placeholder="Press 'i' or 'Tab' to start typing..."
         />
         <input
           ref={suggestRef}
-          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
+          className="bg-transparent border-l-4 border-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
           disabled={true}
           value={''}
         />

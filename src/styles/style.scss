@@ -8,6 +8,7 @@
     --green: #4caf50;
     --orange: #ff9800;
     --control: #e2e8f0;
+    --control-focus: rgba(255, 255, 255, 0.2);
     --background: #fafafa;
     --foreground: #222222;
     --foreground-dim: #a0aec0;
@@ -22,6 +23,7 @@
     --green: #8bc34a;
     --orange: #ffb13d;
     --control: #192226;
+    --control-focus: rgba(33, 45, 51, 0.4);
     --background: #233035;
     --foreground: #d7e1e4;
     --foreground-dim: #638997;
@@ -34,15 +36,18 @@
 body {
   font-size: 14px;
   line-height: 1.6em;
+}
+
+input:focus {
+  outline: none;
+}
+
+.overflow-y-auto {
   &::-webkit-scrollbar {
     width: 0 !important;
   }
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
-}
-
-input:focus {
-  outline: none;
 }
 
 @tailwind components;
@@ -82,4 +87,20 @@ code {
 
 .pulse {
   animation: shadow-pulse 1s infinite;
+}
+
+.el-sideview-header {
+  @apply relative;
+  &::before {
+    content: '#';
+    position: absolute;
+    left: -0.75rem;
+    opacity: 0.5;
+  }
+}
+
+.el-archived-list {
+  .task-content span {
+    @apply text-stall-dim;
+  }
 }
