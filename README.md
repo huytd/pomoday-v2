@@ -21,7 +21,7 @@
 
 ## What is Pomoday?
 
-![](https://www.pomoday.com/screenshot.png)
+![](screenshot.png)
 
 Pomoday is an easy to use, yet powerful and flexible web-based task management software that you can use with just a keyboard.
 
