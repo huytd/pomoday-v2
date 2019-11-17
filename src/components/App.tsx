@@ -223,7 +223,7 @@ export const App = () => {
               &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a
               @tag-b: Rename a tag
               <br />
-              &nbsp; <b>today</b>: Show today activities
+              &nbsp; <b>today</b>: Show/hide today's activities
               <br />
               &nbsp; <b>dark</b>: Enable dark mode
               <br />
