@@ -96,11 +96,11 @@ $ docker-compose up -d
 
 ## Backers and Sponsors
 
-I would like to give a special thanks to all of the backers who sponsored this project since day-zero.
+I would like to give a special thanks to all of the advisors and backers who sponsored this project since day-zero.
 
-| <a href="https://github.com/ledongthuc"><img src="https://avatars1.githubusercontent.com/u/1828895?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/trungfinity"><img src="https://avatars1.githubusercontent.com/u/6896444?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/thaod"><img src="https://avatars3.githubusercontent.com/u/11632797?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/mquy"><img src="https://avatars0.githubusercontent.com/u/1636026?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/quannt"><img src="https://avatars1.githubusercontent.com/u/3423859?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/dvkndn"><img src="https://avatars1.githubusercontent.com/u/5953369?s=460&v=4" width="48" height="48"/> |
-|:--:|:--:|:--:|:--:|:--:|:--:|
-|[**ledongthuc**](https://github.com/ledongthuc)|[**trungfinity**](https://github.com/trungfinity)|[**thaod**](https://github.com/thaod)|[**mquy**](https://github.com/mquy)|[**quannt**](https://github.com/quannt)|[**dvkndn**](https://github.com/dvkndn)|
+| <a href="https://github.com/imhuyqn"><img src="https://avatars0.githubusercontent.com/u/2289071?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/ledongthuc"><img src="https://avatars1.githubusercontent.com/u/1828895?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/trungfinity"><img src="https://avatars1.githubusercontent.com/u/6896444?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/thaod"><img src="https://avatars3.githubusercontent.com/u/11632797?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/mquy"><img src="https://avatars0.githubusercontent.com/u/1636026?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/quannt"><img src="https://avatars1.githubusercontent.com/u/3423859?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/dvkndn"><img src="https://avatars1.githubusercontent.com/u/5953369?s=460&v=4" width="48" height="48"/> |
+|:--:|:--:|:--:|:--:|:--:|:--:|:--:|
+|[**imhuyqn**](https://github.com/imhuyqn)|[**ledongthuc**](https://github.com/ledongthuc)|[**trungfinity**](https://github.com/trungfinity)|[**thaod**](https://github.com/thaod)|[**mquy**](https://github.com/mquy)|[**quannt**](https://github.com/quannt)|[**dvkndn**](https://github.com/dvkndn)|
 
 ## License
 
