@@ -4,7 +4,6 @@ export type Command = {
   text?: string;
   id?: string;
 } | null;
-
 const parseTaskCommand = (str: string) =>
   str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
 const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
@@ -17,6 +16,8 @@ const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
 const parseArchiveCommand = (str: string) =>
   str.match(/^(a(?:rchive)?)\s(.*)/i);
+const parseRestoreCommand = (str: string) =>
+  str.match(/^(re(?:store)?)\s(.*)/i);
 const parseTagRenameCommand = (str: string) =>
   str.match(
     /^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i,
@@ -27,7 +28,6 @@ const parseVisibilityCommand = (str: string) =>
   );
 const parseOtherCommand = (str: string) =>
   str.match(/^(close-help|help|today|dark|light|customize|list-archived)/i);
-
 export const parseCommand = (input: string): Command => {
   const matchTask = parseTaskCommand(input);
   if (matchTask) {
@@ -70,7 +70,8 @@ export const parseCommand = (input: string): Command => {
     parseDeleteCommand(input) ||
     parseFlagCommand(input) ||
     parseStopCommand(input) ||
-    parseArchiveCommand(input);
+    parseArchiveCommand(input) ||
+    parseRestoreCommand(input);
   if (matchOther) {
     return {
       command: matchOther[1],

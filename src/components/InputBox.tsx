@@ -1,25 +1,38 @@
 import * as React from 'react';
 import { StateContext } from './App';
-import { parseCommand } from '../helpers/commands';
 import {
-  TaskStatus,
-  stopWorkLogging,
-  TaskItem,
-  getHistoryQueue,
-  MAX_COMMAND_QUEUE_LENGTH,
   findCommon,
-  KEY_TAB,
-  KEY_RIGHT,
-  KEY_F,
-  KEY_UP,
-  KEY_P,
+  getHistoryQueue,
   KEY_DOWN,
-  KEY_N,
-  KEY_RETURN,
-  KEY_INPUT,
   KEY_ESC,
+  KEY_F,
+  KEY_INPUT,
+  KEY_N,
+  KEY_P,
+  KEY_RETURN,
+  KEY_RIGHT,
+  KEY_TAB,
+  KEY_UP,
+  MAX_COMMAND_QUEUE_LENGTH,
 } from '../helpers/utils';
 import Queue from '../helpers/queue';
+import { parseCommand } from '../helpers/commands/parser';
+import {
+  archiveCommand,
+  beginCommand,
+  checkCommand,
+  deleteCommand,
+  editTaskCommand,
+  flagCommand,
+  hideCommand,
+  insertTaskCommand,
+  moveCommand,
+  otherCommand,
+  restoreCommand,
+  showCommand,
+  stopCommand,
+  tagRenameCommand,
+} from '../helpers/commands/actions';
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -99,324 +112,59 @@ export const InputBox = props => {
           switch (cmd.command.toLowerCase()) {
             case 'mv':
             case 'move':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  t.tag = cmd.tag;
-                }
-                return t;
-              });
+              tasksToUpdate = moveCommand(tasksToUpdate, state, ids, cmd);
               break;
             case 'b':
             case 'begin':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  if (t.status !== TaskStatus.WIP) {
-                    t.status = TaskStatus.WIP;
-                    t.logs = (t.logs || []).concat({
-                      start: Date.now(),
-                      end: 0,
-                    });
-                  }
-                }
-                return t;
-              });
+              tasksToUpdate = beginCommand(tasksToUpdate, state, ids);
               break;
             case 'c':
             case 'check':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  t.status =
-                    t.status === TaskStatus.DONE
-                      ? TaskStatus.WAIT
-                      : TaskStatus.DONE;
-                  if (t.status === TaskStatus.DONE) {
-                    t = stopWorkLogging(t);
-                  }
-                }
-                return t;
-              });
+              tasksToUpdate = checkCommand(tasksToUpdate, state, ids);
               break;
             case 'd':
             case 'delete':
-              if (!ids.length) {
-                // Delete by tag
-                const tag = (cmd.id.match(/^(@.*)/) || []).pop();
-                if (tag) {
-                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
-                    if (t.tag !== tag) {
-                      tasks.push(t);
-                    }
-                    return tasks;
-                  }, []);
-                }
-                // Delete by status
-                const status = (
-                  cmd.id.match(
-                    /^(finished|done|flag|flagged|ongoing|wip|wait|pending)/,
-                  ) || []
-                ).pop();
-                if (status) {
-                  let taskStatus = null;
-                  switch (status) {
-                    case 'finished':
-                    case 'done':
-                      taskStatus = TaskStatus.DONE;
-                      break;
-                    case 'flag':
-                    case 'flagged':
-                      taskStatus = TaskStatus.FLAG;
-                      break;
-                    case 'ongoing':
-                    case 'wip':
-                      taskStatus = TaskStatus.WIP;
-                      break;
-                    case 'wait':
-                    case 'pending':
-                      taskStatus = TaskStatus.WAIT;
-                      break;
-                    default:
-                      break;
-                  }
-                  tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
-                    if (taskStatus) {
-                      if (t.status !== taskStatus) {
-                        tasks.push(t);
-                      } else if (t.archived) {
-                        tasks.push(t);
-                      }
-                    }
-                    return tasks;
-                  }, []);
-                }
-              } else {
-                // Delete by id
-                tasksToUpdate = state.tasks.reduce((tasks, t) => {
-                  if (ids.indexOf(t.id) === -1) {
-                    tasks.push(t);
-                  }
-                  return tasks;
-                }, []);
-              }
+              tasksToUpdate = deleteCommand(tasksToUpdate, ids, cmd, state);
               break;
             case 'fl':
             case 'flag':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  t.status =
-                    t.status === TaskStatus.FLAG
-                      ? TaskStatus.WAIT
-                      : TaskStatus.FLAG;
-                  t = stopWorkLogging(t);
-                }
-                return t;
-              });
+              tasksToUpdate = flagCommand(tasksToUpdate, state, ids);
               break;
             case 'st':
             case 'stop':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  if (t.status === TaskStatus.WIP) {
-                    t.status = TaskStatus.WAIT;
-                    t = stopWorkLogging(t);
-                  }
-                }
-                return t;
-              });
+              tasksToUpdate = stopCommand(tasksToUpdate, state, ids);
               break;
             case 'a':
             case 'archive':
-              tasksToUpdate = state.tasks.map(t => {
-                if (ids.indexOf(t.id) !== -1) {
-                  if (!t.archived) {
-                    t.archived = true;
-                  } else {
-                    t.archived = false;
-                  }
-                }
-                return t;
-              });
+              tasksToUpdate = archiveCommand(ids, cmd, tasksToUpdate, state);
+              break;
+            case 're':
+            case 'restore':
+              tasksToUpdate = restoreCommand(ids, cmd, tasksToUpdate, state);
               break;
             case 't':
             case 'task':
-              const tag = cmd.tag || '@uncategorized';
-              const task = cmd.text;
-              if (task && task.length) {
-                const nextId = state.tasks.reduce(
-                  (maxId: number, t: TaskItem) => {
-                    if (t.id > maxId) {
-                      maxId = t.id;
-                    }
-                    return maxId;
-                  },
-                  0,
-                );
-                tasksToUpdate = state.tasks.concat({
-                  id: nextId + 1,
-                  tag: tag,
-                  title: task,
-                  status: TaskStatus.WAIT,
-                } as TaskItem);
-              }
+              tasksToUpdate = insertTaskCommand(cmd, state, tasksToUpdate);
               break;
             case 'e':
             case 'edit':
-              {
-                const id = ids[0];
-                const task = cmd.text;
-                if (task && task.length) {
-                  tasksToUpdate = state.tasks.map(t => {
-                    if (t.id === id) {
-                      t.title = task;
-                    }
-                    return t;
-                  });
-                }
-              }
+              tasksToUpdate = editTaskCommand(ids, cmd, tasksToUpdate, state);
               break;
             case 'tr':
             case 'tagre':
             case 'tagrename':
-              {
-                const [from, to] = cmd.tag.split(' ');
-                tasksToUpdate = state.tasks.map(t => {
-                  if (t.tag.match(from)) {
-                    t.tag = to;
-                  }
-                  return t;
-                });
-              }
+              tasksToUpdate = tagRenameCommand(cmd, tasksToUpdate, state);
               break;
             /* Visibility */
             case 'hide':
-              switch (cmd.text) {
-                case 'finished':
-                case 'done':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      done: false,
-                    },
-                  };
-                  break;
-                case 'flag':
-                case 'flagged':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      flagged: false,
-                    },
-                  };
-                  break;
-                case 'ongoing':
-                case 'wip':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      wip: false,
-                    },
-                  };
-                  break;
-                case 'pending':
-                case 'wait':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      wait: false,
-                    },
-                  };
-                  break;
-              }
+              updateCandidate = hideCommand(updateCandidate, cmd);
               break;
             case 'show':
-              switch (cmd.text) {
-                case 'finished':
-                case 'done':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      done: true,
-                    },
-                  };
-                  break;
-                case 'flag':
-                case 'flagged':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      flagged: true,
-                    },
-                  };
-                  break;
-                case 'wip':
-                case 'ongoing':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      wip: true,
-                    },
-                  };
-                  break;
-                case 'pending':
-                case 'wait':
-                  updateCandidate = {
-                    ...updateCandidate,
-                    taskVisibility: {
-                      ...updateCandidate.taskVisibility,
-                      wait: true,
-                    },
-                  };
-                  break;
-              }
+              updateCandidate = showCommand(updateCandidate, cmd);
               break;
             /* Single command */
-            case 'help':
-              updateCandidate = {
-                ...updateCandidate,
-                showHelp: true,
-              };
-              break;
-            case 'close-help':
-              updateCandidate = {
-                ...updateCandidate,
-                showHelp: false,
-              };
-              break;
-            case 'today':
-              updateCandidate = {
-                ...updateCandidate,
-                showToday: !state.showToday,
-              };
-              break;
-            case 'dark':
-              updateCandidate = {
-                ...updateCandidate,
-                darkMode: true,
-              };
-              break;
-            case 'light':
-              updateCandidate = {
-                ...updateCandidate,
-                darkMode: false,
-              };
-              break;
-            case 'customize':
-              updateCandidate = {
-                ...updateCandidate,
-                showCustomCSS: !updateCandidate.showCustomCSS,
-              };
-              break;
-            case 'list-archived':
-              updateCandidate = {
-                ...updateCandidate,
-                showArchived: !updateCandidate.showArchived,
-              };
+            default:
+              updateCandidate = otherCommand(updateCandidate, cmd, state);
               break;
           }
         }
