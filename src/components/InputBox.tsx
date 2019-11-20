@@ -174,10 +174,14 @@ export const InputBox = props => {
                     case 'pending':
                       taskStatus = TaskStatus.WAIT;
                       break;
+                    default:
+                      break;
                   }
                   tasksToUpdate = state.tasks.reduce((tasks, t: TaskItem) => {
                     if (taskStatus) {
                       if (t.status !== taskStatus) {
+                        tasks.push(t);
+                      } else if (t.archived) {
                         tasks.push(t);
                       }
                     }
