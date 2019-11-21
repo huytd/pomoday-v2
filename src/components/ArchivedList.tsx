@@ -20,13 +20,13 @@ export const ArchivedList = props => {
     },
   );
   return (
-    <div className="el-archived-list flex flex-col italic">
+    <div className="el-archived-list w-full flex flex-col">
       <div className="mb-4">
-        <div className="el-sideview-header font-bold not-italic uppercase">
-          Archived Tasks
+        <div className="el-sideview-header text-stall-dim font-bold text-lg">
+          Archived
         </div>
-        <div className="el-sideview-sub-header font-normal uppercase text-xs">
-          Total: {archivedItems.length} items
+        <div className="el-sideview-sub-header text-xs text-stall-dim font-normal uppercase">
+          {archivedItems.length} tasks
         </div>
       </div>
       <div className="h-full overflow-y-auto">

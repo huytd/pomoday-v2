@@ -41,12 +41,20 @@ export const CodeEditor = props => {
   };
 
   return (
-    <textarea
-      ref={customCSSRef}
-      onKeyPress={processEnterKey}
-      onChange={updateCustomCSS}
-      className="flex-1 bg-transparent resize-none focus:outline-none"
-      placeholder="Enter custom CSS styles here..."
-      value={state.customCSS}></textarea>
+    <div className={'flex-1 flex flex-col'}>
+      <div className="mb-4">
+        <div className="el-sideview-header text-stall-dim font-bold text-lg">
+          Customization
+        </div>
+      </div>
+      <textarea
+        ref={customCSSRef}
+        onKeyPress={processEnterKey}
+        onChange={updateCustomCSS}
+        className="flex-1 bg-transparent resize-none focus:outline-none"
+        placeholder="Enter custom CSS styles here..."
+        value={state.customCSS}
+      />
+    </div>
   );
 };

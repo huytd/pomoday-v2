@@ -85,14 +85,8 @@ code {
   animation: shadow-pulse 1s infinite;
 }
 
-.el-sideview-header {
-  @apply relative;
-  &::before {
-    content: '#';
-    position: absolute;
-    left: -0.75rem;
-    opacity: 0.5;
-  }
+.el-sideview {
+  @apply bg-control2nd border border-background;
 }
 
 .el-archived-list {

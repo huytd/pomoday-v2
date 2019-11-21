@@ -37,13 +37,14 @@ export const Today = props => {
     today.reduce((total, t) => total + ((t.end || now) - t.start), 0) / 1000;
 
   const todayAsString = () => {
-    const [_, month, day, year] = new Date().toDateString().split(' ');
     return (
       <>
-        <div className="el-sideview-header font-bold uppercase">
-          Today Overview
+        <div className="el-sideview-header text-stall-dim font-bold text-lg">
+          Activities Today
         </div>
-        <div className="el-sideview-sub-header font-normal uppercase text-xs">{`${month} ${day}, ${year}`}</div>
+        <div className="el-sideview-sub-header text-xs text-stall-dim font-normal uppercase">
+          {`${new Date().toLocaleDateString()}`}
+        </div>
       </>
     );
   };
