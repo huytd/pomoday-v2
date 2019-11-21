@@ -11,6 +11,7 @@ import { InputBox } from './InputBox';
 import { GoogleAnalytics } from './GoogleAnalytics';
 import { CodeEditor } from './CodeEditor';
 import { ArchivedList } from './ArchivedList';
+import { HelpDialog } from './HelpDialog';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -197,73 +198,7 @@ export const App = () => {
             </div>
           ) : null}
           {/* Help */}
-          {state.showHelp ? (
-            <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control">
-              Type the command in the input box below, starting with:
-              <br />
-              &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task
-              <br />
-              &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a
-              task
-              <br />
-              &nbsp; <b>c</b> or <b>check</b>&nbsp;&nbsp; Check to mark a task
-              as done
-              <br />
-              &nbsp; <b>d</b> or <b>delete</b>&nbsp; Delete a task
-              <br />
-              &nbsp; <b>e</b> or <b>edit</b>&nbsp; Edit a task title
-              <br />
-              &nbsp; <b>mv</b> or <b>move</b>&nbsp;&nbsp; Move a task to another
-              tag
-              <br />
-              &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Toggle a flag
-              <br />
-              &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task
-              <br />
-              &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a
-              @tag-b: Rename a tag
-              <br />
-              &nbsp; <b>today</b>: Show/hide today's activities
-              <br />
-              &nbsp; <b>dark</b>: Enable dark mode
-              <br />
-              &nbsp; <b>light</b>: Enable light mode
-              <br />
-              <br />
-              Example:
-              <br />
-              &nbsp; <code>t @work This is a new task</code>
-              <br />
-              &nbsp; <code>task @longer-tag This is another task</code>
-              <br />
-              &nbsp; <code>b 10</code> or <code>begin 12</code>
-              <br />
-              &nbsp; <code>c 7</code>&nbsp; or <code>check 9</code>
-              <br />
-              &nbsp; <code>d 3</code>&nbsp; or <code>delete 3</code>
-              <br />
-              &nbsp; <code>e 1 this is a new task description</code>
-              <br />
-              &nbsp; <code>mv 2 @new-tag</code> or{' '}
-              <code>move 2 @uncategorized</code>
-              <br />
-              &nbsp; <code>fl 2</code> or <code>flag 2</code>
-              <br />
-              &nbsp; <code>st 1</code> or <code>stop 1</code>
-              <br />
-              &nbsp; <code>edit 1 a new task description goes here</code>
-              <br />
-              &nbsp; <code>tr @work @play</code>
-              <br />
-              <br />
-              Other commands:
-              <br />
-              &nbsp; <b>close-help</b>: Close this help text
-              <br />
-              &nbsp; <b>help</b>: Show this help text
-              <br />
-            </div>
-          ) : null}
+          {state.showHelp ? <HelpDialog /> : null}
           {/* Custom CSS */}
           {state.showCustomCSS ? (
             <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control flex">

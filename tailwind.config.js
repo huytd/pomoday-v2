@@ -13,6 +13,7 @@ module.exports = {
       green: "var(--green)",
       orange: "var(--orange)",
       control: "var(--control)",
+      control2nd: "var(--control-brighter)",
       focus: "var(--control-focus)",
       background: "var(--background)",
       foreground: "var(--foreground)",

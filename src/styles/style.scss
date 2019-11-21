@@ -8,6 +8,7 @@
     --green: #4caf50;
     --orange: #ff9800;
     --control: #e2e8f0;
+    --control-brighter: #f3f5f9;
     --control-focus: rgba(255, 255, 255, 0.2);
     --background: #fafafa;
     --foreground: #222222;
@@ -23,6 +24,7 @@
     --green: #8bc34a;
     --orange: #ffb13d;
     --control: #192226;
+    --control-brighter: #2d3e45;
     --control-focus: rgba(33, 45, 51, 0.4);
     --background: #233035;
     --foreground: #d7e1e4;
@@ -48,6 +50,7 @@ input:focus {
   }
   overflow: -moz-scrollbars-none;
   -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @tailwind components;
@@ -60,14 +63,7 @@ input:focus {
 }
 
 code {
-  &::before {
-    content: '「 ';
-    opacity: 0.5;
-  }
-  &::after {
-    content: ' 」';
-    opacity: 0.5;
-  }
+  @apply px-2 bg-stall-light rounded-sm;
 }
 
 .task-content {
@@ -102,5 +98,63 @@ code {
 .el-archived-list {
   .task-content span {
     @apply text-stall-dim;
+  }
+}
+
+.markdown-content {
+  :target {
+    @apply border-b;
+  }
+
+  p {
+    @apply my-4 leading-relaxed font-sans text-base;
+  }
+
+  h1 {
+    @apply font-bold text-lg border-stall-light mb-4;
+    &::before {
+      content: '#';
+      @apply opacity-25 mr-3;
+    }
+  }
+
+  h2 {
+    @apply font-bold text-base border-stall-light mb-4;
+    &::before {
+      content: '##';
+      @apply opacity-25 mr-3;
+    }
+  }
+
+  h3 {
+    @apply font-bold text-base border-stall-light mb-4;
+    &::before {
+      content: '###';
+      @apply opacity-25 mr-3;
+    }
+  }
+
+  pre {
+    @apply px-3 py-2 ml-5 bg-control rounded-sm;
+
+    code {
+      @apply m-0 p-0;
+    }
+  }
+
+  code {
+    @apply bg-control font-mono text-sm;
+  }
+
+  ol {
+    @apply list-decimal pl-10 py-3;
+
+    li {
+      @apply ml-2;
+
+      a:hover {
+        @apply underline;
+      }
+    }
   }
 }
