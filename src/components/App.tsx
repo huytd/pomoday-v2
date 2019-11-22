@@ -2,6 +2,12 @@ import * as React from 'react';
 import { Row } from './Row';
 import { Today } from './Today';
 import {
+  defaultState,
+  StorageAdapter,
+  LocalStorageAdapter,
+  FirebaseStorageAdapter,
+} from '../helpers/storage';
+import {
   TaskItem,
   TaskStatus,
   RowType,
@@ -15,49 +21,28 @@ import { HelpDialog } from './HelpDialog';
 
 export const StateContext = React.createContext<any>(null);
 
-const defaultState = {
-  tasks: [] as TaskItem[],
-  showHelp: true,
-  showToday: false,
-  darkMode: false,
-  sawTheInput: false,
-  taskVisibility: {
-    done: true,
-    flagged: true,
-    wait: true,
-    wip: true,
-  },
-  history: getHistoryQueue(),
-  showCustomCSS: false,
-  customCSS: '',
-  showArchived: false,
-};
+let storage: StorageAdapter = new LocalStorageAdapter('pomoday');;
 
-const getInitialState = () => {
-  if (window.localStorage) {
-    const saved = window.localStorage.getItem('pomoday');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        if (parsed) {
-          for (let key in defaultState) {
-            if (!parsed.hasOwnProperty(key)) {
-              parsed[key] = defaultState[key];
-            }
-          }
-          return parsed;
-        }
-      } catch {}
-    }
+try {
+  const firebaseConfigStr = window.localStorage.getItem('pomoday-firebase');
+  if (firebaseConfigStr) {
+    const firebaseConfig = JSON.parse(firebaseConfigStr);
+
+    storage = new FirebaseStorageAdapter(firebaseConfig);
   }
-  return defaultState;
-};
+} catch { }
 
 export const App = () => {
-  const [state, setState] = React.useState(getInitialState());
+  const [state, setState] = React.useState(defaultState);
 
   React.useEffect(() => {
-    window.localStorage.setItem('pomoday', JSON.stringify(state));
+    storage.onChange(setState);
+
+    return () => storage.offChange();
+  }, []);
+
+  React.useEffect(() => {
+    storage.update(state);
   }, [state]);
 
   const getVisibilityStatusText = (): string[] => {
@@ -145,7 +130,7 @@ export const App = () => {
       <div
         className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${
           state.darkMode ? 'dark' : 'light'
-        }`}>
+          }`}>
         <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
           {/* Today */}
           <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
