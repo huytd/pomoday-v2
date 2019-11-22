@@ -236,7 +236,7 @@ export const HelpDialog = props => {
   }, []);
 
   return (
-    <div className="el-sideview bg-white border border-control overflow-hidden rounded-lg shadow-xl m-10 sm:mx-auto sm:my-20 w-auto sm:w-7/12 p-5 text-left absolute top-0 left-0 right-0 bottom-0">
+    <div className="el-sideview bg-white overflow-hidden p-10 mb-5 text-left absolute top-0 left-0 right-0 bottom-0">
       <div className="flex flex-row h-full">
         <div className="markdown-content h-full lg:w-3/5 text-justify overflow-y-auto">
           <div dangerouslySetInnerHTML={{ __html: marked(HELP_TEXT) }} />

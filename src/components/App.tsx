@@ -2,16 +2,20 @@ import * as React from 'react';
 import { Row } from './Row';
 import { Today } from './Today';
 import {
+  getHistoryQueue,
+  RowType,
+  SYNC_TIMER,
   TaskItem,
   TaskStatus,
-  RowType,
-  getHistoryQueue,
 } from '../helpers/utils';
 import { InputBox } from './InputBox';
 import { GoogleAnalytics } from './GoogleAnalytics';
 import { CodeEditor } from './CodeEditor';
 import { ArchivedList } from './ArchivedList';
 import { HelpDialog } from './HelpDialog';
+import { AuthDialog } from './AuthDialog';
+import { fetchFromDB, syncToDB } from '../helpers/api';
+import { SyncStatus } from './SyncStatus';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -31,6 +35,10 @@ const defaultState = {
   showCustomCSS: false,
   customCSS: '',
   showArchived: false,
+  userWantToLogin: false,
+  authToken: '',
+  serverUrl: '',
+  lastSync: 0,
 };
 
 const getInitialState = () => {
@@ -57,7 +65,93 @@ export const App = () => {
   const [state, setState] = React.useState(getInitialState());
 
   React.useEffect(() => {
+    if (state.authToken) {
+      fetchFromDB(state.serverUrl, state.authToken)
+        .then(data => {
+          const fromLocal = state.tasks;
+          const fromDB = data.map(t => {
+            let status = TaskStatus.NONE;
+            switch (t.status) {
+              case 'NONE':
+                status = TaskStatus.NONE;
+                break;
+              case 'DONE':
+                status = TaskStatus.DONE;
+                break;
+              case 'WIP':
+                status = TaskStatus.WIP;
+                break;
+              case 'WAIT':
+                status = TaskStatus.WAIT;
+                break;
+              case 'FLAG':
+                status = TaskStatus.FLAG;
+                break;
+            }
+            return {
+              ...t,
+              status: status,
+            };
+          });
+
+          let merged = fromLocal;
+          for (let i = 0; i < fromDB.length; i++) {
+            const cur: TaskItem = fromDB[i];
+            const found = merged.findIndex(t => t.id === cur.id);
+            if (found !== -1) {
+              if ((merged[found].lastaction || 0) < (cur.lastaction || 0)) {
+                merged[found] = cur;
+              }
+              if (cur.status === TaskStatus.NONE) {
+                merged[found].status = TaskStatus.NONE;
+                merged[found].id = 0;
+              }
+            } else {
+              merged.push(cur);
+            }
+          }
+
+          setState({
+            ...state,
+            tasks: merged,
+            lastSync: Date.now(),
+          });
+        })
+        .catch(e => {
+          console.log('DBG::ERROR', e);
+          setState({
+            ...state,
+            authToken: '',
+          });
+        });
+    }
+  }, [state.authToken]);
+
+  React.useEffect(() => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
+    if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
+      if (state.tasks.length) {
+        const tasks = state.tasks.map(t => {
+          if (!t.logs) t.logs = [];
+          if (!t.lastaction) t.lastaction = Date.now();
+          return t;
+        });
+        syncToDB(tasks, state.serverUrl, state.authToken)
+          .then(() => {
+            setState({
+              ...state,
+              lastSync: Date.now(),
+            });
+          })
+          .catch(e => {
+            console.log('DBG::ERROR', e);
+            setState({
+              ...state,
+              authToken: '',
+            });
+          });
+      }
+    }
   }, [state]);
 
   const getVisibilityStatusText = (): string[] => {
@@ -78,6 +172,7 @@ export const App = () => {
   };
 
   const taskGroups = state.tasks
+    .filter(t => t.status !== TaskStatus.NONE)
     .filter(t => !t.archived)
     .reduce(
       (groups, t: TaskItem) => {
@@ -141,11 +236,12 @@ export const App = () => {
 
   return (
     <StateContext.Provider value={[state, setState]}>
-      <style dangerouslySetInnerHTML={{ __html: state.customCSS }}></style>
+      <style dangerouslySetInnerHTML={{ __html: state.customCSS }} />
       <div
         className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${
           state.darkMode ? 'dark' : 'light'
         }`}>
+        <SyncStatus />
         <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
           {/* Today */}
           <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
@@ -211,6 +307,7 @@ export const App = () => {
               <ArchivedList />
             </div>
           ) : null}
+          {!state.authToken && state.userWantToLogin ? <AuthDialog /> : null}
         </div>
         <InputBox />
       </div>

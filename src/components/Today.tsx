@@ -78,7 +78,8 @@ export const Today = props => {
                   getStatus(!t.done && !t.end ? TaskStatus.WIP : null) +
                   ' ' +
                   taskAsString(t.task),
-              }}></div>
+              }}
+            />
             <div className="text-xs text-stall-dim">
               {!t.end ? null : (
                 <span>

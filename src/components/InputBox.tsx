@@ -164,6 +164,7 @@ export const InputBox = props => {
               break;
             /* Single command */
             default:
+              console.log('DBG::', cmd);
               updateCandidate = otherCommand(updateCandidate, cmd, state);
               break;
           }

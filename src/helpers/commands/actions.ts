@@ -5,6 +5,7 @@ export function moveCommand(tasksToUpdate: any, state, ids, cmd) {
     if (ids.indexOf(t.id) !== -1) {
       t.tag = cmd.tag;
     }
+    t.lastaction = Date.now();
     return t;
   });
   return tasksToUpdate;
@@ -19,6 +20,7 @@ export function beginCommand(tasksToUpdate: any, state, ids) {
           start: Date.now(),
           end: 0,
         });
+        t.lastaction = Date.now();
       }
     }
     return t;
@@ -34,6 +36,7 @@ export function checkCommand(tasksToUpdate: any, state, ids) {
       if (t.status === TaskStatus.DONE) {
         t = stopWorkLogging(t);
       }
+      t.lastaction = Date.now();
     }
     return t;
   });
@@ -46,9 +49,11 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
     const tag = (cmd.id.match(/^(@.*)/) || []).pop();
     if (tag) {
       return state.tasks.reduce((tasks, t: TaskItem) => {
-        if (t.tag !== tag) {
-          tasks.push(t);
+        if (t.tag === tag) {
+          t.status = TaskStatus.NONE;
         }
+        t.lastaction = Date.now();
+        tasks.push(t);
         return tasks;
       }, []);
     }
@@ -81,11 +86,11 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
       }
       return state.tasks.reduce((tasks, t: TaskItem) => {
         if (taskStatus) {
-          if (t.status !== taskStatus) {
-            tasks.push(t);
-          } else if (t.archived) {
-            tasks.push(t);
+          if (t.status === taskStatus && !t.archived) {
+            t.status = TaskStatus.NONE;
           }
+          t.lastaction = Date.now();
+          tasks.push(t);
         }
         return tasks;
       }, []);
@@ -93,9 +98,11 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
   } else {
     // Delete by id
     return state.tasks.reduce((tasks, t) => {
-      if (ids.indexOf(t.id) === -1) {
-        tasks.push(t);
+      if (ids.indexOf(t.id) !== -1) {
+        t.status = TaskStatus.NONE;
       }
+      t.lastaction = Date.now();
+      tasks.push(t);
       return tasks;
     }, []);
   }
@@ -107,6 +114,7 @@ export function flagCommand(tasksToUpdate: any, state, ids) {
       t.status =
         t.status === TaskStatus.FLAG ? TaskStatus.WAIT : TaskStatus.FLAG;
       t = stopWorkLogging(t);
+      t.lastaction = Date.now();
     }
     return t;
   });
@@ -119,6 +127,7 @@ export function stopCommand(tasksToUpdate: any, state, ids) {
       if (t.status === TaskStatus.WIP) {
         t.status = TaskStatus.WAIT;
         t = stopWorkLogging(t);
+        t.lastaction = Date.now();
       }
     }
     return t;
@@ -134,6 +143,7 @@ export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.tag === tag) {
           t.archived = true;
+          t.lastaction = Date.now();
         }
         return t;
       });
@@ -143,6 +153,7 @@ export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (ids.indexOf(t.id) !== -1) {
         t.archived = true;
+        t.lastaction = Date.now();
       }
       return t;
     });
@@ -158,6 +169,7 @@ export function restoreCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.tag === tag) {
           t.archived = false;
+          t.lastaction = Date.now();
         }
         return t;
       });
@@ -167,6 +179,7 @@ export function restoreCommand(ids, cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (ids.indexOf(t.id) !== -1) {
         t.archived = false;
+        t.lastaction = Date.now();
       }
       return t;
     });
@@ -189,6 +202,7 @@ export function insertTaskCommand(cmd, state, tasksToUpdate: any) {
       tag: tag,
       title: task,
       status: TaskStatus.WAIT,
+      lastaction: Date.now(),
     } as TaskItem);
   }
   return tasksToUpdate;
@@ -202,6 +216,7 @@ export function editTaskCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.id === id) {
           t.title = task;
+          t.lastaction = Date.now();
         }
         return t;
       });
@@ -216,6 +231,7 @@ export function tagRenameCommand(cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (t.tag.match(from)) {
         t.tag = to;
+        t.lastaction = Date.now();
       }
       return t;
     });
@@ -353,6 +369,19 @@ export function otherCommand(updateCandidate, cmd, state) {
         ...updateCandidate,
         showArchived: !updateCandidate.showArchived,
       };
+    } else if (commandText === 'login') {
+      return {
+        ...updateCandidate,
+        userWantToLogin: true,
+      };
+    } else if (commandText === 'logout') {
+      return {
+        ...updateCandidate,
+        authToken: '',
+        userWantToLogin: true,
+      };
+    } else {
+      return updateCandidate;
     }
   })();
   return updateCandidate;
