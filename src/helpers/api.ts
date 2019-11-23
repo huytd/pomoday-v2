@@ -1,4 +1,4 @@
-export const fetchFromDB = (server, token) => {
+export const pullFromDB = (server, token) => {
   const url = server.replace(/\/$/, '') + '/list';
   return fetch(url, {
     headers: {
@@ -7,7 +7,7 @@ export const fetchFromDB = (server, token) => {
   }).then(r => r.json());
 };
 
-export const syncToDB = (tasks, server, token) => {
+export const pushToDB = (tasks, server, token) => {
   const url = server.replace(/\/$/, '') + '/list';
   const data = JSON.stringify({ tasks: tasks });
   return fetch(url, {

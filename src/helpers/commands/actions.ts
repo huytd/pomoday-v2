@@ -194,6 +194,8 @@ export function insertTaskCommand(cmd, state, tasksToUpdate: any) {
         tag: tag,
         title: task,
         status: TaskStatus.WAIT,
+        logs: [],
+        archived: false,
         lastaction: Date.now(),
       } as TaskItem);
   }

@@ -14,7 +14,7 @@ import { CodeEditor } from './CodeEditor';
 import { ArchivedList } from './ArchivedList';
 import { HelpDialog } from './HelpDialog';
 import { AuthDialog } from './AuthDialog';
-import { fetchFromDB, syncToDB } from '../helpers/api';
+import { pullFromDB, pushToDB } from '../helpers/api';
 import { SyncStatus } from './SyncStatus';
 
 export const StateContext = React.createContext<any>(null);
@@ -61,72 +61,25 @@ const getInitialState = () => {
   return defaultState;
 };
 
+const syncTasks = async (state, setState) => {
+  await pushToDB(state.tasks, state.serverUrl, state.authToken);
+  const updatedTasks = await pullFromDB(state.serverUrl, state.authToken);
+  setState({
+    ...state,
+    tasks: updatedTasks,
+    lastSync: Date.now(),
+  });
+};
+
 export const App = () => {
   const [state, setState] = React.useState(getInitialState());
 
   React.useEffect(() => {
-    if (state.authToken) {
-      fetchFromDB(state.serverUrl, state.authToken)
-        .then(data => {
-          const fromLocal = state.tasks;
-          const fromDB = data;
-
-          let merged = fromLocal;
-          for (let i = 0; i < fromDB.length; i++) {
-            const cur: TaskItem = fromDB[i];
-            const found = merged.findIndex(t => t.id === cur.id);
-            if (found !== -1) {
-              if ((merged[found].lastaction || 0) < (cur.lastaction || 0)) {
-                merged[found] = cur;
-              }
-              if (cur.status === TaskStatus.NONE) {
-                merged[found].status = TaskStatus.NONE;
-              }
-            } else {
-              merged.push(cur);
-            }
-          }
-
-          setState({
-            ...state,
-            tasks: merged,
-            lastSync: Date.now(),
-          });
-        })
-        .catch(e => {
-          console.log('DBG::ERROR', e);
-          setState({
-            ...state,
-            authToken: '',
-          });
-        });
-    }
-  }, [state.authToken]);
-
-  React.useEffect(() => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
     if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
-      if (state.tasks.length) {
-        const tasks = state.tasks.map(t => {
-          if (!t.logs) t.logs = [];
-          if (!t.lastaction) t.lastaction = Date.now();
-          return t;
-        });
-        syncToDB(tasks, state.serverUrl, state.authToken)
-          .then(() => {
-            setState({
-              ...state,
-              lastSync: Date.now(),
-            });
-          })
-          .catch(e => {
-            console.log('DBG::ERROR', e);
-            setState({
-              ...state,
-              authToken: '',
-            });
-          });
-      }
+      (async () => {
+        await syncTasks(state, setState);
+      })();
     }
   }, [state]);
 
