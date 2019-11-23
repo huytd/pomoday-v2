@@ -5,7 +5,6 @@ export function moveCommand(tasksToUpdate: any, state, ids, cmd) {
     if (ids.indexOf(t.id) !== -1) {
       t.tag = cmd.tag;
     }
-    t.lastaction = Date.now();
     return t;
   });
   return tasksToUpdate;
@@ -20,7 +19,6 @@ export function beginCommand(tasksToUpdate: any, state, ids) {
           start: Date.now(),
           end: 0,
         });
-        t.lastaction = Date.now();
       }
     }
     return t;
@@ -36,7 +34,6 @@ export function checkCommand(tasksToUpdate: any, state, ids) {
       if (t.status === TaskStatus.DONE) {
         t = stopWorkLogging(t);
       }
-      t.lastaction = Date.now();
     }
     return t;
   });
@@ -52,7 +49,6 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
         if (t.tag === tag) {
           t.status = TaskStatus.NONE;
         }
-        t.lastaction = Date.now();
         tasks.push(t);
         return tasks;
       }, []);
@@ -89,7 +85,6 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
           if (t.status === taskStatus && !t.archived) {
             t.status = TaskStatus.NONE;
           }
-          t.lastaction = Date.now();
           tasks.push(t);
         }
         return tasks;
@@ -101,7 +96,6 @@ export function deleteCommand(tasksToUpdate: any, ids, cmd, state) {
       if (ids.indexOf(t.id) !== -1) {
         t.status = TaskStatus.NONE;
       }
-      t.lastaction = Date.now();
       tasks.push(t);
       return tasks;
     }, []);
@@ -114,7 +108,6 @@ export function flagCommand(tasksToUpdate: any, state, ids) {
       t.status =
         t.status === TaskStatus.FLAG ? TaskStatus.WAIT : TaskStatus.FLAG;
       t = stopWorkLogging(t);
-      t.lastaction = Date.now();
     }
     return t;
   });
@@ -127,7 +120,6 @@ export function stopCommand(tasksToUpdate: any, state, ids) {
       if (t.status === TaskStatus.WIP) {
         t.status = TaskStatus.WAIT;
         t = stopWorkLogging(t);
-        t.lastaction = Date.now();
       }
     }
     return t;
@@ -143,7 +135,6 @@ export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.tag === tag) {
           t.archived = true;
-          t.lastaction = Date.now();
         }
         return t;
       });
@@ -153,7 +144,6 @@ export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (ids.indexOf(t.id) !== -1) {
         t.archived = true;
-        t.lastaction = Date.now();
       }
       return t;
     });
@@ -169,7 +159,6 @@ export function restoreCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.tag === tag) {
           t.archived = false;
-          t.lastaction = Date.now();
         }
         return t;
       });
@@ -179,7 +168,6 @@ export function restoreCommand(ids, cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (ids.indexOf(t.id) !== -1) {
         t.archived = false;
-        t.lastaction = Date.now();
       }
       return t;
     });
@@ -192,18 +180,22 @@ export function insertTaskCommand(cmd, state, tasksToUpdate: any) {
   const task = cmd.text;
   if (task && task.length) {
     const nextId = state.tasks.reduce((maxId: number, t: TaskItem) => {
-      if (t.id > maxId) {
-        maxId = t.id;
+      if (t.status !== TaskStatus.NONE) {
+        if (t.id > maxId) {
+          maxId = t.id;
+        }
       }
       return maxId;
     }, 0);
-    tasksToUpdate = state.tasks.concat({
-      id: nextId + 1,
-      tag: tag,
-      title: task,
-      status: TaskStatus.WAIT,
-      lastaction: Date.now(),
-    } as TaskItem);
+    tasksToUpdate = state.tasks
+      .filter(t => t.id !== nextId + 1)
+      .concat({
+        id: nextId + 1,
+        tag: tag,
+        title: task,
+        status: TaskStatus.WAIT,
+        lastaction: Date.now(),
+      } as TaskItem);
   }
   return tasksToUpdate;
 }
@@ -216,7 +208,6 @@ export function editTaskCommand(ids, cmd, tasksToUpdate: any, state) {
       tasksToUpdate = state.tasks.map(t => {
         if (t.id === id) {
           t.title = task;
-          t.lastaction = Date.now();
         }
         return t;
       });
@@ -231,7 +222,6 @@ export function tagRenameCommand(cmd, tasksToUpdate: any, state) {
     tasksToUpdate = state.tasks.map(t => {
       if (t.tag.match(from)) {
         t.tag = to;
-        t.lastaction = Date.now();
       }
       return t;
     });

@@ -69,30 +69,7 @@ export const App = () => {
       fetchFromDB(state.serverUrl, state.authToken)
         .then(data => {
           const fromLocal = state.tasks;
-          const fromDB = data.map(t => {
-            let status = TaskStatus.NONE;
-            switch (t.status) {
-              case 'NONE':
-                status = TaskStatus.NONE;
-                break;
-              case 'DONE':
-                status = TaskStatus.DONE;
-                break;
-              case 'WIP':
-                status = TaskStatus.WIP;
-                break;
-              case 'WAIT':
-                status = TaskStatus.WAIT;
-                break;
-              case 'FLAG':
-                status = TaskStatus.FLAG;
-                break;
-            }
-            return {
-              ...t,
-              status: status,
-            };
-          });
+          const fromDB = data;
 
           let merged = fromLocal;
           for (let i = 0; i < fromDB.length; i++) {
@@ -104,7 +81,6 @@ export const App = () => {
               }
               if (cur.status === TaskStatus.NONE) {
                 merged[found].status = TaskStatus.NONE;
-                merged[found].id = 0;
               }
             } else {
               merged.push(cur);

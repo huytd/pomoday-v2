@@ -12,7 +12,7 @@ export const Row = props => {
     <div
       className={`row ${
         type === RowType.TAG
-          ? 'el-tag font-bold inline-block px-3 py-1 mb-3 bg-control rounded-lg'
+          ? 'el-tag font-bold inline-block px-3 py-1 mb-2 bg-control rounded-lg'
           : type === RowType.TEXT && !text.length
           ? 'el-space p-3'
           : 'el-text flex flex-row'
@@ -22,7 +22,8 @@ export const Row = props => {
       ) : type === RowType.TEXT ? (
         <span
           className="el-text inline-block"
-          dangerouslySetInnerHTML={{ __html: marked(text) }}></span>
+          dangerouslySetInnerHTML={{ __html: marked(text) }}
+        />
       ) : (
         text
       )}

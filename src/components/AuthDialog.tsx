@@ -18,6 +18,12 @@ export const AuthDialog = props => {
   const passwordRef = React.useRef(null);
   const serverRef = React.useRef(null);
 
+  React.useEffect(() => {
+    if (usernameRef && usernameRef.current) {
+      usernameRef.current.focus();
+    }
+  }, []);
+
   const doLogin = () => {
     const username =
       usernameRef && usernameRef.current && usernameRef.current.value;
@@ -81,6 +87,7 @@ export const AuthDialog = props => {
             <div className={'my-2 flex flex-row'}>
               <span className={'w-4/12'}>Username:</span>
               <input
+                tabIndex={1}
                 ref={usernameRef}
                 className={'border border-stall-dim flex-1 ml-2'}
                 type={'text'}
@@ -89,6 +96,7 @@ export const AuthDialog = props => {
             <div className={'my-2 flex flex-row'}>
               <span className={'w-4/12'}>Password:</span>
               <input
+                tabIndex={2}
                 ref={passwordRef}
                 className={'border border-stall-dim flex-1 ml-2'}
                 type={'password'}
@@ -97,6 +105,7 @@ export const AuthDialog = props => {
             <div className={'my-2 flex flex-row'}>
               <span className={'w-4/12'}>Server:</span>
               <input
+                tabIndex={3}
                 ref={serverRef}
                 className={'border border-stall-dim flex-1 ml-2'}
                 type={'text'}
@@ -105,8 +114,11 @@ export const AuthDialog = props => {
             </div>
             <div className={'my-2 float-right'}>
               <button
+                tabIndex={4}
                 onClick={doLogin}
-                className={'px-5 py-1 bg-green text-white'}>
+                className={
+                  'px-5 py-1 bg-green text-white focus:opacity-75 hover:opacity-75'
+                }>
                 Login
               </button>
             </div>

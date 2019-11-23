@@ -215,6 +215,7 @@ export const InputBox = props => {
           className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10 border-l-4 border-transparent focus:border-green focus:bg-focus"
           tabIndex={0}
           autoFocus={true}
+          disabled={state.userWantToLogin && !state.authToken}
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}
