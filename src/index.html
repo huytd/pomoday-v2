@@ -19,5 +19,14 @@
   <body>
     <div id="root"></div>
     <script src="./index.ts"></script>
+
+    <!-- SW Workbox Offline Support -->
+    <script>
+      if ("serviceWorker" in navigator) {
+          window.addEventListener("load", () => {
+              navigator.serviceWorker.register("./sw.js");
+          });
+      }
+  </script>
   </body>
 </html>
