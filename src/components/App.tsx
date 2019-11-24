@@ -16,12 +16,14 @@ import { HelpDialog } from './HelpDialog';
 import { AuthDialog } from './AuthDialog';
 import { pullFromDB, pushToDB } from '../helpers/api';
 import { SyncStatus } from './SyncStatus';
+import { QuickHelp } from './QuickHelp';
 
 export const StateContext = React.createContext<any>(null);
 
 const defaultState = {
   tasks: [] as TaskItem[],
-  showHelp: true,
+  showHelp: false,
+  showQuickHelp: true,
   showToday: false,
   darkMode: false,
   sawTheInput: false,
@@ -224,6 +226,7 @@ export const App = () => {
           ) : null}
           {/* Help */}
           {state.showHelp ? <HelpDialog /> : null}
+          {state.showQuickHelp ? <QuickHelp /> : null}
           {/* Custom CSS */}
           {state.showCustomCSS ? (
             <div className="el-sideview w-full h-full overflow-y-auto mb-20 sm:mb-0 sm:w-2/6 p-5 text-sm text-left border-l border-control flex">

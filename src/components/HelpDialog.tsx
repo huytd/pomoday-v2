@@ -19,6 +19,8 @@ Remember when I said Pomoday is a task management app? So the first thing we wil
 You can create a task by start typing \`t\` or \`task\` command, followed by a \`tag\`, and a task description. 
 If you skip the tag, your task will be created as an \`@uncategorized\` tag.
 
+![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-02.gif)
+
 For example:
 
 \`\`\`
@@ -40,6 +42,8 @@ edit 5 new task description here
 \`\`\`
 
 To delete a task, just use \`d\` or \`delete\` command, you can delete multiple tasks at once, or just a single task:
+
+![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-04.gif)
 
 \`\`\`
 d 1
@@ -100,6 +104,8 @@ Pomoday come with a built-in time tracker, you can start the timer for each task
 When the timer is running, you can stop it using \`stop\` (or \`st\`) command. Marking a task as done (\`check\` or \`c\`) or
 flag it (\`flag\` or \`fl\`) will also stop the timer.
 
+![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-03.gif)
+
 Start a timer for one or multiple tasks:
 
 \`\`\`
@@ -148,73 +154,6 @@ const TOC_TEXT = `
 
 `;
 
-/*
-
-      <br />
-      &nbsp; <b>t</b> or <b>task</b>&nbsp;&nbsp;&nbsp; Add a new task
-      <br />
-      &nbsp; <b>b</b> or <b>begin</b>&nbsp;&nbsp; Start working on a
-      task
-      <br />
-      &nbsp; <b>c</b> or <b>check</b>&nbsp;&nbsp; Check to mark a task
-      as done
-      <br />
-      &nbsp; <b>d</b> or <b>delete</b>&nbsp; Delete a task
-      <br />
-      &nbsp; <b>e</b> or <b>edit</b>&nbsp; Edit a task title
-      <br />
-      &nbsp; <b>mv</b> or <b>move</b>&nbsp;&nbsp; Move a task to another
-      tag
-      <br />
-      &nbsp; <b>fl</b> or <b>flag</b>&nbsp;&nbsp; Toggle a flag
-      <br />
-      &nbsp; <b>st</b> or <b>stop</b>&nbsp;&nbsp; Stop working on a task
-      <br />
-      &nbsp; <b>tr</b> or <b>tagre</b> or <b>tagrename</b> @tag-a
-      @tag-b: Rename a tag
-      <br />
-      &nbsp; <b>today</b>: Show/hide today's activities
-      <br />
-      &nbsp; <b>dark</b>: Enable dark mode
-      <br />
-      &nbsp; <b>light</b>: Enable light mode
-      <br />
-      <br />
-      Example:
-      <br />
-      &nbsp; <code>t @work This is a new task</code>
-      <br />
-      &nbsp; <code>task @longer-tag This is another task</code>
-      <br />
-      &nbsp; <code>b 10</code> or <code>begin 12</code>
-      <br />
-      &nbsp; <code>c 7</code>&nbsp; or <code>check 9</code>
-      <br />
-      &nbsp; <code>d 3</code>&nbsp; or <code>delete 3</code>
-      <br />
-      &nbsp; <code>e 1 this is a new task description</code>
-      <br />
-      &nbsp; <code>mv 2 @new-tag</code> or{' '}
-      <code>move 2 @uncategorized</code>
-      <br />
-      &nbsp; <code>fl 2</code> or <code>flag 2</code>
-      <br />
-      &nbsp; <code>st 1</code> or <code>stop 1</code>
-      <br />
-      &nbsp; <code>edit 1 a new task description goes here</code>
-      <br />
-      &nbsp; <code>tr @work @play</code>
-      <br />
-      <br />
-      Other commands:
-      <br />
-      &nbsp; <b>close-help</b>: Close this help text
-      <br />
-      &nbsp; <b>help</b>: Show this help text
-      <br />
-
- */
-
 export const HelpDialog = props => {
   const [state, setState] = React.useContext(StateContext);
 
@@ -238,7 +177,7 @@ export const HelpDialog = props => {
   return (
     <div className="el-sideview bg-white overflow-hidden p-10 mb-5 text-left absolute top-0 left-0 right-0 bottom-0">
       <div className="flex flex-row h-full">
-        <div className="markdown-content h-full lg:w-3/5 text-justify overflow-y-auto">
+        <div className="markdown-content full-page h-full lg:w-3/5 text-justify overflow-y-auto">
           <div dangerouslySetInnerHTML={{ __html: marked(HELP_TEXT) }} />
         </div>
         <div
@@ -249,8 +188,7 @@ export const HelpDialog = props => {
             dangerouslySetInnerHTML={{ __html: marked(TOC_TEXT) }}
           />
           <div className={'text-xs'}>
-            Enter <code>close-help</code> or press <code>ESC</code> to close
-            this help.
+            Press <code>ESC</code> to close this help.
           </div>
         </div>
       </div>

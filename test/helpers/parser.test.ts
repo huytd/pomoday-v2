@@ -52,7 +52,7 @@ const tests: [string, Command][] = [
   ['stop 1', { command: 'stop', id: '1' }],
   // other command
   ['help', { command: 'help' }],
-  ['close-help', { command: 'close-help' }],
+  ['quickhelp', { command: 'quickhelp' }],
   ['today', { command: 'today' }],
   ['dark', { command: 'dark' }],
   ['light', { command: 'light' }],

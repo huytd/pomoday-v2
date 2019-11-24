@@ -331,10 +331,10 @@ export function otherCommand(updateCandidate, cmd, state) {
         ...updateCandidate,
         showHelp: true,
       };
-    } else if (commandText === 'close-help') {
+    } else if (commandText === 'quickhelp') {
       return {
         ...updateCandidate,
-        showHelp: false,
+        showQuickHelp: true,
       };
     } else if (commandText === 'today') {
       return {

@@ -33,6 +33,7 @@ import {
   stopCommand,
   tagRenameCommand,
 } from '../helpers/commands/actions';
+import { useEventListener } from '../helpers/hooks';
 
 export const InputBox = props => {
   const inputRef = React.useRef(null);
@@ -164,7 +165,6 @@ export const InputBox = props => {
               break;
             /* Single command */
             default:
-              console.log('DBG::', cmd);
               updateCandidate = otherCommand(updateCandidate, cmd, state);
               break;
           }
@@ -185,6 +185,9 @@ export const InputBox = props => {
   };
 
   const focusInput = event => {
+    if (state.showHelp || state.showQuickHelp) {
+      event.preventDefault();
+    }
     const inputIsFocused = inputRef.current === document.activeElement;
     const activeIsEditor =
       document.activeElement.tagName.match(/input|textarea/i) !== null;
@@ -196,13 +199,7 @@ export const InputBox = props => {
     }
   };
 
-  React.useEffect(() => {
-    document.addEventListener('keyup', focusInput, false);
-
-    return () => {
-      document.removeEventListener('keyup', focusInput, false);
-    };
-  }, []);
+  useEventListener('keyup', focusInput);
 
   return (
     <div className="el-editor bg-control w-full h-10 text-sm fixed bottom-0 left-0">
@@ -215,7 +212,11 @@ export const InputBox = props => {
           className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10 border-l-4 border-transparent focus:border-green focus:bg-focus"
           tabIndex={0}
           autoFocus={true}
-          disabled={state.userWantToLogin && !state.authToken}
+          disabled={
+            (state.userWantToLogin && !state.authToken) ||
+            state.showHelp ||
+            state.showQuickHelp
+          }
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}

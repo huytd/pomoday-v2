@@ -95,6 +95,10 @@ code {
   }
 }
 
+.el-backdrop {
+  background: rgba(0, 0, 0, 0.6);
+}
+
 .markdown-content {
   :target {
     @apply border-b;
@@ -151,4 +155,18 @@ code {
       }
     }
   }
+
+  img {
+    @apply flex-1 my-5 border border-stall-light rounded-lg shadow-xl;
+  }
+
+  &.full-page {
+    img {
+      @apply w-5/12 mx-auto;
+    }
+  }
+}
+
+.el-quickhelp p {
+  margin: 0;
 }
