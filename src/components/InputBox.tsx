@@ -39,6 +39,7 @@ export const InputBox = props => {
   const inputRef = React.useRef(null);
   const suggestRef = React.useRef(null);
   const [state, setState] = React.useContext(StateContext);
+  const [isVisible, setVisible] = React.useState(false);
   let historyIndex = -1;
   const history: Queue<string> = getHistoryQueue(state.history);
   let suggestion = '';
@@ -184,6 +185,16 @@ export const InputBox = props => {
     }
   };
 
+  const openInput = () => {
+    setVisible(true);
+    inputRef.current.focus();
+  };
+
+  const hideInput = () => {
+    setVisible(false);
+    inputRef.current.blur();
+  };
+
   const focusInput = event => {
     if (state.showHelp || state.showQuickHelp) {
       event.preventDefault();
@@ -192,24 +203,21 @@ export const InputBox = props => {
     const activeIsEditor =
       document.activeElement.tagName.match(/input|textarea/i) !== null;
     if (event.keyCode === KEY_INPUT && !inputIsFocused && !activeIsEditor) {
-      inputRef.current.focus();
+      openInput();
     }
     if (event.keyCode === KEY_ESC && inputIsFocused) {
-      inputRef.current.blur();
+      hideInput();
     }
   };
 
   useEventListener('keyup', focusInput);
 
-  return (
-    <div className="el-editor bg-control w-full h-10 text-sm fixed bottom-0 left-0">
-      <div className="w-full h-full relative h-8">
-        {state.sawTheInput ? null : (
-          <div className="absolute bottom-0 left-0 ml-2 mb-8 z-50 flex flex-row bg-orange pulse w-4 h-4 rounded-full shadow-xl"></div>
-        )}
+  return isVisible ? (
+    <div className="text-xs sm:text-sm absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
+      <div className="el-editor bg-green border-green border w-9/12 sm:w-5/12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
         <input
           ref={inputRef}
-          className="bg-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-10 border-l-4 border-transparent focus:border-green focus:bg-focus"
+          className="bg-transparent placeholder-white text-white w-full h-full p-5 px-8 absolute top-0 left-0 z-10"
           tabIndex={0}
           autoFocus={true}
           disabled={
@@ -220,15 +228,40 @@ export const InputBox = props => {
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}
-          placeholder="Press 'i' or 'Tab' to start typing..."
+          placeholder="Type your command here or press ESC to close this."
         />
         <input
           ref={suggestRef}
-          className="bg-transparent border-l-4 border-transparent w-full h-full p-2 px-3 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
+          className="bg-transparent text-white w-full h-full p-5 px-8 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
           disabled={true}
           value={''}
         />
       </div>
+      <div
+        className={
+          'block sm:hidden fixed bottom-0 right-0 sm:right-auto sm:left-0 m-5'
+        }>
+        <button
+          onClick={hideInput}
+          className={
+            'sm:hidden text-3xl bg-tomato text-white rounded-full shadow-lg w-16 h-16'
+          }>
+          ✕
+        </button>
+      </div>
+    </div>
+  ) : (
+    <div className={'fixed bottom-0 right-0 sm:right-auto sm:left-0 m-5'}>
+      <span className={'hidden sm:block'}>
+        Press <code>i</code> to show command bar.
+      </span>
+      <button
+        onClick={openInput}
+        className={
+          'sm:hidden text-5xl bg-green text-white rounded-full shadow-lg w-16 h-16'
+        }>
+        ⌨
+      </button>
     </div>
   );
 };

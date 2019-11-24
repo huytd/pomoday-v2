@@ -169,7 +169,7 @@ export const App = () => {
     <StateContext.Provider value={[state, setState]}>
       <style dangerouslySetInnerHTML={{ __html: state.customCSS }} />
       <div
-        className={`w-full h-full relative flex flex-col font-mono text-foreground bg-background ${
+        className={`w-screen h-screen relative flex flex-col font-mono text-foreground bg-background ${
           state.darkMode ? 'dark' : 'light'
         }`}>
         <SyncStatus />
