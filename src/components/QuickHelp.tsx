@@ -17,23 +17,36 @@ export const QuickHelp = props => {
   const [state, setState] = React.useContext(StateContext);
   const [page, setPage] = React.useState(0);
 
+  const nextPage = () => {
+    if (page < QUICK_HELP_TEXT.length - 1) {
+      setPage(page + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (page > 0) {
+      setPage(page - 1);
+    }
+  };
+
+  const closeHelp = () => {
+    setState({
+      ...state,
+      showQuickHelp: false,
+    });
+  };
+
   const processKey = e => {
     if (e.keyCode === KEY_ESC) {
-      setState({
-        ...state,
-        showQuickHelp: false,
-      });
+      closeHelp();
     }
-    console.log(e.key, page);
     if (
       e.key === 'j' ||
       e.key === 'l' ||
       e.key === 'ArrowDown' ||
       e.key === 'ArrowLeft'
     ) {
-      if (page < QUICK_HELP_TEXT.length - 1) {
-        setPage(page + 1);
-      }
+      nextPage();
     }
     if (
       e.key === 'k' ||
@@ -41,9 +54,7 @@ export const QuickHelp = props => {
       e.key === 'ArrowUp' ||
       e.key === 'ArrowRight'
     ) {
-      if (page > 0) {
-        setPage(page - 1);
-      }
+      prevPage();
     }
   };
 
@@ -51,14 +62,41 @@ export const QuickHelp = props => {
 
   return (
     <div className="el-backdrop overflow-hidden absolute top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center">
-      <div className="bg-background rounded-lg shadow-lg p-5 w-3/12 h-auto">
+      <div className="bg-background rounded-lg shadow-lg p-5 w-auto m-10 sm:m-0 sm:w-3/12 h-auto">
         <div
           className={'markdown-content relative flex flex-col el-quickhelp'}
           dangerouslySetInnerHTML={{ __html: marked(QUICK_HELP_TEXT[page]) }}
         />
-        <div className={'border-t border-control pt-3 text-xs text-stall-dim'}>
+        <div
+          className={
+            'border-t hidden sm:block border-control pt-3 text-xs text-stall-dim'
+          }>
           Press <b>J</b>/<b>K</b> or <b>UP</b>/<b>DOWN</b> for next/previous
           pages. <b>ESC</b> to close this help.
+        </div>
+        <div className={'border-t sm:hidden border-control pt-3 text-xs'}>
+          <div className={'flex flex-row'}>
+            {page < QUICK_HELP_TEXT.length - 1 ? (
+              <>
+                <button
+                  onClick={prevPage}
+                  className={'flex-1 bg-stall-light py-2 mx-1 rounded-lg'}>
+                  &lt; Previous
+                </button>
+                <button
+                  onClick={nextPage}
+                  className={'flex-1 bg-stall-light py-2 mx-1 rounded-lg'}>
+                  Next &gt;
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={closeHelp}
+                className={'flex-1 bg-stall-light py-2 mx-1 rounded-lg'}>
+                Close
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>
