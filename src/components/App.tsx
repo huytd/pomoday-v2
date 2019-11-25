@@ -169,11 +169,11 @@ export const App = () => {
     <StateContext.Provider value={[state, setState]}>
       <style dangerouslySetInnerHTML={{ __html: state.customCSS }} />
       <div
-        className={`w-screen h-screen relative flex flex-col font-mono text-foreground bg-background ${
+        className={`w-screen h-screen relative flex flex-col font-mono text-foreground bg-background draggable ${
           state.darkMode ? 'dark' : 'light'
         }`}>
         <SyncStatus />
-        <div className="flex-1 flex flex-col sm:flex-row bg-background overflow-hidden">
+        <div className="flex-1 flex flex-col sm:flex-row bg-background overflow-hidden no-drag">
           {/* Today */}
           <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
             {taskGroups.hidden.length ? (

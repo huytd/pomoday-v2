@@ -56,6 +56,15 @@ input:focus {
 @tailwind components;
 @tailwind utilities;
 
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+.draggable {
+  -webkit-user-select: none;
+  -webkit-app-region: drag;
+}
+
 .row {
   a {
     @apply text-tomato;
