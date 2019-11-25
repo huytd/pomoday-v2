@@ -9,7 +9,7 @@ import {
 } from '../helpers/utils';
 
 export const Today = props => {
-  const [state] = React.useContext(StateContext);
+  const [state, setState] = React.useContext(StateContext);
   const now = Date.now();
   const today = state.tasks.reduce((tasks, t) => {
     if (t.logs) {
@@ -36,6 +36,13 @@ export const Today = props => {
   const totalTime =
     today.reduce((total, t) => total + ((t.end || now) - t.start), 0) / 1000;
 
+  const closeToday = () => {
+    setState({
+      ...state,
+      showToday: false,
+    });
+  };
+
   const todayAsString = () => {
     return (
       <>
@@ -51,6 +58,15 @@ export const Today = props => {
 
   return (
     <>
+      <div className={'block sm:hidden fixed bottom-0 right-0 m-5 z-50'}>
+        <button
+          onClick={closeToday}
+          className={
+            'sm:hidden text-3xl bg-tomato text-white rounded-full shadow-lg w-16 h-16'
+          }>
+          ✕
+        </button>
+      </div>
       <div className="mb-4">{todayAsString()}</div>
       {today.map((t, i) => (
         <div className="mb-2 flex flex-row" key={i}>
