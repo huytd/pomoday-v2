@@ -65,10 +65,10 @@ const getInitialState = () => {
 
 const syncTasks = async (state, setState) => {
   await pushToDB(state.tasks, state.serverUrl, state.authToken);
-  const updatedTasks = await pullFromDB(state.serverUrl, state.authToken);
+  const data = await pullFromDB(state.serverUrl, state.authToken);
   setState({
     ...state,
-    tasks: updatedTasks,
+    tasks: data.tasks,
     lastSync: Date.now(),
   });
 };
