@@ -86,7 +86,7 @@ code {
 }
 
 .el-sideview {
-  @apply bg-control2nd border border-background;
+  @apply bg-control2nd border-l border-stall-light;
 }
 
 .el-archived-list {
@@ -133,7 +133,7 @@ code {
   }
 
   pre {
-    @apply px-3 py-2 ml-5 bg-control rounded-sm;
+    @apply px-3 py-2 ml-5 bg-control rounded-sm overflow-x-auto;
 
     code {
       @apply m-0 p-0;
@@ -162,7 +162,10 @@ code {
 
   &.full-page {
     img {
-      @apply w-5/12 mx-auto;
+      @apply w-11/12 mx-auto;
+      @screen sm {
+        @apply w-5/12 mx-auto;
+      }
     }
   }
 }

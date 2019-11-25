@@ -2,6 +2,7 @@ import * as React from 'react';
 import { KEY_ESC } from '../helpers/utils';
 import { StateContext } from './App';
 import marked from 'marked';
+import { useEventListener } from '../helpers/hooks';
 
 const HELP_TEXT = `
 # How to use
@@ -157,37 +158,44 @@ const TOC_TEXT = `
 export const HelpDialog = props => {
   const [state, setState] = React.useContext(StateContext);
 
+  const closeHelp = () => {
+    setState({
+      ...state,
+      showHelp: false,
+    });
+  };
+
   const processKey = e => {
     if (e.keyCode === KEY_ESC) {
-      setState({
-        ...state,
-        showHelp: false,
-      });
+      closeHelp();
     }
   };
 
-  React.useEffect(() => {
-    document.addEventListener('keyup', processKey, false);
-
-    return () => {
-      document.removeEventListener('keyup', processKey, false);
-    };
-  }, []);
+  useEventListener('keyup', processKey);
 
   return (
-    <div className="el-sideview bg-white overflow-hidden p-10 mb-5 text-left absolute top-0 left-0 right-0 bottom-0">
+    <div className="el-sideview bg-white sm:overflow-hidden p-3 sm:p-10 mb-5 text-left absolute top-0 left-0 right-0 bottom-0">
       <div className="flex flex-row h-full">
-        <div className="markdown-content full-page h-full lg:w-3/5 text-justify overflow-y-auto">
+        <div className={'block sm:hidden fixed bottom-0 right-0 m-5 z-50'}>
+          <button
+            onClick={closeHelp}
+            className={
+              'sm:hidden text-3xl bg-tomato text-white rounded-full shadow-lg w-16 h-16'
+            }>
+            ✕
+          </button>
+        </div>
+        <div className="markdown-content full-page h-auto w-full sm:h-full lg:w-3/5 text-justify sm:overflow-y-auto">
           <div dangerouslySetInnerHTML={{ __html: marked(HELP_TEXT) }} />
         </div>
         <div
           style={{ transition: 'all 0.5s' }}
-          className="markdown-content opacity-50 hover:opacity-100 flex-1 ml-5 text-justify flex flex-col">
+          className="hidden markdown-content opacity-50 hover:opacity-100 flex-1 ml-5 text-justify sm:flex flex-col">
           <div
             className={'flex-1'}
             dangerouslySetInnerHTML={{ __html: marked(TOC_TEXT) }}
           />
-          <div className={'text-xs'}>
+          <div className={'hidden sm:block text-xs'}>
             Press <code>ESC</code> to close this help.
           </div>
         </div>

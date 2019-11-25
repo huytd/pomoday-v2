@@ -173,7 +173,7 @@ export const App = () => {
           state.darkMode ? 'dark' : 'light'
         }`}>
         <SyncStatus />
-        <div className="flex-1 flex flex-col sm:flex-row pb-10 bg-background overflow-hidden">
+        <div className="flex-1 flex flex-col sm:flex-row bg-background overflow-hidden">
           {/* Today */}
           <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
             {taskGroups.hidden.length ? (

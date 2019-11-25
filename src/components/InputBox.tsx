@@ -181,6 +181,7 @@ export const InputBox = props => {
           history: history.push(inputRef.current.value),
         });
         inputRef.current.value = '';
+        setVisible(false);
       }
     }
   };
@@ -196,7 +197,11 @@ export const InputBox = props => {
   };
 
   const focusInput = event => {
-    if (state.showHelp || state.showQuickHelp) {
+    if (
+      state.showHelp ||
+      state.showQuickHelp ||
+      (state.userWantToLogin && !state.authToken)
+    ) {
       event.preventDefault();
     }
     const inputIsFocused = inputRef.current === document.activeElement;
@@ -214,17 +219,12 @@ export const InputBox = props => {
 
   return isVisible ? (
     <div className="text-xs sm:text-sm absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
-      <div className="el-editor bg-green border-green border w-9/12 sm:w-5/12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
+      <div className="el-editor bg-green border-background border w-9/12 sm:w-5/12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
         <input
           ref={inputRef}
           className="bg-transparent placeholder-white text-white w-full h-full p-5 px-8 absolute top-0 left-0 z-10"
           tabIndex={0}
           autoFocus={true}
-          disabled={
-            (state.userWantToLogin && !state.authToken) ||
-            state.showHelp ||
-            state.showQuickHelp
-          }
           onKeyPress={processInput}
           onKeyUp={processInput}
           onKeyDown={onKeyDown}
