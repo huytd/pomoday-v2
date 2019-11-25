@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StateContext } from './App';
 import { KEY_ESC } from '../helpers/utils';
 import { authenticateUser } from '../helpers/api';
+import { useEventListener } from '../helpers/hooks';
 
 enum UIAuthState {
   WAIT,
@@ -59,25 +60,32 @@ export const AuthDialog = props => {
     }
   };
 
+  const closeDialog = () => {
+    setState({
+      ...state,
+      userWantToLogin: false,
+    });
+  };
+
   const processKey = e => {
     if (e.keyCode === KEY_ESC) {
-      setState({
-        ...state,
-        userWantToLogin: false,
-      });
+      closeDialog();
     }
   };
 
-  React.useEffect(() => {
-    document.addEventListener('keyup', processKey, false);
-
-    return () => {
-      document.removeEventListener('keyup', processKey, false);
-    };
-  }, []);
+  useEventListener('keyup', processKey);
 
   return (
     <div className="bg-white p-5 text-left absolute top-0 left-0 right-0 bottom-0">
+      <div className={'block sm:hidden fixed bottom-0 right-0 m-5 z-50'}>
+        <button
+          onClick={closeDialog}
+          className={
+            'sm:hidden text-3xl bg-tomato text-white rounded-full shadow-lg w-16 h-16'
+          }>
+          ✕
+        </button>
+      </div>
       {uiState.status === UIAuthState.WAIT ? (
         <>
           <div className={'p-3'}>

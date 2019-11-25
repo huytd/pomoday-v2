@@ -39,7 +39,7 @@ export const SyncStatus = props => {
             </div>
           </div>
         ) : null}
-        {state.lastSync ? (
+        {state.authToken && state.lastSync ? (
           <div className={'mx-3 flex flex-row'}>
             <div
               className={
