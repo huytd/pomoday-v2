@@ -127,6 +127,33 @@ export function stopCommand(tasksToUpdate: any, state, ids) {
   return tasksToUpdate;
 }
 
+// TODO: Remove the duplicate code here in beginCommand and stopCommand
+export function switchCommand(tasksToUpdate: any, state, ids) {
+  if (Array.isArray(ids) && ids.length) {
+    const stopId = ids[0];
+    const startId = ids[1];
+    tasksToUpdate = state.tasks.map(t => {
+      if (t.id === stopId) {
+        if (t.status === TaskStatus.WIP) {
+          t.status = TaskStatus.WAIT;
+          t = stopWorkLogging(t);
+        }
+      }
+      if (t.id === startId) {
+        if (t.status !== TaskStatus.WIP) {
+          t.status = TaskStatus.WIP;
+          t.logs = (t.logs || []).concat({
+            start: Date.now(),
+            end: 0,
+          });
+        }
+      }
+      return t;
+    });
+  }
+  return tasksToUpdate;
+}
+
 export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
   if (!ids.length) {
     // Archive by tag

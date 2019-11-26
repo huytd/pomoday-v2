@@ -50,6 +50,9 @@ const tests: [string, Command][] = [
   // stop timer
   ['st 1', { command: 'st', id: '1' }],
   ['stop 1', { command: 'stop', id: '1' }],
+  // switch task
+  ['switch 13 12', { command: 'switch', id: '13 12' }],
+  ['sw 1 2', { command: 'sw', id: '1 2' }],
   // other command
   ['help', { command: 'help' }],
   ['quickhelp', { command: 'quickhelp' }],

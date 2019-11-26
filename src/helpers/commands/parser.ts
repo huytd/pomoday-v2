@@ -14,6 +14,7 @@ const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
 const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
 const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
 const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
+const parseSwitchCommand = (str: string) => str.match(/^(sw(?:itch)?)\s(.*)/i);
 const parseArchiveCommand = (str: string) =>
   str.match(/^(a(?:rchive)?)\s(.*)/i);
 const parseRestoreCommand = (str: string) =>
@@ -72,6 +73,7 @@ export const parseCommand = (input: string): Command => {
     parseDeleteCommand(input) ||
     parseFlagCommand(input) ||
     parseStopCommand(input) ||
+    parseSwitchCommand(input) ||
     parseArchiveCommand(input) ||
     parseRestoreCommand(input);
   if (matchOther) {

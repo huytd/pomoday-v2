@@ -31,6 +31,7 @@ import {
   restoreCommand,
   showCommand,
   stopCommand,
+  switchCommand,
   tagRenameCommand,
 } from '../helpers/commands/actions';
 import { useEventListener } from '../helpers/hooks';
@@ -135,6 +136,10 @@ export const InputBox = props => {
             case 'st':
             case 'stop':
               tasksToUpdate = stopCommand(tasksToUpdate, state, ids);
+              break;
+            case 'sw':
+            case 'switch':
+              tasksToUpdate = switchCommand(tasksToUpdate, state, ids);
               break;
             case 'a':
             case 'archive':
@@ -306,6 +311,12 @@ export const InputBox = props => {
               <u>re</u>store:
             </b>{' '}
             unarchive a task
+          </p>
+          <p>
+            <b>
+              <u>sw</u>itch:
+            </b>{' '}
+            switch the working task
           </p>
           <p>
             <b>
