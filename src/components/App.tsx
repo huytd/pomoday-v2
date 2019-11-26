@@ -17,6 +17,7 @@ import { AuthDialog } from './AuthDialog';
 import { pullFromDB, pushToDB } from '../helpers/api';
 import { SyncStatus } from './SyncStatus';
 import { QuickHelp } from './QuickHelp';
+import { useInterval } from '../helpers/hooks';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -84,6 +85,17 @@ export const App = () => {
       })();
     }
   }, [state]);
+
+  useInterval(
+    () => {
+      if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
+        (async () => {
+          await syncTasks(state, setState);
+        })();
+      }
+    },
+    state.authToken ? 10000 : 0,
+  ); // Auto sync per 10s
 
   const getVisibilityStatusText = (): string[] => {
     const hidden = Object.keys(state.taskVisibility)
