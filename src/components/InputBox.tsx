@@ -203,6 +203,7 @@ export const InputBox = props => {
       (state.userWantToLogin && !state.authToken)
     ) {
       event.preventDefault();
+      return;
     }
     const inputIsFocused = inputRef.current === document.activeElement;
     const activeIsEditor =
@@ -249,10 +250,94 @@ export const InputBox = props => {
           ✕
         </button>
       </div>
+      <div className={'fixed bottom-0 right-0 m-5'}>
+        <span
+          className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
+          <p>
+            <b>
+              <u>t</u>ask:
+            </b>{' '}
+            create a new task
+          </p>
+          <p>
+            <b>
+              <u>b</u>egin:
+            </b>{' '}
+            start timer
+          </p>
+          <p>
+            <b>
+              <u>st</u>op:
+            </b>{' '}
+            stop timer
+          </p>
+          <p>
+            <b>
+              <u>fl</u>ag:
+            </b>{' '}
+            flag a task
+          </p>
+          <p>
+            <b>
+              <u>e</u>dit:
+            </b>{' '}
+            edit a task
+          </p>
+          <p>
+            <b>
+              <u>move</u>:
+            </b>{' '}
+            move task to another tag
+          </p>
+          <p>
+            <b>
+              <u>d</u>elete:
+            </b>{' '}
+            delete task
+          </p>
+          <p>
+            <b>
+              <u>a</u>rchive:
+            </b>{' '}
+            archive a task
+          </p>
+          <p>
+            <b>
+              <u>re</u>store:
+            </b>{' '}
+            unarchive a task
+          </p>
+          <p>
+            <b>
+              <u>list-archived</u>:
+            </b>{' '}
+            show archived tasks
+          </p>
+          <p>
+            <b>
+              <u>today</u>:
+            </b>{' '}
+            show today overview
+          </p>
+          <p>
+            <b>
+              <u>customize</u>:
+            </b>{' '}
+            show CSS editor
+          </p>
+          <p>
+            <b>
+              <u>help</u>:
+            </b>{' '}
+            show help page
+          </p>
+        </span>
+      </div>
     </div>
   ) : (
-    <div className={'fixed bottom-0 right-0 sm:right-auto sm:left-0 m-5'}>
-      <span className={'hidden sm:block'}>
+    <div className={'fixed bottom-0 right-0 m-5'}>
+      <span
+        className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
         Press <code>i</code> to show command bar.
       </span>
       <button
