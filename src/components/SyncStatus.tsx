@@ -28,7 +28,7 @@ export const SyncStatus = props => {
 
   return (
     <>
-      <div className="flex flex-row text-xs py-1 px-2 bg-control justify-end border-b border-stall-light">
+      <div className="el-app-header flex flex-row text-xs py-1 px-2 bg-control justify-end border-b border-stall-light">
         {state.authToken ? (
           <div className={'mx-3 flex flex-row'}>
             <div

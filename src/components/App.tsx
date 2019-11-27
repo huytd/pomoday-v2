@@ -162,6 +162,9 @@ export const App = () => {
     },
   );
 
+  const showEmpty =
+    summary.done === 0 && summary.pending === 0 && summary.wip === 0;
+
   const countDone = (group, g) => {
     return (
       group.hidden.filter(t => t.tag === g && t.status === TaskStatus.DONE)
@@ -186,50 +189,63 @@ export const App = () => {
         }`}>
         <SyncStatus />
         <div className="flex-1 flex flex-col sm:flex-row bg-background overflow-hidden no-drag">
-          {/* Today */}
-          <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
-            {taskGroups.hidden.length ? (
-              <div className="pb-5 text-stall-dim">
-                {taskGroups.hidden.length} tasks in{' '}
-                {getVisibilityStatusText().join(', ')} group are hidden.
+          {/* Task List */}
+          {showEmpty ? (
+            <div className={'el-main-view flex-1 p-5 h-full relative'}>
+              <div className={'empty-image w-full h-full'} />
+              <div
+                className={
+                  'absolute flex flex-col leading-loose justify-center items-center top-0 left-0 right-0 bottom-0 text-center text-lg sm:text-2xl text-foreground'
+                }>
+                <div>Need to get some work done?</div>
+                <div>Let's add some task!</div>
               </div>
-            ) : null}
-            <div>
-              {Object.keys(taskGroups.display).map((g, i) => [
-                <Row
-                  key={`tag-${i}`}
-                  type={RowType.TAG}
-                  text={g}
-                  sidetext={`[${countDone(taskGroups, g)}/${countTotal(
-                    taskGroups,
-                    g,
-                  )}]`}
-                />,
-                taskGroups.display[g].map((t, j) => (
-                  <Row
-                    key={`tag-${i}-inner-task-${j}-${t.id}`}
-                    type={RowType.TASK}
-                    task={t}
-                  />
-                )),
-                <Row
-                  key={`tag-${i}-separator-${i}`}
-                  type={RowType.TEXT}
-                  text=""
-                />,
-              ])}
-              <Row
-                type={RowType.TEXT}
-                text={`${(
-                  (summary.done / state.tasks.length) * 100 || 0
-                ).toFixed(0)}% of all tasks complete.`}
-              />
-              <Row
-                type={RowType.TEXT}
-                text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`}
-              />
             </div>
-          </div>
+          ) : (
+            <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
+              {taskGroups.hidden.length ? (
+                <div className="pb-5 text-stall-dim">
+                  {taskGroups.hidden.length} tasks in{' '}
+                  {getVisibilityStatusText().join(', ')} group are hidden.
+                </div>
+              ) : null}
+              <div>
+                {Object.keys(taskGroups.display).map((g, i) => [
+                  <Row
+                    key={`tag-${i}`}
+                    type={RowType.TAG}
+                    text={g}
+                    sidetext={`[${countDone(taskGroups, g)}/${countTotal(
+                      taskGroups,
+                      g,
+                    )}]`}
+                  />,
+                  taskGroups.display[g].map((t, j) => (
+                    <Row
+                      key={`tag-${i}-inner-task-${j}-${t.id}`}
+                      type={RowType.TASK}
+                      task={t}
+                    />
+                  )),
+                  <Row
+                    key={`tag-${i}-separator-${i}`}
+                    type={RowType.TEXT}
+                    text=""
+                  />,
+                ])}
+                <Row
+                  type={RowType.TEXT}
+                  text={`${(
+                    (summary.done / state.tasks.length) * 100 || 0
+                  ).toFixed(0)}% of all tasks complete.`}
+                />
+                <Row
+                  type={RowType.TEXT}
+                  text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`}
+                />
+              </div>
+            </div>
+          )}
           {/* Today */}
           {state.showToday ? (
             <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-sm text-left border-l border-control">

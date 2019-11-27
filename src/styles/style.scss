@@ -182,3 +182,16 @@ code {
 .el-quickhelp p {
   margin: 0;
 }
+
+.empty-image {
+  background-image: url(https://pomoday-cdn.now.sh/empty-state.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-blend-mode: multiply;
+  background-color: var(--background);
+  background-size: 80%;
+  opacity: 0.8;
+  @screen sm {
+    background-size: 30%;
+  }
+}
