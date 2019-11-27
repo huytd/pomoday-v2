@@ -17,7 +17,7 @@ import { AuthDialog } from './AuthDialog';
 import { pullFromDB, pushToDB } from '../helpers/api';
 import { SyncStatus } from './SyncStatus';
 import { QuickHelp } from './QuickHelp';
-import { useInterval } from '../helpers/hooks';
+import { useEventListener, useInterval } from '../helpers/hooks';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -76,6 +76,7 @@ const syncTasks = async (state, setState) => {
 
 export const App = () => {
   const [state, setState] = React.useState(getInitialState());
+  const mainViewRef = React.useRef(null);
 
   React.useEffect(() => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
@@ -180,6 +181,32 @@ export const App = () => {
     );
   };
 
+  const processHotKey = e => {
+    if (mainViewRef && mainViewRef.current) {
+      if (!document.activeElement.tagName.match(/body/i)) return;
+      if (
+        state.showHelp ||
+        state.showQuickHelp ||
+        (state.userWantToLogin && !state.authToken)
+      )
+        return;
+      switch (e.key) {
+        case 'j':
+        case 'ArrowDown':
+          mainViewRef.current.scroll(0, mainViewRef.current.scrollTop + 100);
+          break;
+        case 'k':
+        case 'ArrowUp':
+          mainViewRef.current.scroll(0, mainViewRef.current.scrollTop - 100);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  useEventListener('keydown', processHotKey);
+
   return (
     <StateContext.Provider value={[state, setState]}>
       <style dangerouslySetInnerHTML={{ __html: state.customCSS }} />
@@ -202,7 +229,9 @@ export const App = () => {
               </div>
             </div>
           ) : (
-            <div className="el-main-view flex-1 p-5 h-full overflow-y-auto">
+            <div
+              ref={mainViewRef}
+              className="el-main-view flex-1 p-5 h-full overflow-y-auto">
               {taskGroups.hidden.length ? (
                 <div className="pb-5 text-stall-dim">
                   {taskGroups.hidden.length} tasks in{' '}
