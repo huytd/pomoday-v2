@@ -55,13 +55,13 @@ export type TaskItem = {
 export const getStatus = (status?: TaskStatus) => {
   switch (status) {
     case TaskStatus.DONE:
-      return `<span class="text-lg text-green">✔</span>`;
+      return `<span class="el-status text-lg text-green">✔</span>`;
     case TaskStatus.WIP:
-      return `<span class="text-lg text-orange">*</span>`;
+      return `<span class="el-status text-lg text-orange">*</span>`;
     case TaskStatus.WAIT:
-      return `<span class="text-lg text-stall-dim">□</span>`;
+      return `<span class="el-status text-lg text-stall-dim">□</span>`;
     case TaskStatus.FLAG:
-      return `<span class="text-lg text-tomato">■</span>`;
+      return `<span class="el-status text-lg text-tomato">■</span>`;
     default:
       return '';
   }
