@@ -195,7 +195,7 @@ export const App = () => {
               <div className={'empty-image w-full h-full'} />
               <div
                 className={
-                  'absolute flex flex-col leading-loose justify-center items-center top-0 left-0 right-0 bottom-0 text-center text-lg sm:text-2xl text-foreground'
+                  'absolute flex flex-col leading-relaxed justify-center items-center top-0 left-0 right-0 bottom-0 text-center text-lg sm:text-xl text-foreground'
                 }>
                 <div>Need to get some work done?</div>
                 <div>Let's add some task!</div>
