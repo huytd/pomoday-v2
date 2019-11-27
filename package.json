@@ -16,6 +16,7 @@
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
     "sass": "^1.23.0",
+    "sherlockjs": "^1.4.0",
     "tailwindcss": "^1.1.2",
     "typescript": "^3.6.3"
   },

@@ -1,5 +1,6 @@
 import marked from 'marked';
 import Queue from './queue';
+import Sherlock from 'sherlockjs';
 
 export const KEY_TAB = 9;
 export const KEY_RETURN = 13;
@@ -17,9 +18,23 @@ export const SYNC_TIMER = 5000;
 
 export const getHistoryQueue = (serialized?: any) => {
   let ret = new Queue<string>(MAX_COMMAND_QUEUE_LENGTH);
-  if (serialized) {
-    ret = ret.deserialize(serialized);
+  if (!serialized) {
+    serialized = {
+      store: [
+        'task @tag-name Task content here',
+        'begin [task-id]',
+        'stop [task-id]',
+        'edit [task-id] New task description',
+        'move [task-id] @new-tag',
+        'archive [task-id]',
+        'restore [task-id]',
+        'dark',
+        'light',
+      ],
+      length: 10,
+    };
   }
+  ret = ret.deserialize(serialized);
   return ret;
 };
 
@@ -140,4 +155,19 @@ export const findCommon = (items: string[]): string => {
     return items[0].substr(0, len);
   }
   return '';
+};
+
+export type ParsedEvent = {
+  title: string;
+  start?: number;
+  end?: number;
+};
+
+export const parseEventInTask = (input): ParsedEvent => {
+  const parsed = Sherlock.parse(input);
+  return {
+    title: parsed.eventTitle,
+    start: parsed.startDate,
+    end: parsed.endDate,
+  };
 };
