@@ -11,16 +11,18 @@ export const TaskItemDisplay = props => {
         {task.id}
       </div>
       <div className="el-task-content pt-1 self-center flex-1 text-left">
-        <span className={`task-content inline-block relative pl-5`}>
+        <span className={`task-content inline-block`}>
+          <span
+            className={'mr-2'}
+            dangerouslySetInnerHTML={{ __html: getStatus(task.status) }}
+          />
           <span
             className={
               task.status === TaskStatus.DONE
                 ? 'el-task-done inline-block text-stall-light line-through'
                 : 'el-task-normal inline-block'
             }
-            dangerouslySetInnerHTML={{
-              __html: getStatus(task.status) + taskAsString(task.title),
-            }}
+            dangerouslySetInnerHTML={{ __html: taskAsString(task.title) }}
           />
         </span>{' '}
         <TimeSpent task={task} />
