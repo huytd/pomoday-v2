@@ -82,10 +82,13 @@ export const App = () => {
 
   React.useEffect(() => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
+  }, [state]);
+
+  React.useEffect(() => {
     (async () => {
       await syncTasks(state, setState, false);
     })();
-  }, [state]);
+  }, [state.tasks]);
 
   useInterval(
     () => {
