@@ -90,7 +90,7 @@ export const App = () => {
         await syncTasks(state, setState, false);
       })();
     }
-  }, [state.tasks]);
+  }, [state.tasks, state.authToken]);
 
   useInterval(
     () => {
