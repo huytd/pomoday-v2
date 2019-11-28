@@ -85,9 +85,11 @@ export const App = () => {
   }, [state]);
 
   React.useEffect(() => {
-    (async () => {
-      await syncTasks(state, setState, false);
-    })();
+    if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
+      (async () => {
+        await syncTasks(state, setState, false);
+      })();
+    }
   }, [state.tasks]);
 
   useInterval(

@@ -14,7 +14,7 @@ export const KEY_INPUT = 73;
 export const KEY_ESC = 27;
 
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
-export const SYNC_TIMER = 5000;
+export const SYNC_TIMER = 1000;
 
 export const getHistoryQueue = (serialized?: any) => {
   let ret = new Queue<string>(MAX_COMMAND_QUEUE_LENGTH);
