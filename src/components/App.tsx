@@ -64,8 +64,10 @@ const getInitialState = () => {
   return defaultState;
 };
 
-const syncTasks = async (state, setState) => {
-  await pushToDB(state.tasks, state.serverUrl, state.authToken);
+const syncTasks = async (state, setState, isPull) => {
+  if (!isPull) {
+    await pushToDB(state.tasks, state.serverUrl, state.authToken);
+  }
   const data = await pullFromDB(state.serverUrl, state.authToken);
   setState({
     ...state,
@@ -82,7 +84,7 @@ export const App = () => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
     if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
       (async () => {
-        await syncTasks(state, setState);
+        await syncTasks(state, setState, false);
       })();
     }
   }, [state]);
@@ -91,7 +93,7 @@ export const App = () => {
     () => {
       if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
         (async () => {
-          await syncTasks(state, setState);
+          await syncTasks(state, setState, true);
         })();
       }
     },
