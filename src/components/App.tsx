@@ -82,11 +82,9 @@ export const App = () => {
 
   React.useEffect(() => {
     window.localStorage.setItem('pomoday', JSON.stringify(state));
-    if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
-      (async () => {
-        await syncTasks(state, setState, false);
-      })();
-    }
+    (async () => {
+      await syncTasks(state, setState, false);
+    })();
   }, [state]);
 
   useInterval(
