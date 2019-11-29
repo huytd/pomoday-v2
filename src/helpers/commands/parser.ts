@@ -31,7 +31,11 @@ const parseOtherCommand = (str: string) =>
   str.match(
     /^(help|quickhelp|today|dark|light|customize|list-archived|login|logout)/i,
   );
-export const parseCommand = (input: string): Command => {
+const parseTextFallback = (str: string) => str.match(/((?:\b\w*\b\S*)\s)/);
+
+/* ----------------------------------------- */
+
+function compileTaskCommand(input: string) {
   const matchTask = parseTaskCommand(input);
   if (matchTask) {
     return {
@@ -40,7 +44,10 @@ export const parseCommand = (input: string): Command => {
       text: matchTask[3].trim(),
     } as Command;
   }
+  return null;
+}
 
+function compileEditCommand(input: string) {
   const matchEdit = parseEditCommand(input);
   if (matchEdit) {
     return {
@@ -49,7 +56,10 @@ export const parseCommand = (input: string): Command => {
       text: matchEdit[3].trim(),
     } as Command;
   }
+  return null;
+}
 
+function compileMoveCommand(input: string) {
   const matchMove = parseMoveCommand(input);
   if (matchMove) {
     return {
@@ -58,7 +68,10 @@ export const parseCommand = (input: string): Command => {
       tag: matchMove[3],
     } as Command;
   }
+  return null;
+}
 
+function compileTagReCommand(input: string) {
   const matchTagRe = parseTagRenameCommand(input);
   if (matchTagRe) {
     return {
@@ -66,7 +79,10 @@ export const parseCommand = (input: string): Command => {
       tag: matchTagRe[2] + ' ' + matchTagRe[3],
     } as Command;
   }
+  return null;
+}
 
+function compileMathOtherCommand(input: string) {
   const matchOther =
     parseCheckCommand(input) ||
     parseBeginCommand(input) ||
@@ -82,7 +98,10 @@ export const parseCommand = (input: string): Command => {
       id: matchOther[2],
     };
   }
+  return null;
+}
 
+function compileVisibilityCommand(input: string) {
   const matchVisibility = parseVisibilityCommand(input);
   if (matchVisibility) {
     return {
@@ -90,12 +109,54 @@ export const parseCommand = (input: string): Command => {
       text: matchVisibility[2],
     } as Command;
   }
+  return null;
+}
 
+function compileHelpCommand(input: string) {
   const matchHelp = parseOtherCommand(input);
   if (matchHelp) {
     return {
       command: matchHelp[1],
     };
   }
+  return null;
+}
+
+/* ----------------------------------------- */
+
+export const parseCommand = (input: string): Command => {
+  let ret = compileTaskCommand(input);
+  if (ret) {
+    return ret;
+  }
+
+  ret = compileEditCommand(input);
+  if (ret) {
+    return ret;
+  }
+
+  ret = compileMoveCommand(input);
+  if (ret) {
+    return ret;
+  }
+
+  ret = compileTagReCommand(input);
+  if (ret) {
+    return ret;
+  }
+
+  ret = compileMathOtherCommand(input);
+  if (ret) return ret;
+
+  ret = compileVisibilityCommand(input);
+  if (ret) return ret;
+
+  ret = compileHelpCommand(input);
+  if (ret) return ret;
+
+  if (parseTextFallback(input)) {
+    return compileTaskCommand(`task ${input}`);
+  }
+
   return null;
 };

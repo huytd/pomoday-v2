@@ -29,16 +29,6 @@ export const SyncStatus = props => {
   return (
     <>
       <div className="el-app-header flex flex-row text-xs py-1 px-2 bg-control justify-end border-b border-stall-light">
-        {state.authToken ? (
-          <div className={'mx-3 flex flex-row'}>
-            <div
-              className={'w-2 h-2 bg-green rounded-full block self-center'}
-            />
-            <div className={'text-stall-dim self-center ml-2'}>
-              server connected
-            </div>
-          </div>
-        ) : null}
         {state.authToken && state.lastSync ? (
           <div className={'mx-3 flex flex-row'}>
             <div
@@ -48,7 +38,7 @@ export const SyncStatus = props => {
               }
             />
             <div className={'text-stall-dim self-center ml-2'}>
-              Last Synced: {new Date(state.lastSync).toLocaleTimeString()}
+              Last synced: {new Date(state.lastSync).toLocaleTimeString()}
             </div>
           </div>
         ) : null}

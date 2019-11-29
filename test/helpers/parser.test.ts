@@ -11,6 +11,10 @@ const tests: [string, Command][] = [
     'task @longer-task This is another task',
     { command: 'task', tag: '@longer-task', text: 'This is another task' },
   ],
+  [
+    'task this is an uncategorized task',
+    { command: 'task', text: 'this is an uncategorized task' },
+  ],
   // start task timer
   ['b 10', { command: 'b', id: '10' }],
   ['begin 12', { command: 'begin', id: '12' }],
@@ -61,15 +65,26 @@ const tests: [string, Command][] = [
   ['light', { command: 'light' }],
   ['customize', { command: 'customize' }],
   ['list-archived', { command: 'list-archived' }],
+  // Input without matching any command will be considered as a new task
+  [
+    'hey! this is a new task!',
+    { command: 'task', text: 'hey! this is a new task!' },
+  ],
+  ['single-world-would-not-considered-a-task', null],
+  ['hello', null],
 ];
 
 tests.forEach(([input, expected]) => {
   test(input, t => {
     const result = parseCommand(input);
-    t.equal(expected.command, result.command, 'should be correct command');
-    t.is(expected.tag, result.tag, 'should have correct tag or tags');
-    t.is(expected.text, result.text, 'should have correct text');
-    t.is(expected.id, result.id, 'should have correct id or ids');
+    if (expected != null) {
+      t.equal(expected.command, result.command, 'should be correct command');
+      t.is(expected.tag, result.tag, 'should have correct tag or tags');
+      t.is(expected.text, result.text, 'should have correct text');
+      t.is(expected.id, result.id, 'should have correct id or ids');
+    } else {
+      t.is(expected, result, 'should be null');
+    }
     t.end();
   });
 });
