@@ -10,7 +10,7 @@ const QUICK_HELP_TEXT = [
   '**#2:** Type `t` or `task` to create a new task.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-02.gif)',
   '**#3:** You can start a task timer with `b` or `begin` command. Stop it with `st` or `stop` command.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-03.gif)',
   '**#4:** You can flag a task with `fl` or `flag`. Or delete it with `d` or `delete` command.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-04.gif)',
-  "🎉 That's all of the basic you need! Now press `ESC` to close this help and go try it yourself!",
+  "🎉 That's all of the basic you need! You can type `help` to learn more about Pomoday anytime! Now press `ESC` to close this help and go try it yourself!",
 ];
 
 export const QuickHelp = props => {

@@ -30,6 +30,14 @@ or
 task Call utility company
 \`\`\`    
 
+You can also enter anything and it will be considered as a new task, for example:
+
+\`\`\`
+well this is a new task!
+or
+@work this is a new task at work
+\`\`\`
+
 The number before each task is the task's \`id\`, you'll need this \`id\` for the other commands below.
 
 ### Edit or delete
