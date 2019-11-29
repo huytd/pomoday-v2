@@ -91,7 +91,7 @@ export const Today = props => {
             <div
               dangerouslySetInnerHTML={{
                 __html:
-                  getStatus(!t.done && !t.end ? TaskStatus.WIP : null) +
+                  getStatus(!t.done && !t.end ? TaskStatus.WIP : null, false) +
                   ' ' +
                   taskAsString(t.task),
               }}
