@@ -16,6 +16,19 @@ export const KEY_ESC = 27;
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
 export const SYNC_TIMER = 1000;
 
+const encodeHtmlEntities = str => {
+  var buf = [];
+  for (var i = str.length - 1; i >= 0; i--) {
+    buf.unshift(['&#', str[i].charCodeAt(), ';'].join(''));
+  }
+  return buf.join('');
+};
+
+const decodeHtmlEntities = str =>
+  str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+
 export const getHistoryQueue = (serialized?: any) => {
   let ret = new Queue<string>(MAX_COMMAND_QUEUE_LENGTH);
   if (!serialized) {
@@ -131,10 +144,20 @@ export const counterAsLog = counter => {
   }${min > 0 ? pad(min) + ' min ' : ''}${pad(sec) + ' sec '}`;
 };
 
+const processInlineTag = input =>
+  input.replace(
+    /#(?=\S*['-]?)([0-9a-zA-Z'-]+)/g,
+    '<span class="inline-tag">#$1</span>',
+  );
+
 export const taskAsString = t =>
-  marked(t)
-    .replace('<p>', '')
-    .replace('</p>', '');
+  processInlineTag(
+    decodeHtmlEntities(
+      marked(t)
+        .replace('<p>', '')
+        .replace('</p>', ''),
+    ),
+  );
 
 const equalDate = (a, b) => new Date(a).getDate() === new Date(b).getDate();
 export const isSameDay = (a, b) =>

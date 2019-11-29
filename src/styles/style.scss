@@ -12,6 +12,7 @@
     --control-focus: rgba(255, 255, 255, 0.2);
     --background: #fafafa;
     --foreground: #222222;
+    --tag-foreground: #ffffff;
     --foreground-dim: #a0aec0;
     --foreground-light: #cbd5e0;
   }
@@ -28,12 +29,21 @@
     --control-focus: rgba(33, 45, 51, 0.4);
     --background: #233035;
     --foreground: #d7e1e4;
+    --tag-foreground: #ffffff;
     --foreground-dim: #638997;
     --foreground-light: #506e7a;
   }
 }
 
 @tailwind base;
+
+@mixin shadow-border($weight, $color) {
+  box-shadow: 0 $weight 0 0 $color; /* Border bottom */
+  box-shadow: 0 -$weight 0 0 $color; /* Border top */
+  box-shadow: -$weight 0 0 0 $color; /* Border left */
+  box-shadow: $weight 0 0 0 $color; /* Border right */
+  box-shadow: 0 0 0 $weight $color; /* All the borders by using the spread properties */
+}
 
 body {
   @apply text-base;
@@ -199,4 +209,12 @@ code {
   @screen md {
     background-size: 30%;
   }
+}
+
+.inline-tag {
+  opacity: 0.8;
+  background: var(--purple);
+  color: var(--tag-foreground);
+  border-radius: 3px;
+  @include shadow-border(3px, var(--purple));
 }
