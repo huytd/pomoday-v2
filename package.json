@@ -6,7 +6,7 @@
   "license": "BSD-3-Clause",
   "scripts": {
     "dev": "NODE_ENV=development parcel ./src/index.html",
-    "dist": "NODE_ENV=production parcel build ./src/index.html --public-url ./",
+    "dist": "NODE_ENV=production parcel build ./src/index.html --no-source-maps --public-url ./",
     "test": "ts-node node_modules/tape/bin/tape test/**/*.test.ts"
   },
   "dependencies": {
