@@ -224,7 +224,7 @@ export const InputBox = props => {
   useEventListener('keyup', focusInput);
 
   return isVisible ? (
-    <div className="text-xs sm:text-sm absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
+    <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
       <div className="el-editor bg-control2nd border-stall-light border w-9/12 sm:w-5/12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
         <input
           ref={inputRef}

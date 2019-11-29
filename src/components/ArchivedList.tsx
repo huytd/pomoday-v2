@@ -43,7 +43,7 @@ export const ArchivedList = props => {
           <div className="el-sideview-header text-stall-dim font-bold text-lg">
             Archived
           </div>
-          <div className="el-sideview-sub-header text-xs text-stall-dim font-normal uppercase">
+          <div className="el-sideview-sub-header text-sm text-stall-dim font-normal uppercase">
             {archivedItems.length} tasks
           </div>
         </div>

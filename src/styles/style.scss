@@ -36,8 +36,10 @@
 @tailwind base;
 
 body {
-  font-size: 14px;
-  line-height: 1.6em;
+  @apply text-base;
+  @screen sm {
+    @apply text-sm;
+  }
 }
 
 input:focus {
@@ -114,7 +116,7 @@ code {
   }
 
   p {
-    @apply my-4 leading-relaxed font-sans text-base;
+    @apply my-4 leading-relaxed font-sans;
   }
 
   h1 {
@@ -126,7 +128,7 @@ code {
   }
 
   h2 {
-    @apply font-bold text-base border-stall-light mb-4;
+    @apply font-bold border-stall-light mb-4;
     &::before {
       content: '##';
       @apply opacity-25 mr-3;
@@ -134,7 +136,7 @@ code {
   }
 
   h3 {
-    @apply font-bold text-base border-stall-light mb-4;
+    @apply font-bold border-stall-light mb-4;
     &::before {
       content: '###';
       @apply opacity-25 mr-3;

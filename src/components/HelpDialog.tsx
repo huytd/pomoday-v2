@@ -182,7 +182,7 @@ export const HelpDialog = props => {
   useEventListener('keyup', processKey);
 
   return (
-    <div className="el-sideview bg-white sm:overflow-hidden p-3 sm:p-10 mb-5 text-left absolute top-0 left-0 right-0 bottom-0">
+    <div className="el-sideview bg-white sm:overflow-hidden p-4 sm:p-8 text-left absolute top-0 left-0 right-0 bottom-0">
       <div className="flex flex-row h-full">
         <div className={'block sm:hidden fixed bottom-0 right-0 m-5 z-50'}>
           <button

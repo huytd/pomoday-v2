@@ -49,7 +49,7 @@ export const Today = props => {
         <div className="el-sideview-header text-stall-dim font-bold text-lg">
           Activities Today
         </div>
-        <div className="el-sideview-sub-header text-xs text-stall-dim font-normal uppercase">
+        <div className="el-sideview-sub-header text-sm text-stall-dim font-normal uppercase">
           {`${new Date().toLocaleDateString()}`}
         </div>
       </>
@@ -71,7 +71,7 @@ export const Today = props => {
       {today.map((t, i) => (
         <div className="mb-2 flex flex-row" key={i}>
           <div
-            className={`text-right text-xs pr-3 mr-3 border-r-2 ${
+            className={`text-right text-sm pr-3 mr-3 border-r-2 ${
               t.done
                 ? 'border-green'
                 : !t.end
@@ -96,7 +96,7 @@ export const Today = props => {
                   taskAsString(t.task),
               }}
             />
-            <div className="text-xs text-stall-dim">
+            <div className="text-sm text-stall-dim">
               {!t.end ? null : (
                 <span>
                   {t.done ? <span className="text-green">✔</span> : null}{' '}

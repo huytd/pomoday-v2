@@ -7,7 +7,7 @@ export const TaskItemDisplay = props => {
   const html = getStatus(task.status) + ' ' + taskAsString(task.title);
   return (
     <div className={'flex flex-row'}>
-      <div className="el-task-id pt-1 self-center w-8 text-xs text-right text-stall-light mr-3 pr-2 border-control2nd border-r-2">
+      <div className="el-task-id pt-1 self-center w-8 text-right text-stall-light mr-3 pr-2 border-control2nd border-r-2">
         {task.id}
       </div>
       <div className="el-task-content pt-1 self-center flex-1 text-left">

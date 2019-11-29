@@ -4,13 +4,14 @@ import { TaskItemDisplay } from './TaskItemDisplay';
 import { RowType } from '../helpers/utils';
 
 export const Row = props => {
+  const customClass = props.customClass || '';
   const type = props.type;
   const text = props.text || '';
   const sidetext = props.sidetext || '';
   const task = props.task || undefined;
   return (
     <div
-      className={`row ${
+      className={`row ${customClass} ${
         type === RowType.TAG
           ? 'el-tag font-bold inline-block px-3 py-1 mb-2 bg-control rounded-lg'
           : type === RowType.TEXT && !text.length

@@ -268,21 +268,24 @@ export const App = () => {
                   />,
                 ])}
                 <Row
+                  customClass={'text-sm'}
                   type={RowType.TEXT}
                   text={`${(
                     (summary.done / state.tasks.length) * 100 || 0
                   ).toFixed(0)}% of all tasks complete.`}
                 />
                 <Row
+                  customClass={'text-sm'}
                   type={RowType.TEXT}
                   text={`<span class="text-green">${summary.done}</span> done · <span class="text-orange">${summary.wip}</span> in-progress · <span class="text-purple">${summary.pending}</span> waiting`}
                 />
+                <Row type={RowType.TEXT} text={''} />
               </div>
             </div>
           )}
           {/* Today */}
           {state.showToday ? (
-            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-sm text-left border-l border-control">
+            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-left border-l border-control">
               <Today />
             </div>
           ) : null}
@@ -291,13 +294,13 @@ export const App = () => {
           {state.showQuickHelp ? <QuickHelp /> : null}
           {/* Custom CSS */}
           {state.showCustomCSS ? (
-            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-sm text-left border-l border-control flex">
+            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-left border-l border-control flex">
               <CodeEditor />
             </div>
           ) : null}
           {/* Archived List */}
           {state.showArchived ? (
-            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-sm text-left border-l border-control flex">
+            <div className="el-sideview w-full h-full absolute sm:relative top-0 left-0 right-0 bottom-0 sm:top-auto sm:left-auto sm:right-auto sm:bottom-auto overflow-y-auto sm:w-2/6 p-5 text-left border-l border-control flex">
               <ArchivedList />
             </div>
           ) : null}
