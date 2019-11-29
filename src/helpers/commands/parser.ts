@@ -32,6 +32,7 @@ const parseOtherCommand = (str: string) =>
     /^(help|quickhelp|today|dark|light|customize|list-archived|login|logout)/i,
   );
 const parseTextFallback = (str: string) => str.match(/((?:\b\w*\b\S*)\s)/);
+const parseSearch = (str: string) => str.match(/^\/.*/);
 
 /* ----------------------------------------- */
 
@@ -122,28 +123,35 @@ function compileHelpCommand(input: string) {
   return null;
 }
 
+function compileSearchCommand(input: string) {
+  if (parseSearch(input)) {
+    return {
+      command: 'search',
+      text: input.replace(/^\//, ''),
+    };
+  }
+  return null;
+}
+
 /* ----------------------------------------- */
 
 export const parseCommand = (input: string): Command => {
-  let ret = compileTaskCommand(input);
-  if (ret) {
-    return ret;
-  }
+  let ret;
+
+  ret = compileSearchCommand(input);
+  if (ret) return ret;
+
+  ret = compileTaskCommand(input);
+  if (ret) return ret;
 
   ret = compileEditCommand(input);
-  if (ret) {
-    return ret;
-  }
+  if (ret) return ret;
 
   ret = compileMoveCommand(input);
-  if (ret) {
-    return ret;
-  }
+  if (ret) return ret;
 
   ret = compileTagReCommand(input);
-  if (ret) {
-    return ret;
-  }
+  if (ret) return ret;
 
   ret = compileMathOtherCommand(input);
   if (ret) return ret;

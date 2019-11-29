@@ -218,3 +218,11 @@ code {
   border-radius: 3px;
   @include shadow-border(3px, var(--purple));
 }
+
+.inline-filter-tag {
+  opacity: 0.8;
+  background: var(--orange);
+  color: var(--tag-foreground);
+  border-radius: 3px;
+  @include shadow-border(3px, var(--orange));
+}

@@ -11,6 +11,7 @@ export const KEY_F = 70;
 export const KEY_P = 80;
 export const KEY_N = 78;
 export const KEY_INPUT = 73;
+export const KEY_SLASH = 191;
 export const KEY_ESC = 27;
 
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
@@ -150,14 +151,26 @@ const processInlineTag = input =>
     '<span class="inline-tag">#$1</span>',
   );
 
-export const taskAsString = t =>
-  processInlineTag(
-    decodeHtmlEntities(
-      marked(t)
-        .replace('<p>', '')
-        .replace('</p>', ''),
-    ),
+const processFilterMatchingTag = (input, search) =>
+  search
+    ? input.replace(
+        new RegExp(search, 'ig'),
+        matched => '<span class="inline-filter-tag">' + matched + '</span>',
+      )
+    : input;
+
+export const taskAsString = (t, search?: string) => {
+  const decoded = decodeHtmlEntities(
+    marked(t)
+      .replace('<p>', '')
+      .replace('</p>', ''),
   );
+  if (search) {
+    return processFilterMatchingTag(decoded, search);
+  } else {
+    return processInlineTag(decoded);
+  }
+};
 
 const equalDate = (a, b) => new Date(a).getDate() === new Date(b).getDate();
 export const isSameDay = (a, b) =>

@@ -4,6 +4,7 @@ import { getStatus, taskAsString, TaskStatus } from '../helpers/utils';
 
 export const TaskItemDisplay = props => {
   const task = props.task;
+  const matching = props.matching || undefined;
   return (
     <div className={'flex flex-row'}>
       <div className="el-task-id pt-1 self-start w-8 text-right text-stall-light mr-3 pr-2 border-control2nd border-r-2">
@@ -18,7 +19,9 @@ export const TaskItemDisplay = props => {
                 : 'el-task-normal inline-block'
             }
             dangerouslySetInnerHTML={{
-              __html: getStatus(task.status, true) + taskAsString(task.title),
+              __html:
+                getStatus(task.status, true) +
+                taskAsString(task.title, matching),
             }}
           />
         </span>{' '}

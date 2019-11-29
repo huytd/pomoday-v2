@@ -350,6 +350,16 @@ export function showCommand(updateCandidate, cmd) {
   return updateCandidate;
 }
 
+export function searchCommand(updateCandidate: any, cmd) {
+  if (cmd.command.match(/search/i)) {
+    updateCandidate = {
+      ...updateCandidate,
+      filterBy: cmd.text,
+    };
+  }
+  return updateCandidate;
+}
+
 export function otherCommand(updateCandidate, cmd, state) {
   updateCandidate = (() => {
     let commandText = cmd.command.toLowerCase();

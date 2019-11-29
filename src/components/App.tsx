@@ -42,6 +42,7 @@ const defaultState = {
   authToken: '',
   serverUrl: '',
   lastSync: 0,
+  filterBy: '',
 };
 
 const getInitialState = () => {
@@ -123,6 +124,12 @@ export const App = () => {
   const taskGroups = state.tasks
     .filter(t => t.status !== TaskStatus.NONE)
     .filter(t => !t.archived)
+    .filter(t =>
+      state.filterBy
+        ? t.title.match(new RegExp(state.filterBy, 'ig')) !== null ||
+          t.tag.match(new RegExp(state.filterBy, 'ig')) !== null
+        : true,
+    )
     .reduce(
       (groups, t: TaskItem) => {
         if (!groups.display[t.tag]) {
@@ -196,6 +203,14 @@ export const App = () => {
       )
         return;
       switch (e.key) {
+        case 'Escape':
+          if (state.filterBy) {
+            setState({
+              ...state,
+              filterBy: '',
+            });
+          }
+          break;
         case 'j':
         case 'ArrowDown':
           mainViewRef.current.scroll(0, mainViewRef.current.scrollTop + 100);
@@ -220,6 +235,14 @@ export const App = () => {
           state.darkMode ? 'dark' : 'light'
         }`}>
         <SyncStatus />
+        {/* Filtering */}
+        {state.filterBy ? (
+          <div className={'p-5'}>
+            Search result for: "<b>{state.filterBy}"</b>
+            <br />
+            Press <code>ESC</code> to go back.
+          </div>
+        ) : null}
         <div className="flex-1 flex flex-col sm:flex-row bg-background overflow-hidden no-drag">
           {/* Task List */}
           {showEmpty ? (
@@ -249,6 +272,7 @@ export const App = () => {
                     key={`tag-${i}`}
                     type={RowType.TAG}
                     text={g}
+                    matching={state.filterBy || undefined}
                     sidetext={`[${countDone(taskGroups, g)}/${countTotal(
                       taskGroups,
                       g,
@@ -259,6 +283,7 @@ export const App = () => {
                       key={`tag-${i}-inner-task-${j}-${t.id}`}
                       type={RowType.TASK}
                       task={t}
+                      matching={state.filterBy || undefined}
                     />
                   )),
                   <Row

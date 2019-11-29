@@ -1,7 +1,7 @@
 import * as React from 'react';
 import marked from 'marked';
 import { TaskItemDisplay } from './TaskItemDisplay';
-import { RowType } from '../helpers/utils';
+import { RowType, taskAsString } from '../helpers/utils';
 
 export const Row = props => {
   const customClass = props.customClass || '';
@@ -9,6 +9,7 @@ export const Row = props => {
   const text = props.text || '';
   const sidetext = props.sidetext || '';
   const task = props.task || undefined;
+  const matching = props.matching || undefined;
   return (
     <div
       className={`row ${customClass} ${
@@ -19,14 +20,12 @@ export const Row = props => {
           : 'el-text flex flex-row'
       }`}>
       {type === RowType.TASK ? (
-        <TaskItemDisplay task={task} />
-      ) : type === RowType.TEXT ? (
+        <TaskItemDisplay task={task} matching={matching} />
+      ) : (
         <span
           className="el-text inline-block"
-          dangerouslySetInnerHTML={{ __html: marked(text) }}
+          dangerouslySetInnerHTML={{ __html: taskAsString(text, matching) }}
         />
-      ) : (
-        text
       )}
       {sidetext ? (
         <span className="el-side-text inline-block text-stall-dim ml-2">

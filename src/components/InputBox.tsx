@@ -11,6 +11,7 @@ import {
   KEY_P,
   KEY_RETURN,
   KEY_RIGHT,
+  KEY_SLASH,
   KEY_TAB,
   KEY_UP,
   MAX_COMMAND_QUEUE_LENGTH,
@@ -29,6 +30,7 @@ import {
   moveCommand,
   otherCommand,
   restoreCommand,
+  searchCommand,
   showCommand,
   stopCommand,
   switchCommand,
@@ -170,6 +172,9 @@ export const InputBox = props => {
               updateCandidate = showCommand(updateCandidate, cmd);
               break;
             /* Single command */
+            case 'search':
+              updateCandidate = searchCommand(updateCandidate, cmd);
+              break;
             default:
               updateCandidate = otherCommand(updateCandidate, cmd, state);
               break;
@@ -191,8 +196,11 @@ export const InputBox = props => {
     }
   };
 
-  const openInput = () => {
+  const openInput = (search?: boolean) => {
     setVisible(true);
+    if (search) {
+      inputRef.current.value = '/';
+    }
     inputRef.current.focus();
   };
 
@@ -213,8 +221,12 @@ export const InputBox = props => {
     const inputIsFocused = inputRef.current === document.activeElement;
     const activeIsEditor =
       document.activeElement.tagName.match(/input|textarea/i) !== null;
-    if (event.keyCode === KEY_INPUT && !inputIsFocused && !activeIsEditor) {
-      openInput();
+    if (
+      (event.keyCode === KEY_INPUT || event.keyCode === KEY_SLASH) &&
+      !inputIsFocused &&
+      !activeIsEditor
+    ) {
+      openInput(event.keyCode === KEY_SLASH);
     }
     if (event.keyCode === KEY_ESC && inputIsFocused) {
       hideInput();
@@ -258,6 +270,12 @@ export const InputBox = props => {
       <div className={'fixed bottom-0 right-0 m-5'}>
         <span
           className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
+          <p>
+            <b>
+              <u>/</u>:
+            </b>{' '}
+            search for anything
+          </p>
           <p>
             <b>
               <u>t</u>ask:
@@ -352,7 +370,7 @@ export const InputBox = props => {
         Press <code>i</code> to show command bar.
       </span>
       <button
-        onClick={openInput}
+        onClick={openInput.bind(this.false)}
         className={
           'sm:hidden text-5xl bg-green text-white rounded-full shadow-lg w-16 h-16'
         }>

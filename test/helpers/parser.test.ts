@@ -72,6 +72,10 @@ const tests: [string, Command][] = [
   ],
   ['single-world-would-not-considered-a-task', null],
   ['hello', null],
+  // Search command
+  ['/search', { command: 'search', text: 'search' }],
+  ['/search for anything', { command: 'search', text: 'search for anything' }],
+  ['/search-anything', { command: 'search', text: 'search-anything' }],
 ];
 
 tests.forEach(([input, expected]) => {
