@@ -70,20 +70,20 @@ export type TaskItem = {
 export const getStatus = (status: TaskStatus | null, absolute: boolean) => {
   switch (status) {
     case TaskStatus.DONE:
-      return `<span class="${
-        absolute ? 'absolute -mt-1 top-0 left-0' : ''
+      return `<span style="${absolute ? 'margin-top: -5px;' : ''}" class="${
+        absolute ? 'absolute top-0 left-0' : ''
       } text-lg text-green">✔</span>`;
     case TaskStatus.WIP:
-      return `<span class="${
-        absolute ? 'absolute -mt-1 top-0 left-0' : ''
+      return `<span style="${absolute ? 'margin-top: -5px;' : ''}" class="${
+        absolute ? 'absolute top-0 left-0' : ''
       } text-lg text-orange">*</span>`;
     case TaskStatus.WAIT:
-      return `<span class="${
-        absolute ? 'absolute -mt-1 top-0 left-0' : ''
+      return `<span style="${absolute ? 'margin-top: -5px;' : ''}" class="${
+        absolute ? 'absolute top-0 left-0' : ''
       } text-lg text-stall-dim">□</span>`;
     case TaskStatus.FLAG:
-      return `<span class="${
-        absolute ? 'absolute -mt-1 top-0 left-0' : ''
+      return `<span style="${absolute ? 'margin-top: -5px;' : ''}" class="${
+        absolute ? 'absolute top-0 left-0' : ''
       } text-lg text-tomato">■</span>`;
     default:
       return '';
