@@ -375,7 +375,7 @@ export const InputBox = props => {
         </span>
       </div>
     </div>
-  ) : (
+  ) : state.showQuickHelp || state.showHelp ? null : (
     <div className={'fixed bottom-0 right-0 m-5'}>
       <span
         className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
