@@ -53,6 +53,18 @@ export const InputBox = props => {
       if (value) {
         const matched = history.match(i => i.indexOf(value) === 0);
         suggestion = findCommon(matched);
+        // Special case: If it's edit command, fetch the task content
+        const isEditCommand = value.match(/^e(?:dit)?\ (\d+)\s?$/i);
+        if (isEditCommand && isEditCommand[1]) {
+          const id = parseInt(isEditCommand[1]);
+          if (id && !isNaN(id)) {
+            const found = (state.tasks.filter(t => t.id === id) || []).pop();
+            if (found) {
+              suggestion = `${value.trim()} ${found.title}`;
+            }
+          }
+        }
+        // --------------------------------------------
         if (suggestion) {
           suggestRef.current.value = suggestion;
         } else {
@@ -237,7 +249,7 @@ export const InputBox = props => {
 
   return isVisible ? (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
-      <div className="el-editor bg-control2nd border-stall-light border w-9/12 sm:w-5/12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
+      <div className="el-editor bg-control2nd border-stall-light border w-9/12 sm:w-7/12 md:w-5-12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
         <input
           ref={inputRef}
           className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10"
