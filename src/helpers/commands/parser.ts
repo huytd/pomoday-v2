@@ -5,20 +5,25 @@ export type Command = {
   id?: string;
 } | null;
 const parseTaskCommand = (str: string) =>
-  str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?(.*)/i);
-const parseEditCommand = (str: string) => str.match(/^(e(?:dit)?)\s(\d+)(.*)/i);
+  str.match(/^(t(?:ask)?)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))?([\s\S]*)/i);
+const parseEditCommand = (str: string) =>
+  str.match(/^(e(?:dit)?)\s(\d+)([\s\S]*)/i);
 const parseMoveCommand = (str: string) =>
   str.match(/^(mv|move)\s(?:(\d+)\s)+(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i);
-const parseCheckCommand = (str: string) => str.match(/^(c(?:heck)?)\s(.*)/i);
-const parseBeginCommand = (str: string) => str.match(/^(b(?:egin)?)\s(.*)/i);
-const parseDeleteCommand = (str: string) => str.match(/^(d(?:elete)?)\s(.*)/i);
-const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s(.*)/i);
-const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s(.*)/i);
-const parseSwitchCommand = (str: string) => str.match(/^(sw(?:itch)?)\s(.*)/i);
+const parseCheckCommand = (str: string) =>
+  str.match(/^(c(?:heck)?)\s([\s\S]*)/i);
+const parseBeginCommand = (str: string) =>
+  str.match(/^(b(?:egin)?)\s([\s\S]*)/i);
+const parseDeleteCommand = (str: string) =>
+  str.match(/^(d(?:elete)?)\s([\s\S]*)/i);
+const parseFlagCommand = (str: string) => str.match(/^(fl(?:ag)?)\s([\s\S]*)/i);
+const parseStopCommand = (str: string) => str.match(/^(st(?:op)?)\s([\s\S]*)/i);
+const parseSwitchCommand = (str: string) =>
+  str.match(/^(sw(?:itch)?)\s([\s\S]*)/i);
 const parseArchiveCommand = (str: string) =>
-  str.match(/^(a(?:rchive)?)\s(.*)/i);
+  str.match(/^(a(?:rchive)?)\s([\s\S]*)/i);
 const parseRestoreCommand = (str: string) =>
-  str.match(/^(re(?:store)?)\s(.*)/i);
+  str.match(/^(re(?:store)?)\s([\s\S]*)/i);
 const parseTagRenameCommand = (str: string) =>
   str.match(
     /^(tr|tagre|tagrename)\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))\s(@(?:\S*['-]?)(?:[0-9a-zA-Z'-]+))/i,

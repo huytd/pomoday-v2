@@ -76,6 +76,15 @@ const tests: [string, Command][] = [
   ['/search', { command: 'search', text: 'search' }],
   ['/search for anything', { command: 'search', text: 'search for anything' }],
   ['/search-anything', { command: 'search', text: 'search-anything' }],
+  // Multiline input
+  [
+    'edit 1 This is a\nmultiline\ntest and it should\nwork!!!',
+    {
+      command: 'edit',
+      id: '1',
+      text: 'This is a\nmultiline\ntest and it should\nwork!!!',
+    },
+  ],
 ];
 
 tests.forEach(([input, expected]) => {

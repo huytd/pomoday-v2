@@ -43,6 +43,7 @@ export const InputBox = props => {
   const suggestRef = React.useRef(null);
   const [state, setState] = React.useContext(StateContext);
   const [isVisible, setVisible] = React.useState(false);
+  const [isFullEditor, setFullEditor] = React.useState(false);
   let historyIndex = -1;
   const history: Queue<string> = getHistoryQueue(state.history);
   let suggestion = '';
@@ -87,7 +88,11 @@ export const InputBox = props => {
       const key = e.which || e.keyCode;
       const meta = e.ctrlKey || e.metaKey;
       // TAB or RIGHT or Ctrl + F to pickup the suggestion
-      if (key === KEY_TAB || key === KEY_RIGHT || (meta && key == KEY_F)) {
+      if (
+        key === KEY_TAB ||
+        (!isFullEditor && key === KEY_RIGHT) ||
+        (!isFullEditor && meta && key == KEY_F)
+      ) {
         if (suggestion) {
           inputRef.current.value = suggestion;
           e.stopPropagation();
@@ -96,7 +101,10 @@ export const InputBox = props => {
         }
       }
       // UP KEY
-      else if (key === KEY_UP || (meta && key === KEY_P)) {
+      else if (
+        (!isFullEditor && key === KEY_UP) ||
+        (!isFullEditor && meta && key === KEY_P)
+      ) {
         if (historyIndex < MAX_COMMAND_QUEUE_LENGTH - 1) {
           historyIndex++;
           const historyValue = history.peek(historyIndex);
@@ -106,7 +114,10 @@ export const InputBox = props => {
         }
       }
       // DOWN KEY
-      else if (key === KEY_DOWN || (meta && key === KEY_N)) {
+      else if (
+        (!isFullEditor && key === KEY_DOWN) ||
+        (!isFullEditor && meta && key === KEY_N)
+      ) {
         if (historyIndex > 0) {
           historyIndex--;
           const historyValue = history.peek(historyIndex);
@@ -115,8 +126,8 @@ export const InputBox = props => {
           }
         }
       }
-      // ENTER KEY
-      else if (key === KEY_RETURN) {
+      // ENTER KEY or Meta + ENTER if it's a full editor
+      else if (isFullEditor ? meta && key === KEY_RETURN : key === KEY_RETURN) {
         const cmd = parseCommand(inputRef.current.value);
         let tasksToUpdate = null;
         let updateCandidate = {
@@ -208,7 +219,8 @@ export const InputBox = props => {
     }
   };
 
-  const openInput = (search?: boolean) => {
+  const openInput = (fullEditor: boolean, search: boolean) => {
+    setFullEditor(fullEditor);
     setVisible(true);
     if (search) {
       inputRef.current.value = '/';
@@ -238,7 +250,7 @@ export const InputBox = props => {
       !inputIsFocused &&
       !activeIsEditor
     ) {
-      openInput(event.keyCode === KEY_SLASH);
+      openInput(event.shiftKey, event.keyCode === KEY_SLASH);
     }
     if (event.keyCode === KEY_ESC && inputIsFocused) {
       hideInput();
@@ -249,10 +261,13 @@ export const InputBox = props => {
 
   return isVisible ? (
     <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
-      <div className="el-editor bg-control2nd border-stall-light border w-9/12 sm:w-7/12 md:w-5-12 h-12 relative rounded-lg shadow-lg overflow-hidden mb-64">
-        <input
+      <div
+        className={`el-editor bg-control2nd border-stall-light border w-9/12 sm:w-7/12 md:w-5-12 ${
+          isFullEditor ? 'h-64' : 'h-12'
+        } relative rounded-lg shadow-lg overflow-hidden mb-64`}>
+        <textarea
           ref={inputRef}
-          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10"
+          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10 resize-none"
           tabIndex={0}
           autoFocus={true}
           onKeyPress={processInput}
@@ -260,9 +275,9 @@ export const InputBox = props => {
           onKeyDown={onKeyDown}
           placeholder="Type anything here..."
         />
-        <input
+        <textarea
           ref={suggestRef}
-          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-0 pointer-events-none opacity-25"
+          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-0 pointer-events-none resize-none opacity-25"
           disabled={true}
           value={''}
         />
@@ -280,109 +295,121 @@ export const InputBox = props => {
         </button>
       </div>
       <div className={'fixed bottom-0 right-0 m-5'}>
-        <span
-          className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
-          <p>
-            <b>
-              <u>/</u>:
-            </b>{' '}
-            search for anything
-          </p>
-          <p>
-            <b>
-              <u>t</u>ask:
-            </b>{' '}
-            create a new task
-          </p>
-          <p>
-            <b>
-              <u>b</u>egin:
-            </b>{' '}
-            start timer
-          </p>
-          <p>
-            <b>
-              <u>st</u>op:
-            </b>{' '}
-            stop timer
-          </p>
-          <p>
-            <b>
-              <u>fl</u>ag:
-            </b>{' '}
-            flag a task
-          </p>
-          <p>
-            <b>
-              <u>e</u>dit:
-            </b>{' '}
-            edit a task
-          </p>
-          <p>
-            <b>
-              <u>move</u>:
-            </b>{' '}
-            move task to another tag
-          </p>
-          <p>
-            <b>
-              <u>d</u>elete:
-            </b>{' '}
-            delete task
-          </p>
-          <p>
-            <b>
-              <u>a</u>rchive:
-            </b>{' '}
-            archive a task
-          </p>
-          <p>
-            <b>
-              <u>re</u>store:
-            </b>{' '}
-            unarchive a task
-          </p>
-          <p>
-            <b>
-              <u>sw</u>itch:
-            </b>{' '}
-            switch the working task
-          </p>
-          <p>
-            <b>
-              <u>list-archived</u>:
-            </b>{' '}
-            show archived tasks
-          </p>
-          <p>
-            <b>
-              <u>today</u>:
-            </b>{' '}
-            show today overview
-          </p>
-          <p>
-            <b>
-              <u>customize</u>:
-            </b>{' '}
-            show CSS editor
-          </p>
-          <p>
-            <b>
-              <u>help</u>:
-            </b>{' '}
-            show help page
-          </p>
-        </span>
+        {isFullEditor ? (
+          <span
+            className={
+              'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'
+            }>
+            Press <code>Enter</code> for new line. <code>Ctrl + Enter</code> for
+            submit.
+          </span>
+        ) : (
+          <span
+            className={
+              'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'
+            }>
+            <p>
+              <b>
+                <u>/</u>:
+              </b>{' '}
+              search for anything
+            </p>
+            <p>
+              <b>
+                <u>t</u>ask:
+              </b>{' '}
+              create a new task
+            </p>
+            <p>
+              <b>
+                <u>b</u>egin:
+              </b>{' '}
+              start timer
+            </p>
+            <p>
+              <b>
+                <u>st</u>op:
+              </b>{' '}
+              stop timer
+            </p>
+            <p>
+              <b>
+                <u>fl</u>ag:
+              </b>{' '}
+              flag a task
+            </p>
+            <p>
+              <b>
+                <u>e</u>dit:
+              </b>{' '}
+              edit a task
+            </p>
+            <p>
+              <b>
+                <u>move</u>:
+              </b>{' '}
+              move task to another tag
+            </p>
+            <p>
+              <b>
+                <u>d</u>elete:
+              </b>{' '}
+              delete task
+            </p>
+            <p>
+              <b>
+                <u>a</u>rchive:
+              </b>{' '}
+              archive a task
+            </p>
+            <p>
+              <b>
+                <u>re</u>store:
+              </b>{' '}
+              unarchive a task
+            </p>
+            <p>
+              <b>
+                <u>sw</u>itch:
+              </b>{' '}
+              switch the working task
+            </p>
+            <p>
+              <b>
+                <u>list-archived</u>:
+              </b>{' '}
+              show archived tasks
+            </p>
+            <p>
+              <b>
+                <u>today</u>:
+              </b>{' '}
+              show today overview
+            </p>
+            <p>
+              <b>
+                <u>customize</u>:
+              </b>{' '}
+              show CSS editor
+            </p>
+            <p>
+              <b>
+                <u>help</u>:
+              </b>{' '}
+              show help page
+            </p>
+          </span>
+        )}
       </div>
     </div>
   ) : state.showQuickHelp || state.showHelp ? null : (
     <div className={'fixed bottom-0 right-0 m-5'}>
       <span
         className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
-        Press <code>i</code> to show command bar.
+        Press <code>i</code> or <code>I</code> to show command bar.
       </span>
       <button
-        onClick={openInput.bind(this.false)}
+        onClick={openInput.bind(this.false, this.false)}
         className={
           'sm:hidden text-5xl bg-green text-white rounded-full shadow-lg w-16 h-16'
         }>
