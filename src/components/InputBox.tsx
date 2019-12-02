@@ -263,8 +263,8 @@ export const InputBox = props => {
     <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
       <div
         className={`el-editor bg-control2nd border-stall-light border w-9/12 sm:w-7/12 md:w-5-12 ${
-          isFullEditor ? 'h-64' : 'h-12'
-        } relative rounded-lg shadow-lg overflow-hidden mb-64`}>
+          isFullEditor ? 'h-64 mb-32' : 'h-12 mb-64'
+        } relative rounded-lg shadow-lg overflow-hidden`}>
         <textarea
           ref={inputRef}
           className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10 resize-none"
