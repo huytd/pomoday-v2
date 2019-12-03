@@ -14,7 +14,10 @@ export const Today = props => {
   const today = state.tasks.reduce((tasks, t) => {
     if (t.logs) {
       const works = t.logs.reduce((logs, l, id) => {
-        if (l.start && isSameDay(now, l.start)) {
+        if (
+          (l.start && isSameDay(now, l.start)) ||
+          (l.end && isSameDay(now, l.end))
+        ) {
           logs.push({
             task: t.title,
             start: l.start,
