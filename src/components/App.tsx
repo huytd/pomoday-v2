@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Row } from './Row';
 import { Today } from './Today';
 import {
+  AUTO_SYNC_TIMER,
   getHistoryQueue,
   RowType,
   SYNC_TIMER,
@@ -15,7 +16,7 @@ import { ArchivedList } from './ArchivedList';
 import { HelpDialog } from './HelpDialog';
 import { AuthDialog } from './AuthDialog';
 import { pullFromDB, pushToDB } from '../helpers/api';
-import { SyncStatus } from './SyncStatus';
+import { StatusBar } from './StatusBar';
 import { QuickHelp } from './QuickHelp';
 import { useEventListener, useInterval } from '../helpers/hooks';
 
@@ -101,8 +102,8 @@ export const App = () => {
         })();
       }
     },
-    state.authToken ? 10000 : 0,
-  ); // Auto sync per 10s
+    state.authToken ? AUTO_SYNC_TIMER : 0,
+  ); // Auto sync
 
   const getVisibilityStatusText = (): string[] => {
     const hidden = Object.keys(state.taskVisibility)
@@ -234,7 +235,7 @@ export const App = () => {
         className={`w-screen h-screen relative flex flex-col font-mono text-foreground bg-background draggable ${
           state.darkMode ? 'dark' : 'light'
         }`}>
-        <SyncStatus />
+        <StatusBar />
         {/* Filtering */}
         {state.filterBy ? (
           <div className={'p-5'}>

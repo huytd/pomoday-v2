@@ -16,6 +16,7 @@ export const KEY_ESC = 27;
 
 export const MAX_COMMAND_QUEUE_LENGTH = 10;
 export const SYNC_TIMER = 1000;
+export const AUTO_SYNC_TIMER = 5000;
 
 const encodeHtmlEntities = str => {
   var buf = [];
