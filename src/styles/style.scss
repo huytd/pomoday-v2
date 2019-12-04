@@ -15,6 +15,8 @@
     --tag-foreground: #ffffff;
     --foreground-dim: #a0aec0;
     --foreground-light: #cbd5e0;
+    --code-background: #e2e8f0;
+    --code-foreground: #222222;
   }
   .dark {
     --transparent: rgba(0, 0, 0, 0);
@@ -32,6 +34,8 @@
     --tag-foreground: #ffffff;
     --foreground-dim: #638997;
     --foreground-light: #506e7a;
+    --code-background: #506e7a;
+    --code-foreground: #d7e1e4;
   }
 }
 
@@ -85,12 +89,16 @@ input:focus {
 }
 
 code {
-  @apply px-2 bg-stall-light rounded-sm;
+  @apply px-1;
+  background: var(--code-background);
+  color: var(--code-foreground);
+  border-radius: 3px;
+  @include shadow-border(3px, var(--code-background));
 }
 
 .task-content {
   p {
-    display: block;
+    @apply block leading-loose;
   }
 }
 

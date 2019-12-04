@@ -82,6 +82,24 @@ export type TaskItem = {
   lastaction: number;
 };
 
+export const createTask = (
+  id: number,
+  tag: string,
+  task: string,
+  status: TaskStatus,
+  logs?: Worklog[],
+): TaskItem => {
+  return {
+    id: id,
+    tag: tag,
+    title: task,
+    status: status,
+    logs: logs || [],
+    archived: false,
+    lastaction: Date.now(),
+  };
+};
+
 export const getStatus = (status: TaskStatus | null, absolute: boolean) => {
   switch (status) {
     case TaskStatus.DONE:

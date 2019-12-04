@@ -3,6 +3,7 @@ import { Row } from './Row';
 import { Today } from './Today';
 import {
   AUTO_SYNC_TIMER,
+  createTask,
   getHistoryQueue,
   RowType,
   SYNC_TIMER,
@@ -22,8 +23,65 @@ import { useEventListener, useInterval } from '../helpers/hooks';
 
 export const StateContext = React.createContext<any>(null);
 
+const tutorialTasks: TaskItem[] = [
+  createTask(1, '@demo', "Let's learn the basic of Pomoday:", TaskStatus.FLAG),
+  createTask(2, '@demo', 'This is a task', TaskStatus.WAIT),
+  createTask(3, '@demo', 'This is an ongoing task', TaskStatus.WIP),
+  createTask(4, '@demo', 'This is a finished task', TaskStatus.DONE, [
+    { start: Date.now() - 1.5 * 60 * 60 * 1000, end: Date.now() },
+  ]),
+  createTask(
+    5,
+    '@demo',
+    'You can open the command input by pressing `i` or `I`',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    6,
+    '@demo',
+    'In the command input, you can create a new task by entering the task content. Yes, markdown is\n\nsupported! You can also create a task with a tag, type `@<tag-name>` at the beginning.',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    7,
+    '@demo',
+    'Type `b` or `beging` followed by the `task id` to start the timer on a task.',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    8,
+    '@demo',
+    'Type `st` or `stop` followed by the `task id` to stop the timer.',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    9,
+    '@demo',
+    'Now, try use `c` or `check` followed by the `task id` to mark a task as done.',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    10,
+    '@demo',
+    'Type `e` or `edit`, followed by the `task id` to edit task content.',
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    11,
+    '@demo',
+    "To see how your day's going, type `today`. Try it!",
+    TaskStatus.WAIT,
+  ),
+  createTask(
+    12,
+    '@demo',
+    "That's all! Now, type `delete @demo` to remove all of this tutorial content and start using Pomoday!",
+    TaskStatus.FLAG,
+  ),
+];
+
 const defaultState = {
-  tasks: [] as TaskItem[],
+  tasks: tutorialTasks,
   showHelp: false,
   showQuickHelp: true,
   showToday: false,
