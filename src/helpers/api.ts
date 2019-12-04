@@ -9,7 +9,15 @@ export const pullFromDB = (server, token) => {
 
 export const pushToDB = (tasks, server, token) => {
   const url = server.replace(/\/$/, '') + '/list';
-  const data = JSON.stringify({ tasks: tasks });
+  const data = JSON.stringify({
+    tasks: tasks.map(t => ({
+      // This is a fallback layer for legacy version of Pomoday
+      ...t,
+      logs: t.logs || [],
+      archived: t.archived || false,
+      lastaction: t.lastaction || Date.now(),
+    })),
+  });
   return fetch(url, {
     headers: {
       Accept: 'application/json',

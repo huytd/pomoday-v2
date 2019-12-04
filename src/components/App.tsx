@@ -128,14 +128,26 @@ const getInitialState = () => {
 
 const syncTasks = async (state, setState, isPull) => {
   if (!isPull) {
-    await pushToDB(state.tasks, state.serverUrl, state.authToken);
+    if (state.tasks.length) {
+      const data = await pushToDB(
+        state.tasks,
+        state.serverUrl,
+        state.authToken,
+      );
+      setState({
+        ...state,
+        tasks: data.tasks,
+        lastSync: Date.now(),
+      });
+    }
+  } else {
+    const data = await pullFromDB(state.serverUrl, state.authToken);
+    setState({
+      ...state,
+      tasks: data.tasks,
+      lastSync: Date.now(),
+    });
   }
-  const data = await pullFromDB(state.serverUrl, state.authToken);
-  setState({
-    ...state,
-    tasks: data.tasks,
-    lastSync: Date.now(),
-  });
 };
 
 export const App = () => {
@@ -147,7 +159,7 @@ export const App = () => {
   }, [state]);
 
   React.useEffect(() => {
-    if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
+    if (state.authToken && Date.now() - state.lastSync >= SYNC_TIMER) {
       (async () => {
         await syncTasks(state, setState, false);
       })();
@@ -156,7 +168,7 @@ export const App = () => {
 
   useInterval(
     () => {
-      if (state.authToken && Date.now() - state.lastSync > SYNC_TIMER) {
+      if (state.authToken && Date.now() - state.lastSync >= SYNC_TIMER) {
         (async () => {
           await syncTasks(state, setState, true);
         })();
@@ -182,7 +194,8 @@ export const App = () => {
     return hidden;
   };
 
-  const taskGroups = state.tasks
+  const taskGroups = [...state.tasks]
+    .sort((a, b) => a.id - b.id)
     .filter(t => t.status !== TaskStatus.NONE)
     .filter(t => !t.archived)
     .filter(t =>
