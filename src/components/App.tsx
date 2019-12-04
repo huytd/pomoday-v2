@@ -26,7 +26,9 @@ export const StateContext = React.createContext<any>(null);
 const tutorialTasks: TaskItem[] = [
   createTask(1, '@demo', "Let's learn the basic of Pomoday:", TaskStatus.FLAG),
   createTask(2, '@demo', 'This is a task', TaskStatus.WAIT),
-  createTask(3, '@demo', 'This is an ongoing task', TaskStatus.WIP),
+  createTask(3, '@demo', 'This is an ongoing task', TaskStatus.WIP, [
+    { start: Date.now(), end: 0 },
+  ]),
   createTask(4, '@demo', 'This is a finished task', TaskStatus.DONE, [
     { start: Date.now() - 1.5 * 60 * 60 * 1000, end: Date.now() },
   ]),
