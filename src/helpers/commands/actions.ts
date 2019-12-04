@@ -399,8 +399,15 @@ export function otherCommand(updateCandidate, cmd, state) {
         showArchived: !updateCandidate.showArchived,
       };
     } else if (commandText === 'login') {
+      // OK, Let me explain the weird @demo stuff here:
+      // If the user is already has their data on another machine, and
+      // they opened this app on a new machine, then login right away,
+      // the tasks in the range of 1..12 will be conflict with the demo
+      // tasks. So, we will explicitly remove these demo tasks if they're
+      // actually a demo, when login.
       return {
         ...updateCandidate,
+        tasks: updateCandidate.tasks.filter(t => ((t.id-1)*(t.id-12) <= 0) ? t.tag !== '@demo' : true),
         userWantToLogin: true,
       };
     } else if (commandText === 'logout') {
