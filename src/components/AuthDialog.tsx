@@ -41,6 +41,7 @@ export const AuthDialog = props => {
           setState({
             ...state,
             authToken: authToken,
+            userName: username,
             userWantToLogin: false,
             serverUrl: server,
           });

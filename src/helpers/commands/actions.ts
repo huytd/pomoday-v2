@@ -407,13 +407,16 @@ export function otherCommand(updateCandidate, cmd, state) {
       // actually a demo, when login.
       return {
         ...updateCandidate,
-        tasks: updateCandidate.tasks.filter(t => ((t.id-1)*(t.id-12) <= 0) ? t.tag !== '@demo' : true),
+        tasks: updateCandidate.tasks.filter(t =>
+          (t.id - 1) * (t.id - 12) <= 0 ? t.tag !== '@demo' : true,
+        ),
         userWantToLogin: true,
       };
     } else if (commandText === 'logout') {
       return {
         ...updateCandidate,
         authToken: '',
+        userName: '',
         userWantToLogin: true,
       };
     } else {

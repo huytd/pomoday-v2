@@ -101,6 +101,7 @@ const defaultState = {
   showArchived: false,
   userWantToLogin: false,
   authToken: '',
+  userName: '',
   serverUrl: '',
   lastSync: 0,
   filterBy: '',

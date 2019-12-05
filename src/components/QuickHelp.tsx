@@ -62,7 +62,16 @@ export const QuickHelp = props => {
 
   return (
     <div className="el-backdrop overflow-hidden absolute top-0 left-0 right-0 bottom-0 z-50 flex items-center justify-center">
-      <div className="bg-background rounded-lg shadow-lg p-5 w-auto m-10 sm:m-0 sm:w-3/12 h-auto">
+      <div className="bg-background relative rounded-lg shadow-lg p-5 w-auto m-10 sm:m-0 sm:w-3/12 h-auto">
+        <div className={'block sm:hidden fixed bottom-0 right-0 m-5 z-50'}>
+          <button
+            onClick={closeHelp}
+            className={
+              'sm:hidden text-3xl bg-tomato text-white rounded-full shadow-lg w-16 h-16'
+            }>
+            ✕
+          </button>
+        </div>
         <div
           className={'markdown-content relative flex flex-col el-quickhelp'}
           dangerouslySetInnerHTML={{ __html: marked(QUICK_HELP_TEXT[page]) }}
