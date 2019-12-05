@@ -47,7 +47,7 @@ const tutorialTasks: TaskItem[] = [
   createTask(
     7,
     '@demo',
-    'Type `b` or `beging` followed by the `task id` to start the timer on a task.',
+    'Type `b` or `begin` followed by the `task id` to start the timer on a task.',
     TaskStatus.WAIT,
   ),
   createTask(
