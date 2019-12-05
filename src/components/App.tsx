@@ -126,14 +126,17 @@ const getInitialState = () => {
   return defaultState;
 };
 
+let pushInProgress = false;
 const syncTasks = async (state, setState, isPull) => {
   if (!isPull) {
     if (state.tasks.length) {
+      pushInProgress = true;
       const data = await pushToDB(
         state.tasks,
         state.serverUrl,
         state.authToken,
       );
+      pushInProgress = false;
       setState({
         ...state,
         tasks: data.tasks,
@@ -141,12 +144,14 @@ const syncTasks = async (state, setState, isPull) => {
       });
     }
   } else {
-    const data = await pullFromDB(state.serverUrl, state.authToken);
-    setState({
-      ...state,
-      tasks: data.tasks,
-      lastSync: Date.now(),
-    });
+    if (!pushInProgress) {
+      const data = await pullFromDB(state.serverUrl, state.authToken);
+      setState({
+        ...state,
+        tasks: data.tasks,
+        lastSync: Date.now(),
+      });
+    }
   }
 };
 
