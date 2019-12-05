@@ -230,7 +230,9 @@ export const InputBox = props => {
 
   const hideInput = () => {
     setVisible(false);
-    inputRef.current.blur();
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
   };
 
   const focusInput = event => {
@@ -252,7 +254,7 @@ export const InputBox = props => {
     ) {
       openInput(event.shiftKey, event.keyCode === KEY_SLASH);
     }
-    if (event.keyCode === KEY_ESC && inputIsFocused) {
+    if (event.keyCode === KEY_ESC) {
       hideInput();
     }
   };
