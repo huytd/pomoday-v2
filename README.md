@@ -1,7 +1,7 @@
 <p align="center"><img src="./logo.png" width="300px;" /></p>
 <p align="center" style="font-weight: bold; text-align: center; font-family: monospace; padding-bottom: 15px;">Be productive without leaving your keyboard</p>
 
-<p align="center" style="text-align: center;"><img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/> <img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/></p>
+<p align="center" style="text-align: center;"><a href="https://opencollective.com/pomoday-project" alt="Financial Contributors on Open Collective"><img src="https://opencollective.com/pomoday-project/all/badge.svg?label=financial+contributors&style=for-the-badge" /></a> <img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/> <img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/></p>
 
 <p align="center">Try it online at https://pomoday.app. Don't forget to follow us on Twitter <a href="https://twitter.com/@pomoday_app">@pomoday_app</a>.</p>
 
@@ -101,6 +101,36 @@ I would like to give a special thanks to all of the advisors and backers who spo
 | <a href="https://github.com/imhuyqn"><img src="https://avatars0.githubusercontent.com/u/2289071?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/ledongthuc"><img src="https://avatars1.githubusercontent.com/u/1828895?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/trungfinity"><img src="https://avatars1.githubusercontent.com/u/6896444?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/thaod"><img src="https://avatars3.githubusercontent.com/u/11632797?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/mquy"><img src="https://avatars0.githubusercontent.com/u/1636026?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/quannt"><img src="https://avatars1.githubusercontent.com/u/3423859?s=460&v=4" width="48" height="48"/></a> | <a href="https://github.com/dvkndn"><img src="https://avatars1.githubusercontent.com/u/5953369?s=460&v=4" width="48" height="48"/> |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
 |[**imhuyqn**](https://github.com/imhuyqn)|[**ledongthuc**](https://github.com/ledongthuc)|[**trungfinity**](https://github.com/trungfinity)|[**thaod**](https://github.com/thaod)|[**mquy**](https://github.com/mquy)|[**quannt**](https://github.com/quannt)|[**dvkndn**](https://github.com/dvkndn)|
+
+## Contributors
+
+### Code Contributors
+
+This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
+<a href="https://github.com/huytd/pomoday-v2/graphs/contributors"><img src="https://opencollective.com/pomoday-project/contributors.svg?width=890&button=false" /></a>
+
+### Financial Contributors
+
+Become a financial contributor and help us sustain our community. [[Contribute](https://opencollective.com/pomoday-project/contribute)]
+
+#### Individuals
+
+<a href="https://opencollective.com/pomoday-project"><img src="https://opencollective.com/pomoday-project/individuals.svg?width=890"></a>
+
+#### Organizations
+
+Support this project with your organization. Your logo will show up here with a link to your website. [[Contribute](https://opencollective.com/pomoday-project/contribute)]
+
+<a href="https://opencollective.com/pomoday-project/organization/0/website"><img src="https://opencollective.com/pomoday-project/organization/0/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/1/website"><img src="https://opencollective.com/pomoday-project/organization/1/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/2/website"><img src="https://opencollective.com/pomoday-project/organization/2/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/3/website"><img src="https://opencollective.com/pomoday-project/organization/3/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/4/website"><img src="https://opencollective.com/pomoday-project/organization/4/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/5/website"><img src="https://opencollective.com/pomoday-project/organization/5/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/6/website"><img src="https://opencollective.com/pomoday-project/organization/6/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/7/website"><img src="https://opencollective.com/pomoday-project/organization/7/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/8/website"><img src="https://opencollective.com/pomoday-project/organization/8/avatar.svg"></a>
+<a href="https://opencollective.com/pomoday-project/organization/9/website"><img src="https://opencollective.com/pomoday-project/organization/9/avatar.svg"></a>
 
 ## License
 
