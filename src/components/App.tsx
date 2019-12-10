@@ -4,6 +4,7 @@ import { Today } from './Today';
 import {
   AUTO_SYNC_TIMER,
   createTask,
+  generateUuid,
   getHistoryQueue,
   RowType,
   SYNC_TIMER,
@@ -124,6 +125,13 @@ const getInitialState = () => {
           for (let key in defaultState) {
             if (!parsed.hasOwnProperty(key)) {
               parsed[key] = defaultState[key];
+            }
+            // fill up all missing data because of schema changes here
+            if (key === 'tasks') {
+              parsed[key] = parsed[key].map((t: TaskItem) => ({
+                ...t,
+                uuid: t.uuid || generateUuid(),
+              }));
             }
           }
           return parsed;

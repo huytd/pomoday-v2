@@ -1,4 +1,4 @@
-import { stopWorkLogging, TaskItem, TaskStatus } from '../utils';
+import { generateUuid, stopWorkLogging, TaskItem, TaskStatus } from '../utils';
 
 export function moveCommand(tasksToUpdate: any, state, ids, cmd) {
   tasksToUpdate = state.tasks.map(t => {
@@ -217,6 +217,7 @@ export function insertTaskCommand(cmd, state, tasksToUpdate: any) {
     tasksToUpdate = state.tasks
       .filter(t => t.id !== nextId + 1)
       .concat({
+        uuid: generateUuid(),
         id: nextId + 1,
         tag: tag,
         title: task,

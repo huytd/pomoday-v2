@@ -1,6 +1,7 @@
 import marked from 'marked';
 import Queue from './queue';
 import Sherlock from 'sherlockjs';
+import uuidv4 from 'uuid/v4';
 
 export const KEY_TAB = 9;
 export const KEY_RETURN = 13;
@@ -73,6 +74,7 @@ export type Worklog = {
 };
 
 export type TaskItem = {
+  uuid: string;
   id: number;
   tag: string;
   title: string;
@@ -82,6 +84,8 @@ export type TaskItem = {
   lastaction: number;
 };
 
+export const generateUuid = uuidv4;
+
 export const createTask = (
   id: number,
   tag: string,
@@ -90,6 +94,7 @@ export const createTask = (
   logs?: Worklog[],
 ): TaskItem => {
   return {
+    uuid: generateUuid(),
     id: id,
     tag: tag,
     title: task,
