@@ -125,11 +125,14 @@ export const StatusBar = props => {
                 </svg>
               </a>
               <a
-                className="hidden flex items-center hover:text-gray-700 ml-4"
+                className="flex items-center hover:text-gray-700 cursor-pointer ml-4"
                 title={'Setting'}
-                target={'_blank'}
-                rel={'nofollow'}
-                href="#">
+                onClick={() => {
+                  setState({
+                    ...state,
+                    showSettings: true,
+                  });
+                }}>
                 <svg
                   className="fill-current w-4 h-4"
                   xmlns="http://www.w3.org/2000/svg"

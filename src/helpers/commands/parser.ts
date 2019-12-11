@@ -34,7 +34,7 @@ const parseVisibilityCommand = (str: string) =>
   );
 const parseOtherCommand = (str: string) =>
   str.match(
-    /^(help|quickhelp|today|dark|light|customize|list-archived|login|logout)/i,
+    /^(help|quickhelp|today|dark|light|setting|customize|list-archived|login|logout)/i,
   );
 const parseTextFallback = (str: string) => str.match(/((?:\b\w*\b\S*)\s)/);
 const parseSearch = (str: string) => str.match(/^\/.*/);

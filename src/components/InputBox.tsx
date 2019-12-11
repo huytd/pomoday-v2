@@ -215,6 +215,8 @@ export const InputBox = props => {
         });
         inputRef.current.value = '';
         setVisible(false);
+        event.preventDefault();
+        return;
       }
     }
   };
@@ -244,7 +246,8 @@ export const InputBox = props => {
       event.preventDefault();
       return;
     }
-    const inputIsFocused = inputRef.current === document.activeElement;
+    const inputIsFocused =
+      inputRef && inputRef.current === document.activeElement;
     const activeIsEditor =
       document.activeElement.tagName.match(/input|textarea/i) !== null;
     if (
@@ -261,15 +264,37 @@ export const InputBox = props => {
 
   useEventListener('keyup', focusInput);
 
-  return isVisible ? (
-    <div className="absolute top-0 right-0 bottom-0 left-0 flex items-center justify-center">
+  return isVisible || state.settings.stickyInput ? (
+    <div
+      className={`${
+        !state.settings.stickyInput
+          ? 'absolute top-0 right-0 bottom-0 left-0'
+          : ''
+      } flex items-center justify-center`}>
       <div
-        className={`el-editor bg-control2nd border-stall-light border w-9/12 sm:w-7/12 md:w-5-12 ${
-          isFullEditor ? 'h-64 mb-32' : 'h-12 mb-64'
-        } relative rounded-lg shadow-lg overflow-hidden`}>
+        className={`el-editor bg-control2nd border-stall-light border
+        ${
+          !state.settings.stickyInput
+            ? 'w-9/12 sm:w-7/12 md:w-5-12 rounded-lg shadow-lg'
+            : 'w-full'
+        }
+        ${
+          isFullEditor
+            ? state.settings.stickyInput
+              ? 'h-64'
+              : 'h-64 mb-32'
+            : state.settings.stickyInput
+            ? 'h-12'
+            : 'h-12 mb-64'
+        }
+        relative overflow-hidden`}>
         <textarea
           ref={inputRef}
-          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10 resize-none"
+          className={`bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-10 resize-none ${
+            state.settings.stickyInput
+              ? 'border-l-4 border-transparent focus:border-green'
+              : ''
+          }`}
           tabIndex={0}
           autoFocus={true}
           onKeyPress={processInput}
@@ -279,7 +304,11 @@ export const InputBox = props => {
         />
         <textarea
           ref={suggestRef}
-          className="bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-0 pointer-events-none resize-none opacity-25"
+          className={`bg-transparent text-foreground w-full h-full p-3 px-4 absolute top-0 left-0 z-0 pointer-events-none resize-none opacity-25 ${
+            state.settings.stickyInput
+              ? 'border-l-4 border-transparent focus:border-green'
+              : ''
+          }`}
           disabled={true}
           value={''}
         />
@@ -305,11 +334,11 @@ export const InputBox = props => {
             Press <code>Enter</code> for new line. <code>Ctrl + Enter</code> for
             submit.
           </span>
-        ) : (
+        ) : state.settings.hintPopup ? (
           <span
-            className={
-              'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'
-            }>
+            className={`hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg ${
+              state.settings.stickyInput ? 'mb-10' : ''
+            }`}>
             <p>
               <b>
                 <u>/</u>:
@@ -401,7 +430,7 @@ export const InputBox = props => {
               show help page
             </p>
           </span>
-        )}
+        ) : null}
       </div>
     </div>
   ) : state.showQuickHelp || state.showHelp ? null : (

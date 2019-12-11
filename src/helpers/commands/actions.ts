@@ -388,6 +388,11 @@ export function otherCommand(updateCandidate, cmd, state) {
         ...updateCandidate,
         darkMode: false,
       };
+    } else if (commandText === 'setting') {
+      return {
+        ...updateCandidate,
+        showSettings: true,
+      };
     } else if (commandText === 'customize') {
       return {
         ...updateCandidate,

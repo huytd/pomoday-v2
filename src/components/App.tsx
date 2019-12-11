@@ -20,6 +20,7 @@ import { pullFromDB, pushToDB } from '../helpers/api';
 import { StatusBar } from './StatusBar';
 import { QuickHelp } from './QuickHelp';
 import { useEventListener, useInterval } from '../helpers/hooks';
+import { Settings } from './Settings';
 
 export const StateContext = React.createContext<any>(null);
 
@@ -96,6 +97,12 @@ const defaultState = {
     wip: true,
   },
   history: getHistoryQueue(),
+  showSettings: false,
+  settings: {
+    hintPopup: true,
+    stickyInput: false,
+    autoDarkMode: false,
+  },
   showCustomCSS: false,
   customCSS: '',
   showArchived: false,
@@ -277,6 +284,7 @@ export const App = () => {
     if (mainViewRef && mainViewRef.current) {
       if (!document.activeElement.tagName.match(/body/i)) return;
       if (
+        state.showSettings ||
         state.showHelp ||
         state.showQuickHelp ||
         (state.userWantToLogin && !state.authToken)
@@ -409,7 +417,10 @@ export const App = () => {
               <ArchivedList />
             </div>
           ) : null}
+          {/* Login */}
           {!state.authToken && state.userWantToLogin ? <AuthDialog /> : null}
+          {/* Settings */}
+          {state.showSettings ? <Settings /> : null}
         </div>
         <InputBox />
       </div>
