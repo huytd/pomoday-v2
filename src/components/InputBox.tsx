@@ -87,12 +87,8 @@ export const InputBox = props => {
       }
       const key = e.which || e.keyCode;
       const meta = e.ctrlKey || e.metaKey;
-      // TAB or RIGHT or Ctrl + F to pickup the suggestion
-      if (
-        key === KEY_TAB ||
-        (!isFullEditor && key === KEY_RIGHT) ||
-        (!isFullEditor && meta && key == KEY_F)
-      ) {
+      // TAB or Ctrl + F to pickup the suggestion
+      if (key === KEY_TAB || (!isFullEditor && meta && key == KEY_F)) {
         if (suggestion) {
           inputRef.current.value = suggestion;
           e.stopPropagation();
