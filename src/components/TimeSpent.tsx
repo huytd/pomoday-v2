@@ -4,37 +4,29 @@ import { TaskStatus, counterAsString, Worklog } from '../helpers/utils';
 
 export const TimeSpent = props => {
   const task = props.task;
-  const getTotalTime = () => {
-    return (
-      (task.logs || []).reduce((total, log: Worklog) => {
-        if (log.end) {
-          total += log.end - log.start;
-        } else {
-          total += Date.now() - log.start;
-        }
-        return total;
-      }, 0) / 1000
-    );
-  };
+  const logs = task.logs || [{ start: 0, end: 0 }];
 
-  const updateAppVisibility = e => {
-    if (task.status === TaskStatus.WIP) {
-      if (document.visibilityState === 'visible') {
-        setCounter(getTotalTime());
+  const totalSpent =
+    logs.reduce((total, log: Worklog) => {
+      if (log.end) {
+        total += log.end - log.start;
       }
+      return total;
+    }, 0) / 1000;
+
+  const getOnGoingSpent = () => {
+    const last = logs[logs.length - 1];
+    if (last && !last.end) {
+      return totalSpent + (Date.now() - last.start) / 1000;
     }
+    return totalSpent;
   };
 
-  useEventListener('visibilitychange', updateAppVisibility);
-
-  const [counter, setCounter] = React.useState(getTotalTime());
+  const [counter, setCounter] = React.useState(getOnGoingSpent());
 
   useInterval(
     () => {
-      // I can just call getTotalTime() here again to avoid the hassle of
-      // catching visibility change and recalculating. But I don't think
-      // looping thru the worklog every 1s is a smart solution.
-      setCounter(counter + 1);
+      setCounter(getOnGoingSpent());
     },
     task.status === TaskStatus.WIP ? 1000 : 0,
   );
