@@ -4,7 +4,7 @@ import { TaskStatus, counterAsString, Worklog } from '../helpers/utils';
 
 export const TimeSpent = props => {
   const task = props.task;
-  const logs = task.logs || [{ start: 0, end: 0 }];
+  const logs = task.logs || [];
 
   const totalSpent =
     logs.reduce((total, log: Worklog) => {
