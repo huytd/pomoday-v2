@@ -166,6 +166,16 @@ export function archiveCommand(ids, cmd, tasksToUpdate: any, state) {
         return t;
       });
     }
+    // Archive by done status
+    const status = (cmd.id.match(/^(#.*)/) || []).pop();
+    if (status.toLowerCase() == '#done') {
+      tasksToUpdate = state.tasks.map(t => {
+        if (t.status === TaskStatus.DONE) {
+          t.archived = true;
+        }
+        return t;
+      });
+    }
   } else {
     // Archive by Ids
     tasksToUpdate = state.tasks.map(t => {
