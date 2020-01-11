@@ -31,7 +31,12 @@ export const AuthDialog = props => {
     const password =
       passwordRef && passwordRef.current && passwordRef.current.value;
     const server = serverRef && serverRef.current && serverRef.current.value;
-    if (username && password && server) {
+    if (username.includes(':')) {
+      setUIState({
+        status: UIAuthState.WAIT,
+        errorMessage: 'Failed to login. Username is invalid.',
+      });
+    } else if (username && password && server) {
       setUIState({
         status: UIAuthState.LOADING,
         errorMessage: '',
