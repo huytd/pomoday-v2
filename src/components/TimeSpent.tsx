@@ -24,6 +24,10 @@ export const TimeSpent = props => {
 
   const [counter, setCounter] = React.useState(getOnGoingSpent());
 
+  React.useEffect(() => {
+    setCounter(getOnGoingSpent());
+  }, [task.status]);
+
   useInterval(
     () => {
       setCounter(getOnGoingSpent());
