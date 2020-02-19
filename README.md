@@ -13,6 +13,7 @@
     - [Online version](#online-version)
     - [Self-hosted](#self-hosted-version)
 - [Development](#development)
+- [Syncing across devices](#syncing-across-devices)
 - [Similar Projects](#similar-projects)
 - [Backers and Sponsors](#backers-and-sponsors)
 - [License](#license)
