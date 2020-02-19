@@ -90,6 +90,12 @@ $ docker-compose build
 $ docker-compose up -d
 ```
 
+## Syncing across devices
+
+To sync the data across devices, you'll need to implement your own backend, please see [Backend API Specification](https://github.com/huytd/pomoday-v2/wiki/Pomoday-Backend-API-Specification) for the details.
+
+To use https://pomoday.app with your own backend, there's a `login` command in the app, you'll be able to put your backend API URL there.
+
 ## Similar Projects
 
 - [taskbook](https://github.com/klaussinani/taskbook): This is an awesome task management application that actually works, and works very well for everyone who likes to live in a command line. Pomoday was also heavily inspired by Taskbook, as you can see from the UI and the keyboard-only command interfaces.
