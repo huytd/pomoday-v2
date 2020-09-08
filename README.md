@@ -67,7 +67,7 @@ To host Pomoday locally or on your own server:
   ```
 4. Now you can deploy the `dist` folder anywhere, just like a static web page
 
-It's recomended to deploy it to [now.sh](https://now.sh), because it's easy:
+It's recommended to deploy it to [now.sh](https://now.sh), because it's easy:
 
 ```
 $ cd dist
