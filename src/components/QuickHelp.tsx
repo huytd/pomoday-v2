@@ -6,7 +6,7 @@ import { useEventListener } from '../helpers/hooks';
 
 const QUICK_HELP_TEXT = [
   "<img src='https://pomoday-cdn.now.sh/logo.png' style='border: none; box-shadow: none; width: 50%; margin: 10px auto;' /><p style='margin: 5px 0;'>Welcome to Pomoday, a keyboard-only task management application that help you be more productive!</p><p style='margin: 5px 0;'>Let's get started!</p>",
-  '**#1:** Press `i` to start typing.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-01.gif)',
+  '**#1:** Type any key to start.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-01.gif)',
   '**#2:** Type `t` or `task` to create a new task.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-02.gif)',
   '**#3:** You can start a task timer with `b` or `begin` command. Stop it with `st` or `stop` command.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-03.gif)',
   '**#4:** You can flag a task with `fl` or `flag`. Or delete it with `d` or `delete` command.\n![](https://pomoday-cdn.now.sh/quickhelp/quickhelp-04.gif)',
