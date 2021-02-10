@@ -37,7 +37,7 @@ const tutorialTasks: TaskItem[] = [
   createTask(
     5,
     '@demo',
-    'You can open the command input by pressing `i` or `I`',
+    'You can open the command input by pressing any key. Multiline input starts with capital characters.',
     TaskStatus.WAIT,
   ),
   createTask(

@@ -15,6 +15,7 @@ import {
   KEY_TAB,
   KEY_UP,
   MAX_COMMAND_QUEUE_LENGTH,
+  KEY_SHIFT,
 } from '../helpers/utils';
 import Queue from '../helpers/queue';
 import { parseCommand } from '../helpers/commands/parser';
@@ -217,11 +218,17 @@ export const InputBox = props => {
     }
   };
 
-  const openInput = (fullEditor: boolean, search: boolean) => {
+  const openInput = (
+    fullEditor: boolean,
+    search: boolean,
+    initial: string = '',
+  ) => {
     setFullEditor(fullEditor);
     setVisible(true);
     if (search) {
       inputRef.current.value = '/';
+    } else {
+      inputRef.current.value = initial;
     }
     inputRef.current.focus();
   };
@@ -246,12 +253,19 @@ export const InputBox = props => {
       inputRef && inputRef.current === document.activeElement;
     const activeIsEditor =
       document.activeElement.tagName.match(/input|textarea/i) !== null;
-    if (
-      (event.keyCode === KEY_INPUT || event.keyCode === KEY_SLASH) &&
-      !inputIsFocused &&
-      !activeIsEditor
-    ) {
-      openInput(event.shiftKey, event.keyCode === KEY_SLASH);
+    // Some global typeahead keys could be defined here
+    if (!inputIsFocused && !activeIsEditor) {
+      if (event.keyCode === KEY_SLASH) {
+        openInput(event.shiftKey, event.keyCode === KEY_SLASH);
+      } else if (event.keyCode >= 48 && event.keyCode <= 90) {
+        // Typeahead should only be allowed for [0-9a-Z]
+        let c = String.fromCharCode(event.keyCode).toLowerCase();
+        if (event.shiftKey) c = c.toUpperCase();
+        // For special commands, insert the space afterward
+        const specialCommands = 'mbcdfste';
+        if (specialCommands.indexOf(c) !== -1) c += ' ';
+        openInput(event.shiftKey, false, c);
+      }
     }
     if (event.keyCode === KEY_ESC) {
       hideInput();
@@ -433,7 +447,7 @@ export const InputBox = props => {
     <div className={'fixed bottom-0 right-0 m-5'}>
       <span
         className={'hidden sm:block bg-white px-3 py-2 rounded-lg shadow-lg'}>
-        Press <code>i</code> or <code>I</code> to show command bar.
+        Type anything, or press <code>/</code> to search.
       </span>
       <button
         onClick={openInput.bind(this.false, this.false)}

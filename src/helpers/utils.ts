@@ -5,6 +5,7 @@ import uuidv4 from 'uuid/v4';
 
 export const KEY_TAB = 9;
 export const KEY_RETURN = 13;
+export const KEY_SHIFT = 16;
 export const KEY_UP = 38;
 export const KEY_RIGHT = 39;
 export const KEY_DOWN = 40;
