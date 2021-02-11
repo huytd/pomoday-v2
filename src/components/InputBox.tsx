@@ -262,7 +262,7 @@ export const InputBox = props => {
         let c = String.fromCharCode(event.keyCode).toLowerCase();
         if (event.shiftKey) c = c.toUpperCase();
         // For special commands, insert the space afterward
-        const specialCommands = 'mbcdfste';
+        const specialCommands = 'bcde';
         if (specialCommands.indexOf(c) !== -1) c += ' ';
         openInput(event.shiftKey, false, c);
       }
