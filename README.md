@@ -97,6 +97,8 @@ To sync the data across devices, you'll need to implement your own backend, plea
 
 To use https://pomoday.app with your own backend, there's a `login` command in the app, you'll be able to put your backend API URL there.
 
+You can also check the list of [3rd party backend](https://github.com/huytd/pomoday-v2/wiki/Backend-(for-data-synchronize)) for self-hosted options.
+
 ## Similar Projects
 
 - [taskbook](https://github.com/klaussinani/taskbook): This is an awesome task management application that actually works, and works very well for everyone who likes to live in a command line. Pomoday was also heavily inspired by Taskbook, as you can see from the UI and the keyboard-only command interfaces.
