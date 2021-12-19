@@ -3,7 +3,7 @@
 
 <p align="center" style="text-align: center;"><a href="https://opencollective.com/pomoday-project" alt="Financial Contributors on Open Collective"><img src="https://opencollective.com/pomoday-project/all/badge.svg?label=financial+contributors&style=for-the-badge" /></a> <img src="https://img.shields.io/github/license/huytd/pomoday-v2?style=for-the-badge"/> <img src="https://img.shields.io/badge/%23-community%20edition-blueviolet?style=for-the-badge"/></p>
 
-<p align="center">Try it online at https://pomoday.app. Don't forget to follow us on Twitter <a href="https://twitter.com/@pomoday_app">@pomoday_app</a>.</p>
+<p align="center">Try it online at https://pomoday.vercel.app</p>
 
 ---
 
