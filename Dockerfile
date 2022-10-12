@@ -12,7 +12,7 @@ COPY . .
 
 RUN npm run dist
 
-FROM halverneus/static-file-server:v1.7.0
+FROM halverneus/static-file-server:v1.8.8
 
 ENV PORT 8888
 
